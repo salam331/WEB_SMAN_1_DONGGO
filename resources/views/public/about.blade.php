@@ -7,7 +7,7 @@
 
         <!-- 🌈 HERO SECTION -->
         <section class="hero-section text-white py-5 mt-4 mb-4 rounded-5 shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                               background-attachment: fixed;">
+                                       background-attachment: fixed;">
             <div class="container text-center position-relative" style="z-index: 2;">
                 <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">
                     {!! $school->hero_title ?? 'Tentang ' . ($school->name ?? 'SMAN 1 Donggo') !!}
@@ -53,12 +53,12 @@
 
                             @if($school && $school->vision)
                                 <h4 class="fw-bold text-primary mt-4">Visi</h4>
-                                <p class="text-muted">{{ $school->vision }}</p>
+                                <p class="text-muted">{!! nl2br(e($school->vision)) !!}</p>
                             @endif
 
                             @if($school && $school->mission)
                                 <h4 class="fw-bold text-primary mt-4">Misi</h4>
-                                <p class="text-muted">{{ $school->mission }}</p>
+                                <p class="text-muted">{!! nl2br(e($school->mission)) !!}</p>
                             @endif
                         </div>
                     </div>

@@ -50,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        //tambahan route dashboard publikasi
 
         // User Management
         Route::get('/users', [AdminController::class, 'users'])->name('users');

@@ -230,6 +230,7 @@
                                         <i class="fas fa-history"></i> Dashboard Aktifitas
                                     </a>
                                 </li>
+                                {{-- tambahkan link yang menuju ke dasboard publikasi di sini --}}
 
                                 {{-- ===== DATA PENGGUNA ===== --}}
                                 <li class="menu-header">Manajemen Data</li>
