@@ -274,7 +274,7 @@ class AdminController extends Controller
     }
 
     // Schedule Management
-    public function index(Request $request)
+    public function schedulesIndex(Request $request)
     {
         $query = Schedule::with('classRoom', 'subject', 'teacher.user');
 
@@ -482,7 +482,7 @@ class AdminController extends Controller
     }
 
     // Attendance Management
-    public function attendances(Request $request)
+    public function attendancesIndex(Request $request)
     {
         $query = Attendance::with('student.user', 'student.classRoom', 'recordedBy');
 
@@ -506,6 +506,108 @@ class AdminController extends Controller
 
         $attendances = $query->orderBy('date', 'desc')->paginate(20);
         return view('admin.attendances.index', compact('attendances'));
+    }
+
+    public function createAttendance()
+    {
+        $students = Student::with('user', 'classRoom')->get();
+        $schedules = Schedule::with('subject', 'classRoom', 'teacher.user')->get();
+        return view('admin.attendances.create', compact('students', 'schedules'));
+    }
+
+    public function storeAttendance(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'schedule_id' => 'required|exists:schedules,id',
+            'date' => 'required|date',
+            'status' => 'required|in:present,absent,late,excused',
+            'remark' => 'nullable|string|max:255',
+        ]);
+
+        // Check if attendance already exists for this student, schedule, and date
+        $existingAttendance = Attendance::where('student_id', $request->student_id)
+            ->where('schedule_id', $request->schedule_id)
+            ->where('date', $request->date)
+            ->first();
+
+        if ($existingAttendance) {
+            return redirect()->back()->with('error', 'Data kehadiran untuk siswa ini pada jadwal dan tanggal yang sama sudah ada.')->withInput();
+        }
+
+        Attendance::create([
+            'student_id' => $request->student_id,
+            'schedule_id' => $request->schedule_id,
+            'date' => $request->date,
+            'status' => $request->status,
+            'remark' => $request->remark,
+            'recorded_by' => auth()->id(),
+        ]);
+
+        LogService::logCreate('Attendance', null, [], "Created attendance record for student ID: {$request->student_id}");
+
+        return redirect()->route('admin.attendances.index')->with('success', 'Data kehadiran berhasil ditambahkan.');
+    }
+
+    public function showAttendance(Attendance $attendance)
+    {
+        $attendance->load('student.user', 'student.classRoom', 'schedule.subject', 'schedule.teacher.user', 'recordedBy');
+        return view('admin.attendances.show', compact('attendance'));
+    }
+
+    public function editAttendance(Attendance $attendance)
+    {
+        $attendance->load('student.user', 'student.classRoom', 'schedule.subject', 'schedule.teacher.user');
+        $students = Student::with('user', 'classRoom')->get();
+        $schedules = Schedule::with('subject', 'classRoom', 'teacher.user')->get();
+        return view('admin.attendances.edit', compact('attendance', 'students', 'schedules'));
+    }
+
+    public function updateAttendance(Request $request, Attendance $attendance)
+    {
+        $request->validate([
+            'student_id' => 'required|exists:students,id',
+            'schedule_id' => 'required|exists:schedules,id',
+            'date' => 'required|date',
+            'status' => 'required|in:present,absent,late,excused',
+            'remark' => 'nullable|string|max:255',
+        ]);
+
+        // Check if another attendance exists for this student, schedule, and date (excluding current record)
+        $existingAttendance = Attendance::where('student_id', $request->student_id)
+            ->where('schedule_id', $request->schedule_id)
+            ->where('date', $request->date)
+            ->where('id', '!=', $attendance->id)
+            ->first();
+
+        if ($existingAttendance) {
+            return redirect()->back()->with('error', 'Data kehadiran untuk siswa ini pada jadwal dan tanggal yang sama sudah ada.')->withInput();
+        }
+
+        $oldData = $attendance->toArray();
+
+        $attendance->update([
+            'student_id' => $request->student_id,
+            'schedule_id' => $request->schedule_id,
+            'date' => $request->date,
+            'status' => $request->status,
+            'remark' => $request->remark,
+        ]);
+
+        LogService::logUpdate('Attendance', $attendance->id, $oldData, $attendance->toArray(), "Updated attendance record for student ID: {$request->student_id}");
+
+        return redirect()->route('admin.attendances.index')->with('success', 'Data kehadiran berhasil diperbarui.');
+    }
+
+    public function destroyAttendance(Attendance $attendance)
+    {
+        $oldData = $attendance->toArray();
+
+        $attendance->delete();
+
+        LogService::logDelete('Attendance', $attendance->id, $oldData, "Deleted attendance record for student ID: {$attendance->student_id}");
+
+        return redirect()->route('admin.attendances.index')->with('success', 'Data kehadiran berhasil dihapus.');
     }
 
     public function exportAttendances(Request $request)
@@ -555,6 +657,69 @@ class AdminController extends Controller
         ));
 
         return $pdf->download('laporan_kehadiran_' . now()->format('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    // Attendance Summary
+    public function attendanceSummary(Request $request)
+    {
+        $query = Attendance::with('student.user', 'student.classRoom', 'schedule.subject');
+
+        if ($request->filled('class_id')) {
+            $query->whereHas('student', function ($q) use ($request) {
+                $q->where('rombel_id', $request->class_id);
+            });
+        }
+
+        if ($request->filled('subject_id')) {
+            $query->whereHas('schedule', function ($q) use ($request) {
+                $q->where('subject_id', $request->subject_id);
+            });
+        }
+
+        if ($request->filled('start_date')) {
+            $query->where('date', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $query->where('date', '<=', $request->end_date);
+        }
+
+        $attendances = $query->get();
+
+        // Group by student and subject
+        $summary = [];
+        foreach ($attendances as $attendance) {
+            $studentId = $attendance->student_id;
+            $subjectId = $attendance->schedule->subject_id ?? null;
+
+            if (!isset($summary[$studentId])) {
+                $summary[$studentId] = [
+                    'student' => $attendance->student,
+                    'subjects' => []
+                ];
+            }
+
+            if ($subjectId && !isset($summary[$studentId]['subjects'][$subjectId])) {
+                $summary[$studentId]['subjects'][$subjectId] = [
+                    'subject' => $attendance->schedule->subject,
+                    'total' => 0,
+                    'present' => 0,
+                    'absent' => 0,
+                    'late' => 0,
+                    'excused' => 0,
+                ];
+            }
+
+            if ($subjectId) {
+                $summary[$studentId]['subjects'][$subjectId]['total']++;
+                $summary[$studentId]['subjects'][$subjectId][$attendance->status]++;
+            }
+        }
+
+        $classes = ClassRoom::all();
+        $subjects = Subject::all();
+
+        return view('admin.attendances.summary', compact('summary', 'classes', 'subjects', 'request'));
     }
 
     // Invoice Management

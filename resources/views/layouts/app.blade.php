@@ -190,6 +190,14 @@
                 padding: 0.75rem 1rem;
             }
         }
+
+        .sidebar-logo {
+            width: 50px;
+            /* Sesuaikan ukuran logo */
+            height: 50px;
+            object-fit: contain;
+            /* Supaya proporsional */
+        }
     </style>
 </head>
 
@@ -197,84 +205,116 @@
     <div class="app-wrapper">
         <!-- Sidebar -->
         <aside class="sidebar" id="sidebar">
-            <h2>SMAN 1 DONGGO</h2>
+            <div class="sidebar-header d-flex align-items-center mb-3">
+                <img src="{{ asset('image/logo.png') }}" alt="Logo" class="sidebar-logo me-2">
+                <h2 class="mb-0">SMAN 1 DONGGO</h2>
+            </div>
             <nav>
                 <ul>
                     @auth
                         @if(auth()->user()->hasRole('admin'))
-                            <li>
-                                <a href="{{ route('admin.dashboard') }}"
-                                    class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.users') }}"
-                                    class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
-                                    <i class="fas fa-users"></i> Data Pengguna
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.teachers') }}"
-                                    class="{{ request()->routeIs('admin.teachers*') ? 'active' : '' }}">
-                                    <i class="fas fa-chalkboard-teacher"></i> Data Guru
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.students') }}"
-                                    class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}">
-                                    <i class="fas fa-user-graduate"></i> Data Siswa
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.classes') }}"
-                                    class="{{ request()->routeIs('admin.classes*') ? 'active' : '' }}">
-                                    <i class="fas fa-school"></i> Data Kelas
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.subjects.index') }}"
-                                    class="{{ request()->routeIs('admin.subjects.*') ? 'active' : '' }}">
-                                    <i class="fas fa-book"></i> Mata Pelajaran
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.materials.index') }}"
-                                    class="{{ request()->routeIs('admin.materials.*') ? 'active' : '' }}">
-                                    <i class="fas fa-book-reader"></i> Materi Pembelajaran
-                                </a>
+                            <ul class="sidebar-menu">
+
+                                {{-- ===== DASHBOARD ===== --}}
+                                <li class="menu-header">Dashboard</li>
+                                <li>
+                                    <a href="{{ route('admin.dashboard') }}"
+                                        class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <span>Dashboard Utama</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.logs.dashboard') }}"
+                                        class="{{ request()->routeIs('admin.logs*') ? 'active' : '' }}">
+                                        <i class="fas fa-history"></i> Dashboard Aktifitas
+                                    </a>
+                                </li>
+
+                                {{-- ===== DATA PENGGUNA ===== --}}
+                                <li class="menu-header">Manajemen Data</li>
+                                <li>
+                                    <a href="{{ route('admin.users') }}"
+                                        class="{{ request()->routeIs('admin.users*') ? 'active' : '' }}">
+                                        <i class="fas fa-users"></i> Data Pengguna
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.teachers') }}"
+                                        class="{{ request()->routeIs('admin.teachers*') ? 'active' : '' }}">
+                                        <i class="fas fa-chalkboard-teacher"></i> Data Guru
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.students') }}"
+                                        class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}">
+                                        <i class="fas fa-user-graduate"></i> Data Siswa
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.classes') }}"
+                                        class="{{ request()->routeIs('admin.classes*') ? 'active' : '' }}">
+                                        <i class="fas fa-school"></i> Data Kelas
+                                    </a>
+                                </li>
+
+                                {{-- ===== AKADEMIK ===== --}}
+                                <li class="menu-header">Akademik</li>
+                                <li>
+                                    <a href="{{ route('admin.subjects.index') }}"
+                                        class="{{ request()->routeIs('admin.subjects.*') ? 'active' : '' }}">
+                                        <i class="fas fa-book"></i> Mata Pelajaran
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.materials.index') }}"
+                                        class="{{ request()->routeIs('admin.materials.*') ? 'active' : '' }}">
+                                        <i class="fas fa-book-reader"></i> Materi Pembelajaran
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.schedules.index') }}"
+                                        class="{{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
+                                        <i class="fas fa-calendar-alt"></i> Jadwal Pelajaran
+                                    </a>
+                                </li>
+
+                                {{-- ===== KEHADIRAN ===== --}}
+                                <li class="menu-header">Kehadiran</li>
+                                <li>
+                                    <a href="{{ route('admin.attendances.index') }}"
+                                        class="{{ request()->routeIs('admin.attendances.index') ? 'active' : '' }}">
+                                        <i class="fas fa-calendar-check"></i> Data Kehadiran
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.attendances.summary') }}"
+                                        class="{{ request()->routeIs('admin.attendances.summary') ? 'active' : '' }}">
+                                        <i class="fas fa-chart-bar"></i> Ringkasan Kehadiran
+                                    </a>
+                                </li>
+
+                                {{-- ===== KEUANGAN ===== --}}
+                                <li class="menu-header">Keuangan</li>
+                                <li>
+                                    <a href="{{ route('admin.invoices') }}"
+                                        class="{{ request()->routeIs('admin.invoices*') ? 'active' : '' }}">
+                                        <i class="fas fa-file-invoice-dollar"></i> Tagihan
+                                    </a>
+                                </li>
+
+                                {{-- ===== INFORMASI & LOG ===== --}}
+                                <li class="menu-header">Informasi</li>
+                                <li>
+                                    <a href="{{ route('admin.announcements') }}"
+                                        class="{{ request()->routeIs('admin.announcements*') ? 'active' : '' }}">
+                                        <i class="fas fa-bullhorn"></i> Pengumuman
+                                    </a>
+                                </li>
+
                             </ul>
-                            <li>
-                                <a href="{{ route('admin.schedules.index') }}"
-                                    class="{{ request()->routeIs('admin.schedules.*') ? 'active' : '' }}">
-                                    <i class="fas fa-calendar-alt"></i> Jadwal Pelajaran
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.announcements') }}"
-                                    class="{{ request()->routeIs('admin.announcements*') ? 'active' : '' }}">
-                                    <i class="fas fa-bullhorn"></i> Pengumuman
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.invoices') }}"
-                                    class="{{ request()->routeIs('admin.invoices*') ? 'active' : '' }}">
-                                    <i class="fas fa-file-invoice-dollar"></i> Tagihan
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.attendances') }}"
-                                    class="{{ request()->routeIs('admin.attendances*') ? 'active' : '' }}">
-                                    <i class="fas fa-calendar-check"></i> Kehadiran
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('admin.logs.dashboard') }}"
-                                    class="{{ request()->routeIs('admin.logs*') ? 'active' : '' }}">
-                                    <i class="fas fa-history"></i> Catatan Sistem
-                                </a>
-                            </li>
                         @endif
+
 
                         @if(auth()->user()->hasRole('guru'))
                             <li>
@@ -288,6 +328,7 @@
                 </ul>
             </nav>
         </aside>
+
 
         <!-- Main -->
         <main>
@@ -365,6 +406,19 @@
             }
 
             lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        });
+
+        const sidebar = document.getElementById('sidebar');
+
+        // Restore posisi scroll saat load
+        window.addEventListener('load', () => {
+            const scrollPos = localStorage.getItem('sidebarScroll');
+            if (scrollPos) sidebar.scrollTop = parseInt(scrollPos);
+        });
+
+        // Simpan posisi scroll setiap saat sidebar digulir
+        sidebar.addEventListener('scroll', () => {
+            localStorage.setItem('sidebarScroll', sidebar.scrollTop);
         });
     </script>
     <script>

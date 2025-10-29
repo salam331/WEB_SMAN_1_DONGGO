@@ -83,7 +83,13 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/subjects', SubjectController::class)->names('subjects');
 
         // Schedule Management
-        Route::resource('/schedules', AdminController::class)->names('schedules');
+        Route::get('/schedules', [AdminController::class, 'schedulesIndex'])->name('schedules.index');
+        Route::get('/schedules/create', [AdminController::class, 'create'])->name('schedules.create');
+        Route::post('/schedules', [AdminController::class, 'store'])->name('schedules.store');
+        Route::get('/schedules/{schedule}', [AdminController::class, 'show'])->name('schedules.show');
+        Route::get('/schedules/{schedule}/edit', [AdminController::class, 'edit'])->name('schedules.edit');
+        Route::put('/schedules/{schedule}', [AdminController::class, 'update'])->name('schedules.update');
+        Route::delete('/schedules/{schedule}', [AdminController::class, 'destroy'])->name('schedules.destroy');
 
         // Announcement Management
         Route::get('/announcements', [AdminController::class, 'announcements'])->name('announcements');
@@ -98,7 +104,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/materials/{material}/download', [MaterialController::class, 'download'])->name('materials.download');
 
         // Attendance Management
-        Route::get('/attendances', [AdminController::class, 'attendances'])->name('attendances');
+        Route::get('/attendances', [AdminController::class, 'attendancesIndex'])->name('attendances.index');
+        Route::get('/attendances/create', [AdminController::class, 'createAttendance'])->name('attendances.create');
+        Route::post('/attendances', [AdminController::class, 'storeAttendance'])->name('attendances.store');
+        Route::get('/attendances/{attendance}/show', [AdminController::class, 'showAttendance'])->name('attendances.show');
+        Route::get('/attendances/{attendance}/edit', [AdminController::class, 'editAttendance'])->name('attendances.edit');
+        Route::put('/attendances/{attendance}', [AdminController::class, 'updateAttendance'])->name('attendances.update');
+        Route::delete('/attendances/{attendance}', [AdminController::class, 'destroyAttendance'])->name('attendances.destroy');
+        Route::get('/attendances/summary', [AdminController::class, 'attendanceSummary'])->name('attendances.summary');
         Route::get('/attendances/export', [AdminController::class, 'exportAttendances'])->name('attendances.export');
         Route::get('/attendances/report', [AdminController::class, 'attendanceReport'])->name('attendances.report');
 

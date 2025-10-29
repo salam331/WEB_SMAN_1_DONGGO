@@ -1,28 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Log Aktivitas - SMAN 1 Donggo')
+@section('title', 'SMAN 1 DONGGO')
 
 @section('content')
     <div class="container-fluid py-4">
-
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card border-0 shadow-sm rounded-4">
-                    <div class="card-body bg-gradient-primary text-white py-4 d-flex justify-content-between align-items-center"
-                        style="background: linear-gradient(90deg, #4e73df 0%, #224abe 100%);">
-                        <div>
-                            <h3 class="fw-bold mb-1"><i class="fas fa-history me-2"></i>Dashboard Log Aktivitas</h3>
-                            <p class="mb-0 opacity-75">Ringkasan aktivitas sistem dan pengguna</p>
-                        </div>
-                        <div class="text-end">
-                            <div class="h6 mb-0">{{ now()->format('l, d F Y') }}</div>
-                            <small class="opacity-75">{{ now()->format('H:i') }} WITA</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Statistics Cards -->
         <div class="row g-4 mb-4">

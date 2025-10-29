@@ -1,175 +1,139 @@
 @extends('layouts.public')
 
-@section('title', 'Beranda')
+@section('title', 'SMAN 1 DONGGO - Beranda')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Hero Section -->
-    <div class="row">
-        <div class="col-12">
-            <div class="hero-section bg-primary text-white py-5">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-lg-6">
-                            <h1 class="display-4 fw-bold mb-3">Selamat Datang di SMAN 1 Donggo</h1>
-                            <p class="lead mb-4">Sekolah berkualitas dengan pendidikan yang unggul dan berintegritas.</p>
-                            <a href="{{ route('login') }}" class="btn btn-light btn-lg me-3">Masuk Sistem</a>
-                            <a href="{{ route('about') }}" class="btn btn-outline-light btn-lg">Tentang Kami</a>
-                            <a href="{{ route('public.gallery') }}" class="btn btn-outline-light btn-lg">Galeri Sekolah</a>
-                            <a href="{{ route('public.announcements') }}" class="btn btn-outline-light btn-lg">Pengumuman Sekolah</a>
-                            <a href="{{ route('contact') }}" class="btn btn-outline-light btn-lg">Kontak Kami</a>
+    <div class="container-fluid">
+
+        <!-- 🌈 HERO SECTION -->
+        <section class="hero-section text-white py-4 mt-4 rounded-bottom-5 shadow-sm mb-4 rounded-5"
+            style="background: linear-gradient(135deg, #7ebf99 0%, #667eea 100%);">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+                        <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">
+                            Selamat Datang di <br><span class="text-primary">SMAN 1 Donggo</span>
+                        </h1>
+                        <p class="lead mb-4 animate__animated animate__fadeInUp">
+                            Sekolah berkualitas dengan pendidikan yang unggul dan berintegritas.
+                        </p>
+                        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                            <a href="{{ route('login') }}" class="btn btn-light btn-lg fw-semibold shadow-sm">
+                                <i class="fas fa-sign-in-alt me-2"></i>Masuk Sistem
+                            </a>
+                            <a href="{{ route('about') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-info-circle me-2"></i>Tentang Kami
+                            </a>
+                            <a href="{{ route('public.gallery') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-images me-2"></i>Galeri
+                            </a>
+                            <a href="{{ route('public.announcements') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-bullhorn me-2"></i>Pengumuman
+                            </a>
+                            <a href="{{ route('contact') }}" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-phone me-2"></i>Kontak
+                            </a>
                         </div>
-                        <div class="col-lg-6">
-                            <img src="{{ asset('images/school-hero.jpg') }}" alt="School Building" class="img-fluid rounded shadow" onerror="this.src='https://via.placeholder.com/600x400/007bff/ffffff?text=School+Building'">
-                        </div>
+                    </div>
+                    <div
+                        class="col-lg-6 text-center d-flex align-items-center justify-content-center justify-content-lg-end gap-4 flex-wrap">
+                        <img src="{{ asset('image/logo.png') }}" alt="Logo Sekolah"
+                            class="img-fluid animate__animated animate__fadeIn"
+                            style="max-width: 250px; animation-duration: 2s;">
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <!-- Quick Stats -->
-    <div class="row mt-5">
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-primary mb-3"></i>
-                    <h4 class="card-title">Siswa</h4>
-                    <p class="card-text">Jumlah siswa aktif</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-chalkboard-teacher fa-3x text-success mb-3"></i>
-                    <h4 class="card-title">Guru</h4>
-                    <p class="card-text">Tenaga pengajar profesional</p>
-                    <h2 class="text-success">{{ $school->total_teachers ?? '50+' }}</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-graduation-cap fa-3x text-info mb-3"></i>
-                    <h4 class="card-title">Program</h4>
-                    <p class="card-text">Program studi unggulan</p>
-                    <h2 class="text-info">6</h2>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-trophy fa-3x text-warning mb-3"></i>
-                    <h4 class="card-title">Prestasi</h4>
-                    <p class="card-text">Penghargaan dan prestasi</p>
-                    <h2 class="text-warning">100+</h2>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Announcements Section -->
-    @if($announcements->count() > 0)
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0">
-                    <h3 class="mb-0">
-                        <i class="fas fa-bullhorn text-primary me-2"></i>
-                        Pengumuman Terbaru
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach($announcements as $announcement)
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 border-0 bg-light">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-start">
-                                        @if($announcement->pinned)
-                                        <i class="fas fa-thumbtack text-warning me-2 mt-1"></i>
-                                        @endif
-                                        <div class="flex-grow-1">
-                                            <h5 class="card-title mb-2">{{ $announcement->title }}</h5>
-                                            <p class="card-text text-muted small mb-2">
-                                                <i class="fas fa-calendar me-1"></i>
-                                                {{ $announcement->created_at->format('d M Y') }}
-                                                @if($announcement->postedBy)
-                                                • {{ $announcement->postedBy->name }}
+        <!-- 💠 QUICK STATS -->
+        <section class="stats-section mb-5">
+            <div class="row g-4">
+                @php
+                    $stats = [
+                        ['icon' => 'fa-users', 'color' => 'primary', 'title' => 'Siswa', 'desc' => 'Jumlah siswa aktif', 'value' => $school->total_students ?? '500+'],
+                        ['icon' => 'fa-chalkboard-teacher', 'color' => 'success', 'title' => 'Guru', 'desc' => 'Tenaga pengajar profesional', 'value' => $school->total_teachers ?? '50+'],
+                        ['icon' => 'fa-graduation-cap', 'color' => 'info', 'title' => 'Program', 'desc' => 'Program studi unggulan', 'value' => '6'],
+                        ['icon' => 'fa-trophy', 'color' => 'warning', 'title' => 'Prestasi', 'desc' => 'Penghargaan dan prestasi', 'value' => '100+']
+                    ];
+                @endphp
+                @foreach($stats as $s)
+                    <div class="col-md-3">
+                        <div class="card border-0 shadow-sm text-center h-100 rounded-4 stat-card">
+                            <div class="card-body py-4">
+                                <div
+                                    class="icon-wrapper bg-{{ $s['color'] }} bg-opacity-10 text-{{ $s['color'] }} mb-3 mx-auto">
+                                    <i class="fas {{ $s['icon'] }} fa-3x"></i>
+                                </div>
+                                <h5 class="fw-semibold mb-1">{{ $s['title'] }}</h5>
+                                <p class="text-muted small mb-2">{{ $s['desc'] }}</p>
+                                <h3 class="fw-bold text-{{ $s['color'] }}">{{ $s['value'] }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        <!-- 📣 ANNOUNCEMENTS -->
+        @if($announcements->count() > 0)
+            <section class="announcements-section mb-5">
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-gradient border-0 py-3 px-4"
+                        style="background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);">
+                        <h4 class="fw-bold mb-0 text-primary">
+                            <i class="fas fa-bullhorn me-2"></i>Pengumuman Terbaru
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-4">
+                            @foreach($announcements as $a)
+                                <div class="col-md-6">
+                                    <div class="card border-0 shadow-sm h-100 rounded-4 hover-card">
+                                        <div class="card-body">
+                                            <div class="d-flex">
+                                                @if($a->pinned)
+                                                    <i class="fas fa-thumbtack text-warning me-2 mt-1"></i>
                                                 @endif
-                                            </p>
-                                            <p class="card-text">{{ Str::limit($announcement->content, 150) }}</p>
-                                            <a href="{{ route('public.announcements') }}" class="btn btn-sm btn-outline-primary">Baca Selengkapnya</a>
+                                                <div>
+                                                    <h5 class="fw-semibold mb-2">{{ $a->title }}</h5>
+                                                    <p class="text-muted small mb-2">
+                                                        <i class="fas fa-calendar me-1"></i>{{ $a->created_at->format('d M Y') }}
+                                                        @if($a->postedBy)
+                                                            • {{ $a->postedBy->name }}
+                                                        @endif
+                                                    </p>
+                                                    <p class="text-muted">{{ Str::limit($a->content, 120) }}</p>
+                                                    <a href="{{ route('public.announcements') }}"
+                                                        class="btn btn-sm btn-outline-primary rounded-pill">
+                                                        Baca Selengkapnya
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
-                        @endforeach
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    @endif
+            </section>
+        @endif
 
-    <!-- Features Section -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="text-center mb-5">
-                <h2 class="display-5 fw-bold">Fitur Sistem</h2>
-                <p class="lead text-muted">Platform terintegrasi untuk manajemen sekolah modern</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm text-center">
-                <div class="card-body">
-                    <i class="fas fa-book-open fa-4x text-primary mb-4"></i>
-                    <h4 class="card-title">Materi Pembelajaran</h4>
-                    <p class="card-text">Akses materi pembelajaran digital yang terorganisir dengan baik untuk mendukung proses belajar mengajar.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm text-center">
-                <div class="card-body">
-                    <i class="fas fa-clipboard-check fa-4x text-success mb-4"></i>
-                    <h4 class="card-title">Penilaian & Ujian</h4>
-                    <p class="card-text">Sistem penilaian yang transparan dan terintegrasi untuk monitoring perkembangan akademik siswa.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 border-0 shadow-sm text-center">
-                <div class="card-body">
-                    <i class="fas fa-chart-line fa-4x text-info mb-4"></i>
-                    <h4 class="card-title">Laporan & Analitik</h4>
-                    <p class="card-text">Laporan komprehensif dan analitik data untuk pengambilan keputusan yang lebih baik.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Contact Info -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm bg-primary text-white">
-                <div class="card-body text-center py-5">
-                    <h3 class="mb-3">Hubungi Kami</h3>
-                    <div class="row">
+        <!-- 📞 CONTACT INFO -->
+        <section class="contact-section">
+            <div class="card border-0 shadow-sm bg-primary text-white text-center rounded-4 overflow-hidden">
+                <div class="card-body py-5">
+                    <h3 class="fw-bold mb-4"><i class="fas fa-envelope-open me-2"></i>Hubungi Kami</h3>
+                    <div class="row g-4 justify-content-center">
                         <div class="col-md-4">
                             <i class="fas fa-map-marker-alt fa-2x mb-2"></i>
-                            <p>Jl. Pendidikan No. 1, Donggo, Bima</p>
+                            <p>Jl. Pesanggrahan No.19,
+                                Doridungga, Kec. Donggo, <br>Kabupaten Bima, Nusa Tenggara Bar.</p>
                         </div>
                         <div class="col-md-4">
                             <i class="fas fa-phone fa-2x mb-2"></i>
-                            <p>(0374) 123456</p>
+                            <p>(+62) 85339458990</p>
                         </div>
                         <div class="col-md-4">
                             <i class="fas fa-envelope fa-2x mb-2"></i>
@@ -178,22 +142,125 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
     </div>
-</div>
 @endsection
 
+{{-- @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('nav.navbar');
+            const sections = document.querySelectorAll('section');
+            if (!header || sections.length === 0) return;
+
+            let isScrolling;
+            const headerHeight = header.offsetHeight;
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const fadeStart = headerHeight + 10;
+                const fadeEnd = headerHeight + 800;
+
+                // Efek aktif saat scroll
+                sections.forEach(sec => {
+                    const rect = sec.getBoundingClientRect();
+                    const offsetTop = rect.top + window.scrollY;
+                    const distance = scrollTop - offsetTop + window.innerHeight / 3;
+                    let fadeAmount = (distance - fadeStart) / (fadeEnd - fadeStart);
+                    fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
+
+                    // Efek blur & pudar
+                    sec.style.opacity = 1 - fadeAmount * 1.2;
+                    sec.style.filter = `blur(${fadeAmount * 10}px)`;
+                    sec.style.transform = `translateY(${fadeAmount * 10}px)`;
+                });
+
+                // Deteksi saat scroll berhenti → tampilkan kembali semua section
+                clearTimeout(isScrolling);
+                isScrolling = setTimeout(() => {
+                    sections.forEach(sec => {
+                        sec.style.transition = 'opacity 0.4s ease-out, filter 0.4s ease-out, transform 0.4s ease-out';
+                        sec.style.opacity = 1;
+                        sec.style.filter = 'blur(0)';
+                        sec.style.transform = 'translateY(0)';
+                    });
+                }, 100); // 100ms setelah berhenti scroll
+            });
+        });
+    </script>
+@endpush --}}
+
 @push('styles')
-<style>
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 0 0 50px 50px;
-}
-.card {
-    transition: transform 0.3s ease;
-}
-.card:hover {
-    transform: translateY(-5px);
-}
-</style>
+    <style>
+        /* Efek awal semua section */
+        section {
+            transition: opacity 0.25s ease-in-out, filter 0.25s ease-in-out, transform 0.25s ease-in-out;
+            will-change: opacity, filter, transform;
+        }
+
+        /* Saat user hover pada card agar tetap elegan */
+        .stat-card,
+        .hover-card {
+            transition: all .35s ease;
+        }
+
+        .stat-card:hover,
+        .hover-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 1.25rem 2rem rgba(0, 0, 0, 0.1);
+        }
+
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all .3s ease;
+        }
+
+        .hover-card:hover .icon-wrapper {
+            transform: rotate(8deg) scale(1.1);
+        }
+    </style>
+@endpush
+
+
+{{-- @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('nav.navbar');
+            const hero = document.querySelector('.hero-section');
+            if (!header || !hero) return;
+
+            const headerHeight = header.offsetHeight;
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const fadeStart = headerHeight;       // mulai pudar tepat setelah header
+                const fadeEnd = headerHeight + 200;   // jarak pendek = pudar cepat
+
+                let fadeAmount = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+                fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
+
+                hero.style.opacity = 1 - fadeAmount * 1.5;
+                hero.style.filter = `blur(${fadeAmount * 10}px)`;
+                hero.style.transform = `scale(${1 - fadeAmount * 0.05}) translateY(-${fadeAmount * 20}px)`;
+            });
+        });
+    </script>
+@endpush --}}
+
+@push('styles')
+    <style>
+        .hero-section {
+            opacity: 1;
+            filter: blur(0);
+            transform: translateY(0) scale(1);
+            transition: opacity 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out;
+            will-change: opacity, filter, transform;
+        }
+    </style>
 @endpush

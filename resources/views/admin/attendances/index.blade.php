@@ -12,6 +12,12 @@
                 <i class="fas fa-user-check me-2"></i> Daftar Kehadiran Siswa
             </h5>
             <div class="d-flex gap-2">
+                <a href="{{ route('admin.attendances.create') }}" class="btn btn-success btn-sm fw-semibold rounded-pill shadow-sm">
+                    <i class="fas fa-plus me-1"></i> Tambah Kehadiran
+                </a>
+                <a href="{{ route('admin.attendances.summary') }}" class="btn btn-light btn-sm text-info fw-semibold rounded-pill shadow-sm">
+                    <i class="fas fa-chart-bar me-1"></i> Ringkasan
+                </a>
                 <a href="{{ route('admin.attendances.export') }}" class="btn btn-light btn-sm text-success fw-semibold rounded-pill shadow-sm">
                     <i class="fas fa-file-excel me-1"></i> Export Excel
                 </a>
@@ -103,10 +109,27 @@
                                         <i class="fas fa-user-tag me-1"></i>{{ $attendance->recordedBy->name ?? '-' }}
                                     </span>
                                 </td>
+                                <td>
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <a href="{{ route('admin.attendances.show', $attendance) }}" class="btn btn-sm btn-info rounded-pill" title="Lihat Detail">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('admin.attendances.edit', $attendance) }}" class="btn btn-sm btn-warning rounded-pill" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('admin.attendances.destroy', $attendance) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data kehadiran ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger rounded-pill" title="Hapus">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-4 text-muted">
+                                <td colspan="8" class="text-center py-4 text-muted">
                                     <i class="fas fa-info-circle me-2 text-primary"></i> Tidak ada data kehadiran.
                                 </td>
                             </tr>

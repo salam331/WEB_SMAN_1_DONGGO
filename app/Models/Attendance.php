@@ -18,6 +18,8 @@ class Attendance extends Model
         'recorded_by',
     ];
 
+    protected $dates = ['date'];
+
     protected $casts = [
         'date' => 'date',
     ];
