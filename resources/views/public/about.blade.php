@@ -7,13 +7,13 @@
 
         <!-- 🌈 HERO SECTION -->
         <section class="hero-section text-white py-5 mt-4 mb-4 rounded-5 shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                   background-attachment: fixed;">
+                               background-attachment: fixed;">
             <div class="container text-center position-relative" style="z-index: 2;">
                 <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">
-                    Tentang {{ $school->name ?? 'SMAN 1 Donggo' }}
+                    {!! $school->hero_title ?? 'Tentang ' . ($school->name ?? 'SMAN 1 Donggo') !!}
                 </h1>
                 <p class="lead animate__animated animate__fadeInUp">
-                    Membangun Generasi Unggul dengan Pendidikan Berkualitas
+                    {{ $school->hero_description ?? 'Membangun Generasi Unggul dengan Pendidikan Berkualitas' }}
                 </p>
             </div>
             <div class="hero-overlay"></div>
@@ -44,10 +44,10 @@
                                 </div>
                             </div>
 
-                            @if($school && $school->description)
+                            @if($school && $school->school_description)
                                 <hr class="my-4">
                                 <h4 class="fw-bold text-primary">Deskripsi</h4>
-                                <p class="text-muted">{{ $school->description }}</p>
+                                <p class="text-muted">{{ $school->school_description }}</p>
                             @endif
 
                             @if($school && $school->vision)
@@ -73,7 +73,7 @@
             </div>
             <div class="row g-4">
                 @php
-                    $features = [
+                    $features = $school->features ?? [
                         ['icon' => 'fa-graduation-cap', 'color' => 'primary', 'title' => 'Kurikulum Modern', 'desc' => 'Kurikulum terkini yang disesuaikan dengan perkembangan zaman.'],
                         ['icon' => 'fa-users', 'color' => 'success', 'title' => 'Guru Berkompeten', 'desc' => 'Tenaga pengajar profesional dan berpengalaman.'],
                         ['icon' => 'fa-flask', 'color' => 'info', 'title' => 'Fasilitas Lengkap', 'desc' => 'Sarana memadai untuk mendukung pembelajaran.'],
@@ -97,30 +97,29 @@
         </section>
 
         <!-- 📊 STATISTICS -->
-        <section class="stats-section fade-section mt-5">
+        <section class="stats-section fade-section mt-5 bg-white">
             <div class="card border-0 shadow-sm bg-gradient text-white rounded-4 overflow-hidden"
                 style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);">
                 <div class="card-body py-5">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold">Statistik Sekolah</h3>
+                        <h3 class="fw-bold text-primary mb-4">Statistik Sekolah</h3>
                     </div>
-                    <div class="row text-center">
-                        <div class="col-md-3 mb-4">
-                            <h2 class="display-5 fw-bold">{{ $school->total_students ?? '500+' }}</h2>
-                            <p>Siswa Aktif</p>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <h2 class="display-5 fw-bold">{{ $school->total_teachers ?? '50+' }}</h2>
-                            <p>Guru & Staff</p>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <h2 class="display-5 fw-bold">{{ $school->total_classes ?? '24' }}</h2>
-                            <p>Kelas</p>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <h2 class="display-5 fw-bold">{{ $school->total_achievements ?? '100+' }}</h2>
-                            <p>Prestasi</p>
-                        </div>
+                    <div class="row text-center text-success">
+                        @php
+                            $statistics = [
+                                ['label' => 'Siswa Aktif', 'value' => $studentsCount ?? 0],
+                                ['label' => 'Guru & Staff', 'value' => $teachersCount ?? 0],
+                                ['label' => 'Kelas', 'value' => $classesCount ?? 0],
+                                ['label' => 'Prestasi', 'value' => $school->prestasi_count ?? '100+'] // nanti disesuaikan
+                            ];
+                        @endphp
+
+                        @foreach($statistics as $stat)
+                            <div class="col-md-3 mb-4">
+                                <h2 class="display-5 fw-bold">{{ $stat['value'] }}</h2>
+                                <p>{{ $stat['label'] }}</p>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>

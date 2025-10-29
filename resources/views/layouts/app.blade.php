@@ -306,6 +306,12 @@
                                 {{-- ===== INFORMASI & LOG ===== --}}
                                 <li class="menu-header">Informasi</li>
                                 <li>
+                                    <a href="{{ route('admin.school-profiles.index') }}"
+                                        class="{{ request()->routeIs('admin.school-profiles*') ? 'active' : '' }}">
+                                        <i class="fas fa-school"></i> Profil Sekolah
+                                    </a>
+                                </li>
+                                <li>
                                     <a href="{{ route('admin.announcements') }}"
                                         class="{{ request()->routeIs('admin.announcements*') ? 'active' : '' }}">
                                         <i class="fas fa-bullhorn"></i> Pengumuman

@@ -23,5 +23,15 @@ class SchoolProfile extends Model
         'total_teachers',
         'total_programs',
         'total_achievements',
+        'hero_title',
+        'hero_description',
+        'school_description',
+        'features',
+        'statistics',
+    ];
+
+    protected $casts = [
+        'features' => 'array',
+        'statistics' => 'array',
     ];
 }

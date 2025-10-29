@@ -24,7 +24,17 @@ class PublicController extends Controller
     public function about()
     {
         $school = SchoolProfile::first();
-        return view('public.about', compact('school'));
+        if ($school) {
+            $school->features = json_decode($school->features, true);
+            $school->statistics = json_decode($school->statistics, true);
+        }
+
+        // Hitung jumlah siswa, guru, dan kelas untuk statistik
+        $studentsCount = \App\Models\Student::count();
+        $teachersCount = \App\Models\Teacher::count();
+        $classesCount = \App\Models\ClassRoom::count();
+
+        return view('public.about', compact('school', 'studentsCount', 'teachersCount', 'classesCount'));
     }
 
     public function announcements()
