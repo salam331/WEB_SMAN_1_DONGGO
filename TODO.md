@@ -1,23 +1,34 @@
-# TODO List - Fitur Pengumuman Admin
+# TODO List
 
-## ✅ Completed Tasks
-- [x] Analisis struktur file dan kode yang ada
-- [x] Memahami model Announcement dan relasi
-- [x] Memahami controller AdminController untuk CRUD announcements
-- [x] Memahami tampilan public/announcements.blade.php saat ini
+## Fitur yang Sudah Diimplementasi
+- [x] Sistem manajemen siswa, guru, dan orang tua
+- [x] Manajemen kelas dan mata pelajaran
+- [x] Sistem jadwal pelajaran
+- [x] Manajemen pengumuman
+- [x] Sistem absensi
+- [x] Manajemen materi pembelajaran
+- [x] Sistem ujian dan nilai
+- [x] Manajemen tagihan/invoice
+- [x] Sistem galeri
+- [x] Profil sekolah
+- [x] Sistem log aktivitas
+- [x] Sistem pesan antar pengguna (guru, siswa, orang tua)
+- [x] Sistem pesan kontak dari halaman publik
 
-## 🔄 In Progress Tasks
-- [x] Tambah checkbox "Publikasikan ke halaman publik" di create.blade.php
-- [x] Tambah checkbox "Publikasikan ke halaman publik" di edit.blade.php
-- [x] Update AdminController storeAnnouncement untuk handle is_public
-- [x] Update AdminController updateAnnouncement untuk handle is_public
-- [x] Ubah tampilan public/announcements.blade.php menjadi card bersebelahan
-- [x] Tambah modal untuk detail pengumuman
-- [x] Tambah animasi dan styling responsif
-- [ ] Test tampilan responsif dan fungsionalitas
+## Fitur yang Sedang Dikerjakan
+- [ ] Sistem notifikasi real-time
 
-## 📋 Pending Tasks
-- [ ] Test CRUD announcements dengan checkbox publish
-- [ ] Test tampilan public announcements
-- [ ] Verifikasi pagination masih berfungsi
-- [ ] Test responsivitas di berbagai ukuran layar
+## Fitur yang Perlu Ditambahkan
+- [ ] Dashboard analytics dengan chart
+- [ ] Export data ke PDF/Excel
+- [ ] Backup database otomatis
+- [ ] Sistem voting/polling untuk siswa
+- [ ] Integrasi dengan Google Calendar
+- [ ] Sistem reminder untuk tugas
+- [ ] API untuk mobile app
+- [ ] Sistem chat real-time
+- [ ] Manajemen perpustakaan
+- [ ] Sistem kesehatan siswa
+- [ ] Manajemen ekstrakurikuler
+- [ ] Sistem rapor digital
+- [ ] Integrasi dengan payment gateway

@@ -64,6 +64,7 @@ class SchoolProfileController extends Controller
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
             'headmaster_name' => 'required|string|max:255',
+            'accreditation' => 'required|string|max:5',
             'vision' => 'required|string',
             'mission' => 'required|string',
             'logo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -71,6 +72,7 @@ class SchoolProfileController extends Controller
             'hero_title' => 'nullable|string|max:255',
             'hero_description' => 'nullable|string|max:500',
             'school_description' => 'nullable|string',
+            'total_achievements' => 'nullable|integer',
             'features' => 'nullable|array',
             'statistics' => 'nullable|array',
         ]);

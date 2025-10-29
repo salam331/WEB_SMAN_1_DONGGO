@@ -64,7 +64,7 @@
                             <h5 class="mb-0"><i class="fas fa-paper-plane me-2"></i>Kirim Pesan</h5>
                         </div>
                         <div class="card-body p-4">
-                            <form id="contactForm">
+                            <form id="contactForm" action="{{ route('contact.store') }}" method="POST">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Nama Lengkap <span
@@ -242,6 +242,8 @@
             e.preventDefault();
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
+
+            // Basic validation
             if (!data.name || !data.email || !data.subject || !data.message) {
                 alert('Mohon lengkapi semua field wajib.');
                 return;
@@ -251,8 +253,28 @@
                 alert('Format email tidak valid.');
                 return;
             }
-            new bootstrap.Modal('#successModal').show();
-            this.reset();
+
+            // Submit form via AJAX
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    new bootstrap.Modal('#successModal').show();
+                    this.reset();
+                } else {
+                    alert('Terjadi kesalahan. Silakan coba lagi.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan. Silakan coba lagi.');
+            });
         });
     </script>
 @endpush

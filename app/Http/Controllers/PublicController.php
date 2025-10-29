@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SchoolProfile;
 use App\Models\Announcement;
 use App\Models\Gallery;
+use App\Models\ContactMessage;
 
 class PublicController extends Controller
 {
@@ -62,6 +63,24 @@ class PublicController extends Controller
     {
         $school = SchoolProfile::first();
         return view('public.contact', compact('school'));
+    }
+
+    public function storeContactMessage(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'nullable|string|max:20',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:1000',
+        ]);
+
+        ContactMessage::create($validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pesan Anda telah dikirim dan akan diperiksa oleh admin.'
+        ]);
     }
 
     public function showAnnouncement($id)

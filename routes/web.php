@@ -18,6 +18,7 @@ Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/announcements', [PublicController::class, 'announcements'])->name('public.announcements');
 Route::get('/gallery', [PublicController::class, 'gallery'])->name('public.gallery');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+Route::post('/contact', [PublicController::class, 'storeContactMessage'])->name('contact.store');
 // Route::get('/announcement/{id}', [PublicController::class, 'showAnnouncement'])->name('public.announcement.show');
 Route::get('/announcement/detail/{id}', [PublicController::class, 'getAnnouncementDetail'])
     ->name('public.announcement.detail');
@@ -134,6 +135,11 @@ Route::middleware(['auth'])->group(function () {
 
         // School Profile Management
         Route::resource('/school-profiles', \App\Http\Controllers\Admin\SchoolProfileController::class)->names('school-profiles');
+
+        // Contact Messages Management
+        Route::resource('/contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->names('contact-messages');
+        Route::post('/contact-messages/{contactMessage}/approve', [\App\Http\Controllers\Admin\ContactMessageController::class, 'approve'])->name('contact-messages.approve');
+        Route::post('/contact-messages/{contactMessage}/reject', [\App\Http\Controllers\Admin\ContactMessageController::class, 'reject'])->name('contact-messages.reject');
 
         // Logs
         Route::get('/logs', [AdminController::class, 'logs'])->name('logs');

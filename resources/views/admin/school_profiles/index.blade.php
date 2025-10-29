@@ -24,6 +24,7 @@
                                 <h4>{{ $school->name }}</h4>
                                 <p class="text-muted">{{ $school->address }}</p>
                                 <p><strong>Kepala Sekolah:</strong> {{ $school->headmaster_name }}</p>
+                                <p><strong>Akreditasi:</strong> {{ $school->accreditation }}</p>
                             </div>
                             <div class="col-md-4 text-end">
                                 <a href="{{ route('admin.school-profiles.edit', $school->id) }}" class="btn btn-primary">
@@ -57,6 +58,10 @@
                                     <tr>
                                         <td><strong>Kepala Sekolah:</strong></td>
                                         <td>{{ $school->headmaster_name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Akreditasi:</strong></td>
+                                        <td>{{ $school->accreditation }}</td>
                                     </tr>
                                 </table>
                             </div>

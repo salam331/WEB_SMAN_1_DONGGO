@@ -15,6 +15,7 @@ class SchoolProfile extends Model
         'phone',
         'email',
         'headmaster_name',
+        'accreditation',
         'vision',
         'mission',
         'logo_path',

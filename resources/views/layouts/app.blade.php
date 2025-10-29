@@ -323,6 +323,12 @@
                                         <i class="fas fa-images"></i> Galeri
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('admin.contact-messages.index') }}"
+                                        class="{{ request()->routeIs('admin.contact-messages*') ? 'active' : '' }}">
+                                        <i class="fas fa-envelope"></i> Pesan Kontak
+                                    </a>    
+                                </li>
 
                             </ul>
                         @endif

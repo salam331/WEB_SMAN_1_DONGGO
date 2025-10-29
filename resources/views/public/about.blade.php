@@ -32,6 +32,7 @@
                                         <li><strong>Nama:</strong> {{ $school->name ?? 'SMAN 1 Donggo' }}</li>
                                         <li><strong>Alamat:</strong>
                                             {{ $school->address ?? 'Jl. Pendidikan No. 1, Donggo, Bima' }}</li>
+                                        <li><strong>Kepala Sekolah:</strong> {{ $school->headmaster_name }} </li>
                                         <li><strong>Telepon:</strong> {{ $school->phone ?? '(0374) 123456' }}</li>
                                         <li><strong>Email:</strong> {{ $school->email ?? 'info@sman1donggo.sch.id' }}</li>
                                         <li><strong>Akreditasi:</strong> {{ $school->accreditation ?? 'A' }}</li>
@@ -110,7 +111,7 @@
                                 ['label' => 'Siswa Aktif', 'value' => $studentsCount ?? 0],
                                 ['label' => 'Guru & Staff', 'value' => $teachersCount ?? 0],
                                 ['label' => 'Kelas', 'value' => $classesCount ?? 0],
-                                ['label' => 'Prestasi', 'value' => $school->prestasi_count ?? '100+'] // nanti disesuaikan
+                                ['label' => 'Prestasi', 'value' => $school->total_achievements ?? 0] // nanti disesuaikan
                             ];
                         @endphp
 
