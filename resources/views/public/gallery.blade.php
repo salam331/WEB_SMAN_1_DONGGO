@@ -23,40 +23,37 @@
         <section class="gallery-section fade-section">
             <div class="container">
                 @if($galleries->count() > 0)
-                    <div class="row g-4" id="gallery-grid">
+                    <div class="gallery-wrapper d-flex flex-wrap justify-content-center gap-4" id="gallery-grid">
                         @foreach($galleries as $gallery)
-                            <div class="col-md-6 col-lg-4">
-                                <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden gallery-item"
-                                    data-bs-toggle="modal" data-bs-target="#galleryModal"
-                                    data-image="{{ Storage::url($gallery->image) }}" data-title="{{ $gallery->title }}"
-                                    data-description="{{ $gallery->description }}"
-                                    data-date="{{ $gallery->created_at->format('d F Y') }}">
-                                    <div class="card-img-container">
-                                        <img src="{{ Storage::url($gallery->image) }}" class="card-img-top gallery-image"
-                                            alt="{{ $gallery->title }}" loading="lazy">
-                                        <div class="gallery-overlay">
-                                            <div class="gallery-overlay-content">
-                                                <i class="fas fa-search-plus fa-2x mb-2 text-white"></i>
-                                                <h6 class="mb-1">{{ $gallery->title }}</h6>
-                                                <small>{{ $gallery->created_at->format('d F Y') }}</small>
-                                            </div>
+                            <div class="gallery-card" data-bs-toggle="modal" data-bs-target="#galleryModal"
+                                data-image="{{ Storage::url($gallery->image) }}" data-title="{{ $gallery->title }}"
+                                data-description="{{ $gallery->description }}"
+                                data-date="{{ $gallery->created_at->format('d F Y') }}">
+                                <div class="card-img-container">
+                                    <img src="{{ Storage::url($gallery->image) }}" class="gallery-image"
+                                        alt="{!! e($gallery->title) !!}" loading="lazy" />
+                                    <div class="gallery-overlay">
+                                        <div class="gallery-overlay-content">
+                                            <i class="fas fa-search-plus fa-2x mb-2 text-white"></i>
+                                            <h6 class="mb-1">{{ $gallery->title }}</h6>
+                                            <small>{{ $gallery->created_at->format('d F Y') }}</small>
                                         </div>
                                     </div>
-                                    <div class="card-body">
-                                        <h6 class="fw-bold">{{ $gallery->title }}</h6>
-                                        @if($gallery->description)
-                                            <p class="text-muted small">{{ Str::limit($gallery->description, 100) }}</p>
-                                        @endif
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar me-1"></i>{{ $gallery->created_at->format('d F Y') }}
-                                        </small>
-                                    </div>
+                                </div>
+                                <div class="card-body text-center mt-2">
+                                    <h6 class="fw-bold">{{ $gallery->title }}</h6>
+                                    @if($gallery->description)
+                                        <p class="text-muted small">{{ Str::limit($gallery->description, 100) }}</p>
+                                    @endif
+                                    <small class="text-muted">
+                                        <i class="fas fa-calendar me-1"></i>{{ $gallery->created_at->format('d F Y') }}
+                                    </small>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
-                    <!-- Pagination -->
+                    <!-- Jika overflow, tambahkan scroll -->
                     <div class="d-flex justify-content-center mt-5">
                         {{ $galleries->links() }}
                     </div>
@@ -214,6 +211,93 @@
             .card-img-container {
                 height: 200px;
             }
+        }
+
+        .gallery-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scroll-behavior: smooth;
+        }
+
+        /* Card gallery tetap sama ukuran */
+        .gallery-card {
+            width: 280px;
+            flex: 0 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.35s ease;
+            cursor: pointer;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 1.5rem 2rem rgba(0, 0, 0, 0.1);
+        }
+
+        /* Container gambar */
+        .card-img-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Menyesuaikan gambar dalam card */
+            transition: transform 0.35s ease;
+        }
+
+        .gallery-card:hover .gallery-image {
+            transform: scale(1.07);
+        }
+
+        /* Overlay */
+        .gallery-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            opacity: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.35s ease;
+            color: white;
+        }
+
+        .gallery-card:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay-content {
+            text-align: center;
+            transform: translateY(10px);
+            transition: transform 0.35s ease;
+        }
+
+        .gallery-card:hover .gallery-overlay-content {
+            transform: translateY(0);
+        }
+
+        /* Scroll bar custom */
+        .gallery-wrapper::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .gallery-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 100, 0.4);
+            border-radius: 4px;
+        }
+
+        .gallery-wrapper::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
         }
     </style>
 @endpush

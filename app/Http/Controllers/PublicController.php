@@ -50,10 +50,12 @@ class PublicController extends Controller
 
     public function gallery()
     {
+        $school = SchoolProfile::first();
         $galleries = Gallery::where('is_public', true)
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('public.gallery', compact('galleries'));
+        return view('public.gallery', compact('galleries', 'school'));
     }
 
     public function contact()

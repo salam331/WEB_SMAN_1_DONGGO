@@ -317,6 +317,12 @@
                                         <i class="fas fa-bullhorn"></i> Pengumuman
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{{ route('admin.galleries.index') }}"
+                                        class="{{ request()->routeIs('admin.galleries*') ? 'active' : '' }}">
+                                        <i class="fas fa-images"></i> Galeri
+                                    </a>
+                                </li>
 
                             </ul>
                         @endif

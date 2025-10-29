@@ -1,16 +1,49 @@
-# TODO: Tambah Fitur Ringkasan Kehadiran untuk Admin
+# TODO: Implementasi Fitur Gallery Admin
 
-## Langkah 1: Tambah Method di AdminController
-- [x] Tambah method `attendanceSummary` di AdminController untuk menampilkan ringkasan kehadiran per siswa per mata pelajaran.
+## Status: Selesai
 
-## Langkah 2: Buat View untuk Ringkasan Kehadiran
-- [x] Buat file view `resources/views/admin/attendances/summary.blade.php` untuk menampilkan ringkasan kehadiran.
+### 1. Update Model Gallery
+- [x] Tambahkan field `description` ke model Gallery jika belum ada
+- [x] Pastikan field `image` sudah ada untuk menyimpan path gambar
 
-## Langkah 3: Tambah Route
-- [x] Tambah route untuk `attendanceSummary` di `routes/web.php`.
+### 2. Buat Controller Gallery untuk Admin
+- [x] Buat `GalleryController.php` di `app/Http/Controllers/Admin/`
+- [x] Implementasikan method: index, create, store, show, edit, update, destroy
+- [x] Tambahkan validasi untuk upload gambar
+- [x] Implementasikan permission check untuk admin
 
-## Langkah 4: Update Menu Navigasi
-- [x] Tambah link ke ringkasan kehadiran di menu admin (kemungkinan di sidebar atau header).
+### 3. Buat Routes untuk Gallery Admin
+- [x] Tambahkan routes di `routes/web.php` dalam group admin
+- [x] Routes: index, create, store, show, edit, update, destroy
 
-## Langkah 5: Test Fitur
-- [x] Test fitur ringkasan kehadiran untuk memastikan data ditampilkan dengan benar.
+### 4. Buat Views untuk Gallery Admin
+- [x] Buat folder `resources/views/admin/galleries/`
+- [x] Buat view `index.blade.php` - daftar gallery dengan tombol CRUD
+- [x] Buat view `create.blade.php` - form tambah gallery
+- [x] Buat view `edit.blade.php` - form edit gallery
+- [x] Buat view `show.blade.php` - detail gallery
+
+### 5. Update Tampilan Public Gallery
+- [x] Modifikasi `resources/views/public/gallery.blade.php`
+- [x] Ubah grid layout menjadi card-based dengan positioning:
+  - 1 gambar: center
+  - 2 gambar: left-right
+  - 3 gambar: 1 center, 2 di samping
+- [x] Pertahankan tampilan hero dan modal
+
+### 6. Update Database Migration (jika perlu)
+- [x] Periksa apakah perlu menambah field `description` atau `image`
+- [x] Jalankan migration jika ada perubahan
+
+### 7. Testing dan Verifikasi
+- [ ] Test upload gambar
+- [ ] Test CRUD operations
+- [ ] Test tampilan public gallery
+- [ ] Verifikasi permission admin
+
+### 8. Update Sidebar Admin
+- [x] Tambahkan menu "Galeri" di sidebar admin
+
+### 9. Update Public Controller
+- [x] Update method gallery() untuk mengirim data school profile ke view
+- [x] Tambahkan orderBy untuk menampilkan gallery terbaru terlebih dahulu

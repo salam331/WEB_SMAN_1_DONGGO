@@ -126,6 +126,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/invoices/export', [AdminController::class, 'exportInvoices'])->name('invoices.export');
         Route::get('/invoices/report', [AdminController::class, 'invoiceReport'])->name('invoices.report');
 
+        // Gallery Management
+        Route::resource('/galleries', \App\Http\Controllers\Admin\GalleryController::class)->names('galleries');
+
         // School Profile Management
         Route::resource('/school-profiles', \App\Http\Controllers\Admin\SchoolProfileController::class)->names('school-profiles');
 

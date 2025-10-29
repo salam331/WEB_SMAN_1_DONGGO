@@ -11,7 +11,8 @@ class Gallery extends Model
 
     protected $fillable = [
         'title',
-        'path',
+        'description',
+        'image',
         'category',
         'is_public',
     ];
