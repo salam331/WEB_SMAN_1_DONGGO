@@ -104,10 +104,10 @@
                                                         @endif
                                                     </p>
                                                     <p class="text-muted">{{ Str::limit($a->content, 120) }}</p>
-                                                    <a href="{{ route('public.announcements') }}"
-                                                        class="btn btn-sm btn-outline-primary rounded-pill">
+                                                    <button class="btn btn-sm btn-outline-primary rounded-pill"
+                                                        data-id="{{ $a->id }}" onclick="showAnnouncementDetail(this)">
                                                         Baca Selengkapnya
-                                                    </a>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,6 +118,32 @@
                     </div>
                 </div>
             </section>
+
+            <!-- 📢 Modal Detail Pengumuman -->
+            <div class="modal fade" id="announcementModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content border-0 rounded-4 shadow-lg animate__animated animate__fadeInUp">
+                        <div class="modal-header bg-primary text-white border-0">
+                            <h5 class="modal-title fw-bold">
+                                <i class="fas fa-bullhorn me-2"></i> Detail Pengumuman
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h4 id="announcementTitle" class="fw-bold text-primary mb-2"></h4>
+                            <p class="text-muted small mb-3" id="announcementMeta"></p>
+                            <hr>
+                            <div id="announcementContent" class="text-secondary" style="line-height: 1.8;"></div>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button class="btn btn-outline-primary rounded-pill px-4" data-bs-dismiss="modal">
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         @endif
 
         <!-- 📞 CONTACT INFO -->
@@ -148,47 +174,47 @@
 @endsection
 
 {{-- @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const header = document.querySelector('nav.navbar');
-            const sections = document.querySelectorAll('section');
-            if (!header || sections.length === 0) return;
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.querySelector('nav.navbar');
+        const sections = document.querySelectorAll('section');
+        if (!header || sections.length === 0) return;
 
-            let isScrolling;
-            const headerHeight = header.offsetHeight;
+        let isScrolling;
+        const headerHeight = header.offsetHeight;
 
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const fadeStart = headerHeight + 10;
-                const fadeEnd = headerHeight + 800;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const fadeStart = headerHeight + 10;
+            const fadeEnd = headerHeight + 800;
 
-                // Efek aktif saat scroll
-                sections.forEach(sec => {
-                    const rect = sec.getBoundingClientRect();
-                    const offsetTop = rect.top + window.scrollY;
-                    const distance = scrollTop - offsetTop + window.innerHeight / 3;
-                    let fadeAmount = (distance - fadeStart) / (fadeEnd - fadeStart);
-                    fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
+            // Efek aktif saat scroll
+            sections.forEach(sec => {
+                const rect = sec.getBoundingClientRect();
+                const offsetTop = rect.top + window.scrollY;
+                const distance = scrollTop - offsetTop + window.innerHeight / 3;
+                let fadeAmount = (distance - fadeStart) / (fadeEnd - fadeStart);
+                fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
 
-                    // Efek blur & pudar
-                    sec.style.opacity = 1 - fadeAmount * 1.2;
-                    sec.style.filter = `blur(${fadeAmount * 10}px)`;
-                    sec.style.transform = `translateY(${fadeAmount * 10}px)`;
-                });
-
-                // Deteksi saat scroll berhenti → tampilkan kembali semua section
-                clearTimeout(isScrolling);
-                isScrolling = setTimeout(() => {
-                    sections.forEach(sec => {
-                        sec.style.transition = 'opacity 0.4s ease-out, filter 0.4s ease-out, transform 0.4s ease-out';
-                        sec.style.opacity = 1;
-                        sec.style.filter = 'blur(0)';
-                        sec.style.transform = 'translateY(0)';
-                    });
-                }, 100); // 100ms setelah berhenti scroll
+                // Efek blur & pudar
+                sec.style.opacity = 1 - fadeAmount * 1.2;
+                sec.style.filter = `blur(${fadeAmount * 10}px)`;
+                sec.style.transform = `translateY(${fadeAmount * 10}px)`;
             });
+
+            // Deteksi saat scroll berhenti → tampilkan kembali semua section
+            clearTimeout(isScrolling);
+            isScrolling = setTimeout(() => {
+                sections.forEach(sec => {
+                    sec.style.transition = 'opacity 0.4s ease-out, filter 0.4s ease-out, transform 0.4s ease-out';
+                    sec.style.opacity = 1;
+                    sec.style.filter = 'blur(0)';
+                    sec.style.transform = 'translateY(0)';
+                });
+            }, 100); // 100ms setelah berhenti scroll
         });
-    </script>
+    });
+</script>
 @endpush --}}
 
 @push('styles')
@@ -229,29 +255,62 @@
 
 
 {{-- @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const header = document.querySelector('nav.navbar');
-            const hero = document.querySelector('.hero-section');
-            if (!header || !hero) return;
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.querySelector('nav.navbar');
+        const hero = document.querySelector('.hero-section');
+        if (!header || !hero) return;
 
-            const headerHeight = header.offsetHeight;
+        const headerHeight = header.offsetHeight;
 
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const fadeStart = headerHeight;       // mulai pudar tepat setelah header
-                const fadeEnd = headerHeight + 200;   // jarak pendek = pudar cepat
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const fadeStart = headerHeight;       // mulai pudar tepat setelah header
+            const fadeEnd = headerHeight + 200;   // jarak pendek = pudar cepat
 
-                let fadeAmount = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
-                fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
+            let fadeAmount = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+            fadeAmount = Math.min(Math.max(fadeAmount, 0), 1);
 
-                hero.style.opacity = 1 - fadeAmount * 1.5;
-                hero.style.filter = `blur(${fadeAmount * 10}px)`;
-                hero.style.transform = `scale(${1 - fadeAmount * 0.05}) translateY(-${fadeAmount * 20}px)`;
-            });
+            hero.style.opacity = 1 - fadeAmount * 1.5;
+            hero.style.filter = `blur(${fadeAmount * 10}px)`;
+            hero.style.transform = `scale(${1 - fadeAmount * 0.05}) translateY(-${fadeAmount * 20}px)`;
         });
-    </script>
+    });
+</script>
 @endpush --}}
+
+@push('scripts')
+    <script>
+        function showAnnouncementDetail(button) {
+            const id = button.getAttribute('data-id');
+            const modal = new bootstrap.Modal(document.getElementById('announcementModal'));
+            const titleEl = document.getElementById('announcementTitle');
+            const contentEl = document.getElementById('announcementContent');
+            const metaEl = document.getElementById('announcementMeta');
+
+            // Reset modal content sementara
+            titleEl.innerHTML = '<span class="text-muted">Memuat...</span>';
+            contentEl.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
+            metaEl.textContent = '';
+
+            modal.show();
+
+            // Ambil data lewat AJAX
+            fetch(`/announcement/detail/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    titleEl.textContent = data.title;
+                    metaEl.textContent = `${data.date} • ${data.author}`;
+                    contentEl.innerHTML = data.content;
+                })
+                .catch(err => {
+                    console.error(err);
+                    contentEl.innerHTML = '<p class="text-danger">Gagal memuat detail pengumuman.</p>';
+                });
+        }
+    </script>
+@endpush
+
 
 @push('styles')
     <style>
@@ -261,6 +320,22 @@
             transform: translateY(0) scale(1);
             transition: opacity 0.3s ease-out, filter 0.3s ease-out, transform 0.3s ease-out;
             will-change: opacity, filter, transform;
+        }
+
+        .modal-content {
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     </style>
 @endpush

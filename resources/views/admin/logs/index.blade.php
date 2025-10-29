@@ -20,7 +20,7 @@
                     <button onclick="exportLogs('csv')" class="btn btn-danger rounded-pill shadow-sm">
                         <i class="fas fa-file-csv me-2"></i> CSV
                     </button>
-                    <a href="{{ route('admin.dashboard') }}" class="btn btn-light text-primary rounded-pill shadow-sm">
+                    <a href="{{ route('admin.logs.dashboard') }}" class="btn btn-light text-primary rounded-pill shadow-sm">
                         <i class="fas fa-arrow-left me-2"></i> Kembali
                     </a>
                 </div>

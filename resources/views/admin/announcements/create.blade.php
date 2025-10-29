@@ -52,6 +52,18 @@
                             placeholder="Tulis isi pengumuman" required>{{ old('content') }}</textarea>
                     </div>
 
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="is_public" value="1" id="is_public" {{ old('is_public') ? 'checked' : '' }}>
+                            <label class="form-check-label fw-semibold text-secondary" for="is_public">
+                                <i class="fas fa-globe me-1 text-primary"></i> Publikasikan ke halaman publik
+                            </label>
+                            <small class="form-text text-muted d-block">
+                                Centang jika pengumuman ini akan ditampilkan di halaman pengumuman publik
+                            </small>
+                        </div>
+                    </div>
+
                     <!-- Tombol Aksi -->
                     <div class="d-flex justify-content-end gap-3 mt-4">
                         <a href="{{ route('admin.announcements') }}"

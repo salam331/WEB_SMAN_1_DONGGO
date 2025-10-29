@@ -18,6 +18,9 @@ Route::get('/about', [PublicController::class, 'about'])->name('about');
 Route::get('/announcements', [PublicController::class, 'announcements'])->name('public.announcements');
 Route::get('/gallery', [PublicController::class, 'gallery'])->name('public.gallery');
 Route::get('/contact', [PublicController::class, 'contact'])->name('contact');
+// Route::get('/announcement/{id}', [PublicController::class, 'showAnnouncement'])->name('public.announcement.show');
+Route::get('/announcement/detail/{id}', [PublicController::class, 'getAnnouncementDetail'])
+    ->name('public.announcement.detail');
 
 // Authentication Routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -133,6 +136,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/school-profiles', \App\Http\Controllers\Admin\SchoolProfileController::class)->names('school-profiles');
 
         // Logs
+        Route::get('/logs', [AdminController::class, 'logs'])->name('logs');
         Route::get('/logs/dashboard', [LogController::class, 'dashboard'])->name('logs.dashboard');
         Route::resource('/logs', LogController::class)->names('logs');
     });

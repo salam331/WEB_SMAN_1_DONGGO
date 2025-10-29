@@ -437,12 +437,14 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'is_public' => 'nullable|boolean',
         ]);
 
         Announcement::create([
             'title' => $request->title,
             'content' => $request->content,
             'posted_by' => auth()->id(),
+            'is_public' => $request->is_public ?? false,
         ]);
 
         return redirect()->route('admin.announcements')->with('success', 'Pengumuman berhasil ditambahkan.');
@@ -458,11 +460,13 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
+            'is_public' => 'nullable|boolean',
         ]);
 
         $announcement->update([
             'title' => $request->title,
             'content' => $request->content,
+            'is_public' => $request->is_public ?? false,
         ]);
 
         return redirect()->route('admin.announcements')->with('success', 'Pengumuman berhasil diperbarui.');
@@ -868,6 +872,13 @@ class AdminController extends Controller
         ));
 
         return $pdf->download('laporan_tagihan_' . now()->format('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    // Logs Management
+    public function logs()
+    {
+        $logs = Log::with('user')->paginate(20);
+        return view('admin.logs.index', compact('logs'));
     }
 
 

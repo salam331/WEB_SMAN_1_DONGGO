@@ -63,4 +63,26 @@ class PublicController extends Controller
         $school = SchoolProfile::first();
         return view('public.contact', compact('school'));
     }
+
+    public function showAnnouncement($id)
+    {
+        $announcement = Announcement::with('postedBy')->findOrFail($id);
+
+        return view('public.announcement-detail', compact('announcement'));
+    }
+
+    public function getAnnouncementDetail($id)
+    {
+        $announcement = Announcement::with('postedBy')->findOrFail($id);
+
+        return response()->json([
+            'id' => $announcement->id,
+            'title' => $announcement->title,
+            'content' => nl2br(e($announcement->content)),
+            'date' => $announcement->created_at->format('d M Y'),
+            'author' => $announcement->postedBy->name ?? 'Admin',
+        ]);
+    }
+
+
 }
