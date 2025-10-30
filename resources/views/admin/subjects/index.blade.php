@@ -20,8 +20,8 @@
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Filter & Search -->
                 <form action="{{ route('admin.subjects.index') }}" method="get"
-                    class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div class="input-group w-50 shadow-sm">
+                    class="mb-4 d-flex flex-wrap justify-content-end align-items-center gap-3">
+                    <div class="input-group w-50">
                         <input type="text" name="search" value="{{ request('search') }}"
                             class="form-control border-0 rounded-start-pill"
                             placeholder="Cari kode atau nama mata pelajaran...">

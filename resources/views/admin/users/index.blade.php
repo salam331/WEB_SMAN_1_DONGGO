@@ -15,6 +15,31 @@
                 </a>
             </div>
 
+            {{-- Form pencarian
+            <form action="{{ route('admin.users') }}" method="get"
+                class="mb-4 d-flex justify-content-end align-items-center flex-wrap gap-2">
+
+                <div class="w-auto">
+                    <select name="roles" class="form-select border-2 shadow-sm rounded-pill px-3 py-2">
+                        <option value="">Semua Roles</option>
+                        @foreach($roles as $role)
+                            <option value="{{ $role }}" {{ request('roles') == $role ? 'selected' : '' }}>
+                                {{ ucfirst($role) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="input-group w-auto">
+                    <input type="text" name="search" value="{{ request('search') }}"
+                        class="form-control border-0 shadow-sm rounded-start-pill px-3 py-2"
+                        placeholder="Cari nama atau email pengguna...">
+                    <button type="submit" class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
+                        <i class="fas fa-search me-1"></i> Cari
+                    </button>
+                </div>
+            </form> --}}
+
             <div class="card-body bg-light bg-gradient p-4">
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered align-middle shadow-sm rounded-3 overflow-hidden"
@@ -130,51 +155,50 @@
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             transform: translateY(-2px);
         }
-        
     </style>
     <style>
         .table-bordered th,
-    .table-bordered td {
-        border-color: #dee2e6 !important;
-    }
+        .table-bordered td {
+            border-color: #dee2e6 !important;
+        }
 
-    .table thead th {
-        border-color: rgba(255, 255, 255, 0.2) !important;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
+        .table thead th {
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
 
-    .table-hover tbody tr:hover {
-        background-color: #f0f7ff !important;
-        transition: all 0.25s ease-in-out;
-    }
+        .table-hover tbody tr:hover {
+            background-color: #f0f7ff !important;
+            transition: all 0.25s ease-in-out;
+        }
 
-    .badge {
-        font-size: 0.85rem;
-    }
+        .badge {
+            font-size: 0.85rem;
+        }
 
-    .btn-outline-primary:hover {
-        background: linear-gradient(135deg, #0062cc, #007bff) !important;
-        color: #fff !important;
-        transform: translateY(-2px);
-        transition: all 0.2s ease;
-    }
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #0062cc, #007bff) !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
 
-    .btn-outline-danger:hover {
-        background: linear-gradient(135deg, #dc3545, #ff4d6d) !important;
-        color: #fff !important;
-        transform: translateY(-2px);
-        transition: all 0.2s ease;
-    }
+        .btn-outline-danger:hover {
+            background: linear-gradient(135deg, #dc3545, #ff4d6d) !important;
+            color: #fff !important;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
 
-    .card {
-        transition: box-shadow 0.3s ease, transform 0.2s ease;
-    }
+        .card {
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+        }
 
-    .card:hover {
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-        transform: translateY(-2px);
-    }
+        .card:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
     </style>
 @endsection

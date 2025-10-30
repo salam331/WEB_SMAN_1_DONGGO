@@ -20,18 +20,9 @@
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Filter & Search -->
                 <form action="{{ route('admin.materials.index') }}" method="get"
-                    class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div class="input-group w-50 shadow-sm">
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            class="form-control border-0 rounded-start-pill"
-                            placeholder="Cari judul atau deskripsi materi...">
-                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
-                            <i class="fas fa-search me-1"></i> Cari
-                        </button>
-                    </div>
-
+                    class="mb-4 d-flex flex-wrap justify-content-end gap-3">
                     <div class="d-flex gap-2">
-                        <select name="subject_id" class="form-select rounded-pill shadow-sm" style="width: auto;">
+                        <select name="subject_id" class="form-select rounded-pill shadow-sm" style="width: 40%;">
                             <option value="">Semua Mata Pelajaran</option>
                             @foreach($subjects as $subject)
                                 <option value="{{ $subject->id }}" 
@@ -51,9 +42,19 @@
                             @endforeach
                         </select>
 
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
+                        {{-- <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm">
                             <i class="fas fa-filter me-1"></i> Filter
+                        </button> --}}
+                        <div class="input-group w-100">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="form-control border-0 shadow-sm rounded-start-pill"
+                            placeholder="Cari judul atau deskripsi materi...">
+                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
+                            <i class="fas fa-search me-1"></i> Cari
                         </button>
+                    </div>  
+
+
                     </div>
                 </form>
 

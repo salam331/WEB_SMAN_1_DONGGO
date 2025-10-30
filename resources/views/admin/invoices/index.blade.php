@@ -28,7 +28,7 @@
         <div class="card-body bg-light bg-gradient p-4">
 
             <!-- Filter Form -->
-            <form method="GET" class="mb-4 d-flex flex-wrap gap-3 align-items-end">
+            <form method="GET" class="mb-4 d-flex flex-wrap gap-3 align-items-end justify-content-end">
                 <div class="w-auto">
                     <label class="form-label fw-semibold text-secondary">Kelas</label>
                     <select name="class_id" class="form-select shadow-sm rounded-pill border-0">

@@ -1,34 +1,18 @@
-# TODO List
+# TODO: Ubah Tampilan Notifikasi Admin
 
-## Fitur yang Sudah Diimplementasi
-- [x] Sistem manajemen siswa, guru, dan orang tua
-- [x] Manajemen kelas dan mata pelajaran
-- [x] Sistem jadwal pelajaran
-- [x] Manajemen pengumuman
-- [x] Sistem absensi
-- [x] Manajemen materi pembelajaran
-- [x] Sistem ujian dan nilai
-- [x] Manajemen tagihan/invoice
-- [x] Sistem galeri
-- [x] Profil sekolah
-- [x] Sistem log aktivitas
-- [x] Sistem pesan antar pengguna (guru, siswa, orang tua)
-- [x] Sistem pesan kontak dari halaman publik
+## Tugas Utama
+- [x] Ubah tampilan notifikasi di halaman admin menjadi toast notification yang muncul di kanan atas (dekat logout) dan otomatis hilang setelah 1 detik.
 
-## Fitur yang Sedang Dikerjakan
-- [ ] Sistem notifikasi real-time
+## Langkah-langkah
+1. [x] Analisis struktur notifikasi saat ini di `resources/views/layouts/app.blade.php`.
+2. [x] Hapus alert lama (success dan error) dari layout.
+3. [x] Tambahkan container toast notification dengan posisi fixed di kanan atas.
+4. [x] Tambahkan CSS untuk styling toast (hijau untuk success, merah untuk error, animasi fade-in/out).
+5. [x] Tambahkan JavaScript untuk menampilkan toast berdasarkan session dan auto-hide setelah 1 detik.
+6. [x] Tambahkan komentar pada setiap baris kode untuk memudahkan penyesuaian (dalam Bahasa Indonesia).
+7. [x] Test notifikasi di beberapa halaman admin (create/edit data) untuk memastikan berfungsi.
 
-## Fitur yang Perlu Ditambahkan
-- [ ] Dashboard analytics dengan chart
-- [ ] Export data ke PDF/Excel
-- [ ] Backup database otomatis
-- [ ] Sistem voting/polling untuk siswa
-- [ ] Integrasi dengan Google Calendar
-- [ ] Sistem reminder untuk tugas
-- [ ] API untuk mobile app
-- [ ] Sistem chat real-time
-- [ ] Manajemen perpustakaan
-- [ ] Sistem kesehatan siswa
-- [ ] Manajemen ekstrakurikuler
-- [ ] Sistem rapor digital
-- [ ] Integrasi dengan payment gateway
+## Catatan
+- Pastikan tidak menghapus data di database.
+- Gunakan Bahasa Indonesia untuk komentar.
+- Notifikasi harus otomatis hilang setelah 1 detik.

@@ -19,7 +19,17 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Form Pencarian -->
-                <form method="GET" class="mb-4 d-flex justify-content-end">
+                <form method="GET" class="mb-4 d-flex justify-content-end gap-2">
+                    <div class="w-auto">
+                        <select name="class_id" class="form-select border-2 border-2 shadow-sm rounded-pill">
+                            <option value="">Semua Kelas</option>
+                            @foreach($classes as $class)
+                                <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
+                                    {{ $class->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="input-group w-50">
                         <input type="text" name="search" value="{{ request('search') }}"
                             class="form-control border-0 shadow-sm rounded-start-pill"

@@ -20,16 +20,9 @@
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Filter & Search -->
                 <form action="{{ route('admin.classes') }}" method="get"
-                    class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div class="input-group w-50 shadow-sm">
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            class="form-control border-0 rounded-start-pill" placeholder="Cari kelas atau wali kelas...">
-                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
-                            <i class="fas fa-search me-1"></i> Cari
-                        </button>
-                    </div>
+                    class="mb-4 d-flex justify-content-end gap-2">
                     <div class="w-auto">
-                        <select name="level" class="form-select border-0 shadow-sm rounded-pill">
+                        <select name="level" class="form-select border-2 border-2 shadow-sm rounded-pill">
                             <option value="">Semua Level</option>
                             @foreach($levels as $level)
                                 <option value="{{ $level }}" {{ request('level') == $level ? 'selected' : '' }}>
@@ -37,6 +30,13 @@
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="input-group w-50">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="form-control border-0 shadow-sm rounded-start-pill" placeholder="Cari kelas atau wali kelas...">
+                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
+                            <i class="fas fa-search me-1"></i> Cari
+                        </button>
                     </div>
                 </form>
 

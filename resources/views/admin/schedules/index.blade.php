@@ -22,16 +22,7 @@
 
                 <!-- Filter & Search -->
                 <form action="{{ route('admin.schedules.index') }}" method="get"
-                    class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
-                    <div class="input-group w-50 shadow-sm">
-                        <input type="text" name="search" value="{{ request('search') }}"
-                            class="form-control border-0 rounded-start-pill"
-                            placeholder="Cari mata pelajaran, guru, atau kelas...">
-                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
-                            <i class="fas fa-search me-1"></i> Cari
-                        </button>
-                    </div>
-
+                    class="mb-4 d-flex flex-wrap justify-content-end align-items-center gap-3">
                     <div class="w-25">
                         <select name="day" class="form-select shadow-sm rounded-pill border-0">
                             <option value="">Semua Hari</option>
@@ -39,6 +30,14 @@
                                 <option value="{{ $key }}" {{ request('day') == $key ? 'selected' : '' }}>{{ $dayName }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="input-group w-50">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            class="form-control border-0 rounded-start-pill"
+                            placeholder="Cari mata pelajaran, guru, atau kelas...">
+                        <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
+                            <i class="fas fa-search me-1"></i> Cari
+                        </button>
                     </div>
                 </form>
 
