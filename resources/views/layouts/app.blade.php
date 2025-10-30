@@ -288,7 +288,12 @@
                                         <i class="fas fa-history"></i> Dashboard Aktifitas
                                     </a>
                                 </li>
-                                {{-- tambahkan link yang menuju ke dasboard publikasi di sini --}}
+                                <li>
+                                    <a href="{{ route('admin.public.dashboard') }}"
+                                        class="{{ request()->routeIs('admin.public.dashboard') ? 'active' : '' }}">
+                                        <i class="fas fa-globe"></i> Dashboard Publik
+                                    </a>
+                                </li>
 
                                 {{-- ===== DATA PENGGUNA ===== --}}
                                 <li class="menu-header">Manajemen Data</li>
@@ -308,6 +313,12 @@
                                     <a href="{{ route('admin.students') }}"
                                         class="{{ request()->routeIs('admin.students*') ? 'active' : '' }}">
                                         <i class="fas fa-user-graduate"></i> Data Siswa
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('admin.parents.index') }}"
+                                        class="{{ request()->routeIs('admin.parents*') ? 'active' : '' }}">
+                                        <i class="fas fa-user-friends"></i> Data Orang Tua
                                     </a>
                                 </li>
                                 <li>

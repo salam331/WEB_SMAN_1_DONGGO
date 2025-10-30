@@ -50,7 +50,9 @@ Route::middleware(['auth'])->group(function () {
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        //tambahan route dashboard publikasi
+        Route::get('/public-dashboard', function () {
+            return redirect()->route('home');
+        })->name('public.dashboard');
 
         // User Management
         Route::get('/users', [AdminController::class, 'users'])->name('users');
@@ -136,6 +138,9 @@ Route::middleware(['auth'])->group(function () {
 
         // School Profile Management
         Route::resource('/school-profiles', \App\Http\Controllers\Admin\SchoolProfileController::class)->names('school-profiles');
+
+        // Parent Management
+        Route::resource('/parents', \App\Http\Controllers\Admin\ParentController::class)->names('parents');
 
         // Contact Messages Management
         Route::resource('/contact-messages', \App\Http\Controllers\Admin\ContactMessageController::class)->names('contact-messages');
