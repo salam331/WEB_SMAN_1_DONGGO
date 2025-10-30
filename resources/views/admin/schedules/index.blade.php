@@ -42,7 +42,7 @@
                 </form>
 
                 <!-- Alerts -->
-                @foreach (['success', 'error'] as $msg)
+                {{-- @foreach (['success', 'error'] as $msg)
                     @if(session($msg))
                         <div class="alert alert-{{ $msg == 'success' ? 'success' : 'danger' }} alert-dismissible fade show rounded-pill shadow-sm"
                             role="alert">
@@ -51,7 +51,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     @endif
-                @endforeach
+                @endforeach --}}
 
                 <!-- Badge colors -->
                 @php

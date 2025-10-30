@@ -19,7 +19,7 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Error Alerts -->
-                @if($errors->any())
+                {{-- @if($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i> Terdapat kesalahan dalam input:
                         <ul class="mt-2 mb-0 ps-3">
@@ -29,7 +29,7 @@
                         </ul>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Form -->
                 <form action="{{ route('admin.materials.update', $material) }}" method="POST" enctype="multipart/form-data" class="p-2">

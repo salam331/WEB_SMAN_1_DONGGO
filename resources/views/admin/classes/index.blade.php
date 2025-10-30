@@ -40,7 +40,7 @@
                     </div>
                 </form>
 
-                <!-- Alerts -->
+                {{-- <!-- Alerts -->
                 @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show rounded-pill shadow-sm" role="alert">
                         <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
@@ -53,7 +53,7 @@
                         <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Table -->
                 <div class="table-responsive">

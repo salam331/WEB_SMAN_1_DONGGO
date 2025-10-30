@@ -18,7 +18,7 @@
 
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Pesan Error -->
-                @if ($errors->any())
+                {{-- @if ($errors->any())
                     <div class="alert alert-danger border-0 rounded-3 shadow-sm">
                         <h6 class="fw-semibold mb-2">
                             <i class="fas fa-exclamation-triangle me-1"></i> Terdapat {{ $errors->count() }} kesalahan:
@@ -29,13 +29,13 @@
                             @endforeach
                         </ul>
                     </div>
-                @endif
+                @endif --}}
 
-                @if (session('error'))
+                {{-- @if (session('error'))
                     <div class="alert alert-danger border-0 rounded-3 shadow-sm">
                         <i class="fas fa-times-circle me-1"></i> {{ session('error') }}
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Form -->
                 <form action="{{ route('admin.classes.store') }}" method="POST" class="needs-validation" novalidate>

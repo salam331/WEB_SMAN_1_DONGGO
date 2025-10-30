@@ -18,12 +18,12 @@
 
                     <div class="card-body bg-light p-4 rounded-bottom-4">
                         {{-- Alert Sukses --}}
-                        @if(session('success'))
+                        {{-- @if(session('success'))
                             <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
                                 <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                             </div>
-                        @endif
+                        @endif --}}
 
                         {{-- Tabel Galeri --}}
                         <div class="table-responsive shadow-sm rounded-3">

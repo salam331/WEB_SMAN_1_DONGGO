@@ -18,13 +18,13 @@
         <!-- Body -->
         <div class="card-body bg-light bg-gradient p-4">
             <!-- Alert Error -->
-            @if(session('error'))
+            {{-- @if(session('error'))
                 <div class="alert alert-danger border-0 shadow-sm rounded-3 mb-4">
                     <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
                 </div>
-            @endif
+            @endif --}}
 
-            @if($errors->any())
+            {{-- @if($errors->any())
                 <div class="alert alert-warning border-0 shadow-sm rounded-3 mb-4">
                     <h6 class="fw-semibold mb-2">
                         <i class="fas fa-triangle-exclamation me-2"></i>
@@ -36,7 +36,7 @@
                         @endforeach
                     </ul>
                 </div>
-            @endif
+            @endif --}}
 
             <!-- Form -->
             <form action="{{ route('admin.classes.update', $classRoom) }}" method="POST" class="p-3 bg-white shadow-sm rounded-3 border">

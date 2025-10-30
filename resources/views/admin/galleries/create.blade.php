@@ -21,7 +21,7 @@
 
                         <div class="card-body">
                             {{-- Alert Error --}}
-                            @if($errors->any())
+                            {{-- @if($errors->any())
                                 <div class="alert alert-danger border-0 shadow-sm rounded-3">
                                     <h6 class="fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Terjadi Kesalahan:</h6>
                                     <ul class="mb-0 ps-3">
@@ -30,7 +30,7 @@
                                         @endforeach
                                     </ul>
                                 </div>
-                            @endif
+                            @endif --}}
 
                             {{-- Judul Galeri --}}
                             <div class="mb-3">

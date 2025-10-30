@@ -19,7 +19,7 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Pesan Error -->
-                @if($errors->any())
+                {{-- @if($errors->any())
                     <div class="alert alert-danger border-0 rounded-3 shadow-sm">
                         <h6 class="fw-semibold mb-2">
                             <i class="fas fa-exclamation-triangle me-1"></i> Terdapat {{ $errors->count() }} kesalahan:
@@ -30,7 +30,7 @@
                             @endforeach
                         </ul>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Form Tambah Jadwal Pelajaran -->
                 <form action="{{ route('admin.schedules.store') }}" method="POST" class="needs-validation" novalidate>
