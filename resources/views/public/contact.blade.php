@@ -151,8 +151,17 @@
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
-                            <a href="https://wa.me/{{ str_replace(['(', ')', ' ', '-'], '', $school->phone ?? '6281234567890') }}"
-                                target="_blank" class="btn btn-outline-success btn-lg w-100">
+                            @php
+                                $rawPhone = $school->phone ?? '085339458990';
+                                // Hapus karakter non-angka
+                                $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+                                // Ubah 0 di awal jadi 62 (kode negara Indonesia)
+                                if (substr($cleanPhone, 0, 1) === '0') {
+                                    $cleanPhone = '62' . substr($cleanPhone, 1);
+                                }
+                            @endphp
+                            <a href="https://wa.me/{{ $cleanPhone }}" target="_blank"
+                                class="btn btn-outline-success btn-lg w-100">
                                 <i class="fab fa-whatsapp fa-2x mb-2"></i><br><small>WhatsApp</small>
                             </a>
                         </div>
@@ -164,7 +173,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+
     </div>
 
     <!-- ✅ SUCCESS MODAL -->
@@ -262,19 +271,19 @@
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    new bootstrap.Modal('#successModal').show();
-                    this.reset();
-                } else {
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        new bootstrap.Modal('#successModal').show();
+                        this.reset();
+                    } else {
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     alert('Terjadi kesalahan. Silakan coba lagi.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Terjadi kesalahan. Silakan coba lagi.');
-            });
+                });
         });
     </script>
 @endpush

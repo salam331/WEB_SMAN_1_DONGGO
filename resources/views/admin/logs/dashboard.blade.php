@@ -62,7 +62,7 @@
                     <!-- Card Header -->
                     <div class="card-header bg-gradient border-0 py-3"
                         style="background: linear-gradient(90deg, #fff7e6 0%, #fff 100%);">
-                        <h5 class="mb-0 fw-semibold text-dark">
+                        <h5 class="mb-0 fw-semibold text-primary text-center">
                             <i class="fas fa-tasks me-2"></i> Distribusi Aksi
                         </h5>
                     </div>
@@ -105,7 +105,7 @@
                     <!-- Card Header -->
                     <div class="card-header bg-gradient border-0 py-3"
                         style="background: linear-gradient(90deg, #e3f2fd 0%, #ffffff 100%);">
-                        <h5 class="mb-0 fw-semibold text-info">
+                        <h5 class="mb-0 fw-semibold text-info text-center">
                             <i class="fas fa-user-tag me-2"></i> Distribusi Role
                         </h5>
                     </div>
@@ -148,7 +148,7 @@
         <div class="card border-0 shadow-sm rounded-4 mb-4">
             <div class="card-header bg-gradient border-0 py-3"
                 style="background: linear-gradient(90deg, #fffde6 0%, #ffffff 100%);">
-                <h5 class="mb-0 fw-semibold text-success"><i class="fas fa-user-clock me-2"></i>Pengguna Paling Aktif</h5>
+                <h5 class="mb-0 fw-semibold text-success text-center"><i class="fas fa-user-clock me-2"></i>Pengguna Paling Aktif</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -201,12 +201,12 @@
 
         <!-- Quick Actions -->
         <div class="card border-0 shadow-sm rounded-4 mb-4">
-            <div class="card-header bg-gradient border-0 py-3"
+            <div class="card-header bg-gradient border-0 py-3 text-center"
                 style="background: linear-gradient(90deg, #fff7e6 0%, #fff 100%);">
                 <h5 class="mb-0 fw-semibold text-dark"><i class="fas fa-bolt me-2 text-warning"></i>Aksi Cepat</h5>
             </div>
             <div class="card-body">
-                <div class="d-flex flex-wrap gap-3">
+                <div class="d-flex flex-wrap gap-3 justify-content-center">
                     <a href="{{ route('admin.logs.index') }}" class="btn btn-primary">
                         <i class="fas fa-list me-2"></i>Lihat Semua Log
                     </a>
