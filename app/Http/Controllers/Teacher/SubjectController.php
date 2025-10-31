@@ -23,7 +23,7 @@ class SubjectController extends Controller
         $teacher = auth()->user()->teacher;
 
         $query = SubjectTeacher::with(['subject', 'classRoom'])
-            ->where('teacher_id', $teacher->id);
+            ->where('subject_teachers.teacher_id', $teacher->id);
 
         // Search functionality
         if ($request->search) {
@@ -34,7 +34,8 @@ class SubjectController extends Controller
             });
         }
 
-        $subjectTeachers = $query->orderBy('subject.code')
+        $subjectTeachers = $query->join('subjects', 'subject_teachers.subject_id', '=', 'subjects.id')
+                                 ->orderBy('subjects.code')
                                  ->paginate(20)
                                  ->withQueryString();
 
@@ -51,7 +52,7 @@ class SubjectController extends Controller
         // Check if teacher is assigned to this subject
         $subjectTeacher = SubjectTeacher::where('teacher_id', $teacher->id)
             ->where('subject_id', $subject->id)
-            ->with(['subject', 'classRoom', 'materials', 'exams'])
+            ->with(['subject', 'classRoom', 'subject.materials', 'subject.exams'])
             ->first();
 
         if (!$subjectTeacher) {

@@ -44,6 +44,9 @@
                                 <th style="width: auto">Judul</th>
                                 <th style="width: auto">Konten</th>
                                 <th style="width: auto">Status</th>
+                                <th style="width: auto">Terbit</th>
+                                <th style="width: auto">Target</th>
+                                <th style="width: auto">Lampiran</th>
                                 <th style="width: auto">Diposting Oleh</th>
                                 <th style="width: auto">Tanggal</th>
                                 <th style="width: auto">Aksi</th>
@@ -76,6 +79,43 @@
                                         @else
                                             <span class="badge bg-secondary text-white px-3 py-2 rounded-pill shadow-sm">
                                                 <i class="fas fa-lock me-1"></i> Privat
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <!-- Terbit -->
+                                    <td class="text-center border-end">
+                                        @if($announcement->is_published)
+                                            <span class="badge bg-success text-white px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-eye me-1"></i> Ya
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary text-white px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-eye-slash me-1"></i> Tidak
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <!-- Target Audience -->
+                                    <td class="text-center border-end">
+                                        @if($announcement->target_audience)
+                                            <span class="badge bg-info text-dark px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-users me-1"></i> {{ ucfirst($announcement->target_audience) }}
+                                            </span>
+                                        @else
+                                            <span class="badge bg-light text-secondary px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-users me-1"></i> -
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <!-- Lampiran -->
+                                    <td class="text-center border-end">
+                                        @if($announcement->attachment)
+                                            <a href="{{ Storage::url($announcement->attachment) }}" target="_blank"
+                                                class="badge bg-primary text-white px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-paperclip me-1"></i> Lihat
+                                            </a>
+                                        @else
+                                            <span class="badge bg-light text-secondary px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-paperclip me-1"></i> -
                                             </span>
                                         @endif
                                     </td>
@@ -113,7 +153,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
+                                    <td colspan="10" class="text-center py-4 text-muted">
                                         <i class="fas fa-info-circle me-2 text-primary"></i> Belum ada pengumuman.
                                     </td>
                                 </tr>

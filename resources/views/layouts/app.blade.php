@@ -112,65 +112,97 @@
 
         /* Notifikasi Toast - Container untuk toast notification */
         .toast-container {
-            position: fixed; /* Posisi tetap di layar */
-            top: 20px; /* Jarak dari atas layar */
-            right: 20px; /* Jarak dari kanan layar, dekat area logout */
-            z-index: 1060; /* Pastikan di atas elemen lain */
-            pointer-events: none; /* Tidak mengganggu klik di bawahnya */
+            position: fixed;
+            /* Posisi tetap di layar */
+            top: 20px;
+            /* Jarak dari atas layar */
+            right: 20px;
+            /* Jarak dari kanan layar, dekat area logout */
+            z-index: 1060;
+            /* Pastikan di atas elemen lain */
+            pointer-events: none;
+            /* Tidak mengganggu klik di bawahnya */
         }
 
         /* Styling untuk toast notification */
         .toast-notification {
-            background: #28a745; /* Warna hijau untuk success */
-            color: white; /* Teks putih */
-            padding: 12px 16px; /* Padding dalam toast */
-            border-radius: 8px; /* Sudut melengkung */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Bayangan untuk efek timbul */
-            margin-bottom: 10px; /* Jarak antar toast jika ada beberapa */
-            font-size: 14px; /* Ukuran font */
-            font-weight: 500; /* Ketebalan font */
-            opacity: 0; /* Mulai transparan */
-            transform: translateY(-20px); /* Mulai dari atas */
-            transition: all 0.3s ease; /* Animasi smooth */
-            pointer-events: auto; /* Izinkan klik pada toast */
-            max-width: 300px; /* Lebar maksimal */
-            word-wrap: break-word; /* Pecah kata panjang */
+            background: #28a745;
+            /* Warna hijau untuk success */
+            color: white;
+            /* Teks putih */
+            padding: 12px 16px;
+            /* Padding dalam toast */
+            border-radius: 8px;
+            /* Sudut melengkung */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* Bayangan untuk efek timbul */
+            margin-bottom: 10px;
+            /* Jarak antar toast jika ada beberapa */
+            font-size: 14px;
+            /* Ukuran font */
+            font-weight: 500;
+            /* Ketebalan font */
+            opacity: 0;
+            /* Mulai transparan */
+            transform: translateY(-20px);
+            /* Mulai dari atas */
+            transition: all 0.3s ease;
+            /* Animasi smooth */
+            pointer-events: auto;
+            /* Izinkan klik pada toast */
+            max-width: 300px;
+            /* Lebar maksimal */
+            word-wrap: break-word;
+            /* Pecah kata panjang */
         }
 
         /* Toast untuk error - warna merah */
         .toast-notification.error {
-            background: #dc3545; /* Warna merah untuk error */
+            background: #dc3545;
+            /* Warna merah untuk error */
         }
 
         /* Animasi muncul (fade-in dan slide-down) */
         .toast-notification.show {
-            opacity: 1; /* Tampilkan penuh */
-            transform: translateY(0); /* Geser ke posisi normal */
+            opacity: 1;
+            /* Tampilkan penuh */
+            transform: translateY(0);
+            /* Geser ke posisi normal */
         }
 
         /* Animasi hilang (fade-out dan slide-up) */
         .toast-notification.hide {
-            opacity: 0; /* Sembunyikan */
-            transform: translateY(-20px); /* Geser ke atas */
+            opacity: 0;
+            /* Sembunyikan */
+            transform: translateY(-20px);
+            /* Geser ke atas */
         }
 
         /* Icon di dalam toast */
         .toast-notification i {
-            margin-right: 8px; /* Jarak antara icon dan teks */
+            margin-right: 8px;
+            /* Jarak antara icon dan teks */
         }
 
         /* Tombol close jika diperlukan (opsional) */
         .toast-close {
-            float: right; /* Posisi di kanan */
-            font-size: 18px; /* Ukuran font */
-            line-height: 1; /* Tinggi baris */
-            color: rgba(255, 255, 255, 0.8); /* Warna putih transparan */
-            cursor: pointer; /* Kursor pointer */
-            margin-left: 10px; /* Jarak dari teks */
+            float: right;
+            /* Posisi di kanan */
+            font-size: 18px;
+            /* Ukuran font */
+            line-height: 1;
+            /* Tinggi baris */
+            color: rgba(255, 255, 255, 0.8);
+            /* Warna putih transparan */
+            cursor: pointer;
+            /* Kursor pointer */
+            margin-left: 10px;
+            /* Jarak dari teks */
         }
 
         .toast-close:hover {
-            color: white; /* Warna putih saat hover */
+            color: white;
+            /* Warna putih saat hover */
         }
 
         /* Logout Button */
@@ -397,7 +429,7 @@
                                     <a href="{{ route('admin.contact-messages.index') }}"
                                         class="{{ request()->routeIs('admin.contact-messages*') ? 'active' : '' }}">
                                         <i class="fas fa-envelope"></i> Pesan Kontak
-                                    </a>    
+                                    </a>
                                 </li>
 
                             </ul>
@@ -406,9 +438,69 @@
 
                         @if(auth()->user()->hasRole('guru'))
                             <li>
-                                <a href="{{ route('teacher.dashboard') }}"
-                                    class="{{ request()->routeIs('teacher.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('teachers.dashboard') }}"
+                                    class="{{ request()->routeIs('teachers.dashboard') ? 'active' : '' }}">
                                     <i class="fas fa-home"></i> Dashboard Guru
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.classes') }}"
+                                    class="{{ request()->routeIs('teachers.classes') ? 'active' : '' }}">
+                                    <i class="fas fa-school"></i> Kelas
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.attendances') }}"
+                                    class="{{ request()->routeIs('teachers.attendances*') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-check"></i> Absensi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.schedules') }}"
+                                    class="{{ request()->routeIs('teachers.schedules*') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-alt"></i> Jadwal Pelajaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.materials.index') }}"
+                                    class="{{ request()->routeIs('teachers.materials*') ? 'active' : '' }}">
+                                    <i class="fas fa-book-reader"></i> Materi Pembelajaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.subjects.index') }}"
+                                    class="{{ request()->routeIs('teachers.subjects*') ? 'active' : '' }}">
+                                    <i class="fas fa-book"></i> Mata Pelajaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.announcements') }}"
+                                    class="{{ request()->routeIs('teachers.announcements*') ? 'active' : '' }}">
+                                    <i class="fas fa-bullhorn"></i> Pengumuman
+                                </a>
+                            </li>
+                            {{-- <li>
+                                <a href="{{ route('teachers.messages') }}"
+                                    class="{{ request()->routeIs('teachers.messages*') ? 'active' : '' }}">
+                                    <i class="fas fa-envelope"></i> Pesan Kontak
+                                </a>
+                            </li> --}}
+                            <li>
+                                <a href="{{ route('teachers.notifications') }}"
+                                    class="{{ request()->routeIs('teachers.notifications*') ? 'active' : '' }}">
+                                    <i class="fas fa-bell"></i> Notifikasi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.grades') }}"
+                                    class="{{ request()->routeIs('teachers.grades*') ? 'active' : '' }}">
+                                    <i class="fas fa-graduation-cap"></i> Nilai
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('teachers.exams.index') }}"
+                                    class="{{ request()->routeIs('teachers.exams*') ? 'active' : '' }}">
+                                    <i class="fas fa-file-alt"></i> Ujian
                                 </a>
                             </li>
                         @endif

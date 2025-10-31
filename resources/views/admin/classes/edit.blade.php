@@ -81,6 +81,18 @@
                         <small class="text-muted">Kapasitas minimal harus sama dengan jumlah siswa saat ini</small>
                     </div>
 
+                    <!-- Ruangan -->
+                    <div class="col-md-6">
+                        <label for="room" class="form-label fw-semibold text-secondary">
+                            <i class="fas fa-door-closed me-1 text-primary"></i> Ruangan
+                        </label>
+                        <input type="text" name="room" id="room"
+                            value="{{ old('room', $classRoom->room) }}"
+                            placeholder="Contoh: Ruang 101"
+                            class="form-control border-0 shadow-sm rounded-3 p-2">
+                        <small class="text-muted">Nama ruangan atau lokasi kelas (opsional)</small>
+                    </div>
+
                     <!-- Wali Kelas -->
                     <div class="col-md-6">
                         <label for="homeroom_teacher_id" class="form-label fw-semibold text-secondary">

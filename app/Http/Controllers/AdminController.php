@@ -438,13 +438,24 @@ class AdminController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'is_public' => 'nullable|boolean',
+            'is_published' => 'nullable|boolean',
+            'target_audience' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
+
+        $attachmentPath = null;
+        if ($request->hasFile('attachment')) {
+            $attachmentPath = $request->file('attachment')->store('announcements', 'public');
+        }
 
         Announcement::create([
             'title' => $request->title,
             'content' => $request->content,
             'posted_by' => auth()->id(),
             'is_public' => $request->is_public ?? false,
+            'is_published' => $request->is_published ?? false,
+            'target_audience' => $request->target_audience,
+            'attachment' => $attachmentPath,
         ]);
 
         return redirect()->route('admin.announcements')->with('success', 'Pengumuman berhasil ditambahkan.');
@@ -461,12 +472,27 @@ class AdminController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'is_public' => 'nullable|boolean',
+            'is_published' => 'nullable|boolean',
+            'target_audience' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
+
+        $attachmentPath = $announcement->attachment;
+        if ($request->hasFile('attachment')) {
+            // Delete old attachment if exists
+            if ($attachmentPath && \Storage::disk('public')->exists($attachmentPath)) {
+                \Storage::disk('public')->delete($attachmentPath);
+            }
+            $attachmentPath = $request->file('attachment')->store('announcements', 'public');
+        }
 
         $announcement->update([
             'title' => $request->title,
             'content' => $request->content,
             'is_public' => $request->is_public ?? false,
+            'is_published' => $request->is_published ?? false,
+            'target_audience' => $request->target_audience,
+            'attachment' => $attachmentPath,
         ]);
 
         return redirect()->route('admin.announcements')->with('success', 'Pengumuman berhasil diperbarui.');

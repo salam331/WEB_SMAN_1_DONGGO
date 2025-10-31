@@ -67,6 +67,7 @@
                                 <th style="width: auto">Level</th>
                                 <th style="width: auto">Kapasitas</th>
                                 <th style="width: auto">Jumlah Siswa</th>
+                                <th style="width: auto">Ruangan</th>
                                 <th style="width: auto">Wali Kelas</th>
                                 <th style="width: 18%">Aksi</th>
                             </tr>
@@ -96,6 +97,16 @@
                                             <i class="fas fa-user-graduate me-1"></i>
                                             {{ $c->students_count }} / {{ $c->capacity }}
                                         </span>
+                                    </td>
+                                    <td class="text-center border-end">
+                                        @if($c->room)
+                                            <span class="badge bg-secondary text-white px-3 py-2 rounded-pill shadow-sm">
+                                                <i class="fas fa-door-closed me-1"></i>
+                                                {{ $c->room }}
+                                            </span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
                                     </td>
                                     <td class="text-center border-end">
                                         @if($c->homeroomTeacher)
@@ -134,7 +145,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4 text-muted">
+                                    <td colspan="8" class="text-center py-4 text-muted">
                                         <i class="fas fa-info-circle me-2 text-primary"></i> Belum ada data kelas.
                                     </td>
                                 </tr>

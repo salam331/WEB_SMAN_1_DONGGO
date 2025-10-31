@@ -133,7 +133,8 @@
 
                                     <!-- Ruangan -->
                                     <td class="text-muted">
-                                        <i class="fas fa-map-marker-alt me-1 text-danger"></i> <br> {{ $schedule->room ?? '-' }}
+                                        <i class="fas fa-map-marker-alt me-1 text-danger"></i> <br>
+                                        {{ $schedule->classRoom->room ?? 'Belum ditentukan' }}
                                     </td>
 
                                     <!-- Aksi -->

@@ -10,16 +10,32 @@
                 <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-book-reader me-2"></i> Edit Materi Pembelajaran
                 </h5>
-                <a href="{{ route('teacher.materials.index') }}"
+                <a href="{{ route('teachers.materials.index') }}"
                     class="btn btn-light btn-sm text-primary fw-semibold rounded-pill shadow-sm">
                     <i class="fas fa-arrow-left me-1"></i> Kembali
                 </a>
             </div>
 
+            <!-- Success Alert -->
+            {{-- @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
+            <!-- Error Alert -->
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif --}}
+
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Error Alerts -->
-                @if($errors->any())
+                {{-- @if($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i> Terdapat kesalahan dalam input:
                         <ul class="mt-2 mb-0 ps-3">
@@ -29,10 +45,10 @@
                         </ul>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Form -->
-                <form action="{{ route('teacher.materials.update', $material) }}" method="POST" enctype="multipart/form-data" class="p-2">
+                <form action="{{ route('teachers.materials.update', $material) }}" method="POST" enctype="multipart/form-data" class="p-2">
                     @csrf
                     @method('PUT')
 
@@ -123,7 +139,7 @@
                                 <div class="alert alert-info rounded-3 shadow-sm mb-3">
                                     <i class="fas fa-file me-2"></i>
                                     <strong>File saat ini:</strong>
-                                    <a href="{{ route('teacher.materials.download', $material) }}" target="_blank" class="text-info fw-semibold">
+                                    <a href="{{ route('teachers.materials.download', $material) }}" target="_blank" class="text-info fw-semibold">
                                         <i class="fas fa-download me-1"></i>{{ basename($material->file_path) }}
                                     </a>
                                     <br>
@@ -149,7 +165,7 @@
 
                     <!-- Tombol Aksi -->
                     <div class="d-flex justify-content-end gap-3 mt-5">
-                        <a href="{{ route('teacher.materials.index') }}"
+                        <a href="{{ route('teachers.materials.index') }}"
                             class="btn btn-outline-secondary rounded-pill shadow-sm px-4 py-2 fw-semibold">
                             <i class="fas fa-times me-1"></i> Batal
                         </a>

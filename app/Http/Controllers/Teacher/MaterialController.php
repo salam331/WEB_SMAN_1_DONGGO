@@ -121,7 +121,7 @@ class MaterialController extends Controller
             Material::create($data);
 
             return redirect()
-                ->route('teacher.materials')
+                ->route('teachers.materials.index')
                 ->with('success', 'Materi berhasil dibuat.');
                 
         } catch (\Exception $e) {
@@ -185,7 +185,7 @@ class MaterialController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'file_path' => ['nullable', 'file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,jpg,jpeg,png,gif,mp4,avi,mov', 'max:51200'],
-            'is_published' => ['boolean'],
+            'is_published' => ['nullable', 'boolean'],
         ]);
 
         // Handle file upload
@@ -201,13 +201,16 @@ class MaterialController extends Controller
             $data['file_path'] = $path;
         }
 
+        // Handle is_published checkbox
+        $data['is_published'] = $request->has('is_published') ? 1 : 0;
+
         try {
             $material->update($data);
 
             return redirect()
-                ->route('teacher.materials')
+                ->route('teachers.materials.index')
                 ->with('success', 'Materi berhasil diperbarui.');
-                
+
         } catch (\Exception $e) {
             return back()
                 ->withInput()
@@ -234,7 +237,7 @@ class MaterialController extends Controller
             $material->delete();
 
             return redirect()
-                ->route('teacher.materials')
+                ->route('teachers.materials.index')
                 ->with('success', 'Materi berhasil dihapus.');
                 
         } catch (\Exception $e) {

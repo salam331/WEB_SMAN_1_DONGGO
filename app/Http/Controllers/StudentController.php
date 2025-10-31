@@ -270,12 +270,10 @@ class StudentController extends BaseController
     // Announcements
     public function announcements()
     {
-        $announcements = \App\Models\Announcement::where('is_public', true)
-            ->orWhere(function($q) {
-                $q->where('is_public', false)
-                  ->whereHas('postedBy', function($q2) {
-                      $q2->where('role', 'guru'); // Assuming announcements from teachers are visible to their students
-                  });
+        $announcements = \App\Models\Announcement::where('is_published', true)
+            ->where(function($q) {
+                $q->where('target_audience', 'all')
+                  ->orWhere('target_audience', 'students');
             })
             ->with('postedBy')
             ->orderBy('pinned', 'desc')

@@ -14,6 +14,7 @@ class ClassRoom extends Model
         'level',
         'homeroom_teacher_id',
         'capacity',
+        'room',
     ];
 
     // Relations

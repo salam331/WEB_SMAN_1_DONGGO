@@ -11,15 +11,15 @@
                     <i class="fas fa-book-reader me-2"></i> Detail Materi Pembelajaran
                 </h5>
                 <div>
-                    <a href="{{ route('teacher.materials.index') }}"
+                    <a href="{{ route('teachers.materials.index') }}"
                         class="btn btn-light btn-sm text-primary fw-semibold rounded-pill shadow-sm me-2">
                         <i class="fas fa-arrow-left me-1"></i> Kembali
                     </a>
-                    <a href="{{ route('teacher.materials.edit', $material) }}"
+                    <a href="{{ route('teachers.materials.edit', $material) }}"
                         class="btn btn-warning btn-sm text-dark fw-semibold rounded-pill shadow-sm me-2">
                         <i class="fas fa-edit me-1"></i> Edit
                     </a>
-                    <form action="{{ route('teacher.materials.destroy', $material) }}" method="POST" class="d-inline">
+                    <form action="{{ route('teachers.materials.destroy', $material) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm rounded-pill shadow-sm fw-semibold"
@@ -119,7 +119,7 @@
                                 <div class="d-flex align-items-center gap-2">
                                     <i class="fas fa-file-download text-warning fs-5"></i>
                                     <div>
-                                        <a href="{{ route('teacher.materials.download', $material) }}" 
+                                        <a href="{{ route('teachers.materials.download', $material) }}"
                                             class="btn btn-sm btn-primary rounded-pill px-3 py-1 fw-semibold text-decoration-none">
                                             <i class="fas fa-download me-1"></i> Unduh File
                                         </a>

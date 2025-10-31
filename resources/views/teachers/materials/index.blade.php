@@ -10,7 +10,7 @@
                 <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-book-reader me-2"></i> Materi Pembelajaran Saya
                 </h5>
-                <a href="{{ route('teacher.materials.create') }}"
+                <a href="{{ route('teachers.materials.create') }}"
                     class="btn btn-light btn-sm text-primary fw-semibold rounded-pill shadow-sm">
                     <i class="fas fa-plus me-1"></i> Tambah Materi
                 </a>
@@ -19,7 +19,7 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Filter & Search -->
-                <form action="{{ route('teacher.materials.index') }}" method="get"
+                <form action="{{ route('teachers.materials.index') }}" method="get"
                     class="mb-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
                     <div class="input-group w-50 shadow-sm">
                         <input type="text" name="search" value="{{ request('search') }}"
@@ -58,7 +58,7 @@
                 </form>
 
                 <!-- Alerts -->
-                @if (session('success'))
+                {{-- @if (session('success'))
                     <div class="alert alert-success alert-dismissible fade show rounded-pill shadow-sm" role="alert">
                         <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -70,7 +70,7 @@
                         <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Table -->
                 <div class="table-responsive">
@@ -133,17 +133,17 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="{{ route('teacher.materials.show', $material) }}"
+                                            <a href="{{ route('teachers.materials.show', $material) }}"
                                                 class="btn btn-sm btn-outline-info rounded-pill shadow-sm px-3 py-1 fw-semibold"
                                                 title="Lihat Detail">
                                                 <i class="fas fa-eye me-1"></i> Lihat
                                             </a>
-                                            <a href="{{ route('teacher.materials.edit', $material) }}"
+                                            <a href="{{ route('teachers.materials.edit', $material) }}"
                                                 class="btn btn-sm btn-outline-primary rounded-pill shadow-sm px-3 py-1 fw-semibold"
                                                 title="Edit Materi">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </a>
-                                            <form action="{{ route('teacher.materials.destroy', $material) }}" method="POST"
+                                            <form action="{{ route('teachers.materials.destroy', $material) }}" method="POST"
                                                 class="d-inline"
                                                 onsubmit="return confirm('Apakah Anda yakin ingin menghapus materi ini?')">
                                                 @csrf @method('DELETE')

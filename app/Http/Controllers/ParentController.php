@@ -89,7 +89,11 @@ class ParentController extends Controller
     // Announcements (public ones)
     public function announcements()
     {
-        $announcements = Announcement::where('is_public', true)
+        $announcements = Announcement::where('is_published', true)
+            ->where(function($q) {
+                $q->where('target_audience', 'all')
+                  ->orWhere('target_audience', 'parents');
+            })
             ->with('postedBy')
             ->orderBy('pinned', 'desc')
             ->orderBy('created_at', 'desc')

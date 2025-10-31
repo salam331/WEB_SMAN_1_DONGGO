@@ -10,7 +10,7 @@
                 <h5 class="mb-0 fw-semibold">
                     <i class="fas fa-book-reader me-2"></i> Tambah Materi Pembelajaran
                 </h5>
-                <a href="{{ route('teacher.materials.index') }}"
+                <a href="{{ route('teachers.materials.index') }}"
                     class="btn btn-light btn-sm text-primary fw-semibold rounded-pill shadow-sm">
                     <i class="fas fa-arrow-left me-1"></i> Kembali
                 </a>
@@ -19,7 +19,7 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Error Alerts -->
-                @if($errors->any())
+                {{-- @if($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
                         <i class="fas fa-exclamation-triangle me-2"></i> Terdapat kesalahan dalam input:
                         <ul class="mt-2 mb-0 ps-3">
@@ -29,10 +29,10 @@
                         </ul>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                @endif
+                @endif --}}
 
                 <!-- Form -->
-                <form action="{{ route('teacher.materials.store') }}" method="POST" enctype="multipart/form-data" class="p-2">
+                <form action="{{ route('teachers.materials.store') }}" method="POST" enctype="multipart/form-data" class="p-2">
                     @csrf
 
                     <div class="row g-4">
@@ -135,7 +135,7 @@
 
                     <!-- Tombol Aksi -->
                     <div class="d-flex justify-content-end gap-3 mt-5">
-                        <a href="{{ route('teacher.materials.index') }}"
+                        <a href="{{ route('teachers.materials.index') }}"
                             class="btn btn-outline-secondary rounded-pill shadow-sm px-4 py-2 fw-semibold">
                             <i class="fas fa-times me-1"></i> Batal
                         </a>

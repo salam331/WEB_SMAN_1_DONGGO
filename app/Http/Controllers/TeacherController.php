@@ -120,7 +120,7 @@ class TeacherController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->with('homeroomTeacher.user')->get();
 
-        return view('teacher.classes.index', compact('classes'));
+        return view('teachers.classes.index', compact('classes'));
     }
 
     public function classDetail($classId)
@@ -132,7 +132,7 @@ class TeacherController extends Controller
             abort(403);
         }
 
-        return view('teacher.classes.detail', compact('class'));
+        return view('teachers.classes.detail', compact('class'));
     }
 
     // Schedule Management
@@ -145,49 +145,218 @@ class TeacherController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('teacher.schedules.index', compact('schedules'));
+        return view('teachers.schedules.index', compact('schedules'));
     }
 
     // Attendance Management
-    public function attendances()
+    public function attendances(Request $request)
     {
         $teacher = auth()->user()->teacher;
-        $attendances = Attendance::whereHas('student.classRoom.subjectTeachers', function ($q) use ($teacher) {
-            $q->where('teacher_id', $teacher->id);
-        })->with('student.user', 'recordedBy')->paginate(20);
 
-        return view('teacher.attendances.index', compact('attendances'));
+        // Ambil semua schedule (jadwal) yang diajar oleh guru ini
+        $scheduleIds = \App\Models\Schedule::where('teacher_id', $teacher->id)->pluck('id');
+
+        // Ambil absensi yang sudah diinput, dikelompokkan per mapel, kelas, dan tanggal (bukan per siswa)
+        $query = \DB::table('attendances')
+            ->join('schedules', 'attendances.schedule_id', '=', 'schedules.id')
+            ->join('subjects', 'schedules.subject_id', '=', 'subjects.id')
+            ->join('class_rooms', 'schedules.class_id', '=', 'class_rooms.id')
+            ->whereIn('attendances.schedule_id', $scheduleIds)
+            ->select(
+                'attendances.schedule_id',
+                'attendances.date',
+                'subjects.name as subject_name',
+                'class_rooms.name as class_name',
+                \DB::raw('COUNT(DISTINCT attendances.student_id) as total_students'),
+                \DB::raw('SUM(CASE WHEN attendances.status = "present" THEN 1 ELSE 0 END) as present_count'),
+                \DB::raw('SUM(CASE WHEN attendances.status = "late" THEN 1 ELSE 0 END) as late_count'),
+                \DB::raw('SUM(CASE WHEN attendances.status = "absent" THEN 1 ELSE 0 END) as absent_count'),
+                \DB::raw('SUM(CASE WHEN attendances.status = "excused" THEN 1 ELSE 0 END) as excused_count')
+            );
+
+        // Filter tanggal jika ada
+        if ($request->filled('date')) {
+            $query->where('attendances.date', $request->date);
+        }
+
+        // Group by schedule, class, subject, dan tanggal
+        $attendances = $query->groupBy('attendances.schedule_id', 'attendances.date', 'subjects.name', 'class_rooms.name')
+            ->orderBy('attendances.date', 'desc')
+            ->paginate(20)
+            ->appends($request->query());
+
+        return view('teachers.attendances.index', compact('attendances'));
+    }
+
+    public function createAttendance()
+    {
+        $teacher = auth()->user()->teacher;
+
+        // Get classes taught by this teacher
+        $classes = ClassRoom::whereHas('subjectTeachers', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->get();
+
+        return view('teachers.attendances.create', compact('classes'));
     }
 
     public function markAttendance(Request $request)
     {
         $request->validate([
-            'student_id' => 'required|exists:students,id',
+            'class_id' => 'required|exists:class_rooms,id',
+            'subject_id' => 'required|exists:subjects,id',
             'date' => 'required|date',
-            'status' => 'required|in:present,late,absent,permit',
-            'remark' => 'nullable|string',
+            'students' => 'required|array',
+            'students.*.student_id' => 'required|exists:students,id',
+            'students.*.status' => 'required|in:present,late,absent,excused',
+            'students.*.remark' => 'nullable|string',
         ]);
 
         $teacher = auth()->user()->teacher;
 
-        $student = Student::findOrFail($request->student_id);
-        if (!$student->classRoom->subjectTeachers()->where('teacher_id', $teacher->id)->exists()) {
-            abort(403);
+        // Verify teacher teaches this subject in this class
+        $schedule = Schedule::where('class_id', $request->class_id)
+            ->where('subject_id', $request->subject_id)
+            ->where('teacher_id', $teacher->id)
+            ->first();
+
+        if (!$schedule) {
+            return back()->with('error', 'Anda tidak mengajar mata pelajaran ini di kelas tersebut.');
         }
 
-        Attendance::updateOrCreate(
-            [
-                'student_id' => $request->student_id,
-                'date' => $request->date,
-            ],
-            [
-                'status' => $request->status,
-                'remark' => $request->remark,
-                'recorded_by' => auth()->id(),
-            ]
-        );
+        foreach ($request->students as $attendanceData) {
+            $student = Student::findOrFail($attendanceData['student_id']);
+            // Perbaikan: cek berdasarkan rombel_id (relasi ke kelas)
+            if ($student->rombel_id !== (int)$request->class_id) {
+                continue; // Lewati jika siswa bukan dari kelas yang dipilih
+            }
 
-        return back()->with('success', 'Attendance marked successfully.');
+            Attendance::updateOrCreate(
+                [
+                    'student_id' => $attendanceData['student_id'],
+                    'schedule_id' => $schedule->id,
+                    'date' => $request->date,
+                ],
+                [
+                    'status' => $attendanceData['status'],
+                    'remark' => $attendanceData['remark'] ?? null,
+                    'recorded_by' => auth()->id(),
+                ]
+            );
+        }
+
+        return redirect()->route('teacher.attendances')->with('success', 'Absensi berhasil disimpan.');
+    }
+
+    public function showAttendance($scheduleId, $date)
+    {
+        $teacher = auth()->user()->teacher;
+
+        // Verify teacher teaches this schedule
+        $schedule = Schedule::where('id', $scheduleId)->where('teacher_id', $teacher->id)->firstOrFail();
+
+        $attendances = Attendance::where('schedule_id', $scheduleId)
+            ->where('date', $date)
+            ->with('student.user', 'recordedBy')
+            ->get();
+
+        return view('teachers.attendances.show', compact('attendances', 'schedule', 'date'));
+    }
+
+    public function editAttendance($scheduleId, $date)
+    {
+        $teacher = auth()->user()->teacher;
+
+        // Verify teacher teaches this schedule
+        $schedule = Schedule::where('id', $scheduleId)->where('teacher_id', $teacher->id)->firstOrFail();
+
+        $attendances = Attendance::where('schedule_id', $scheduleId)
+            ->where('date', $date)
+            ->with('student.user')
+            ->get();
+
+        return view('teachers.attendances.edit', compact('attendances', 'schedule', 'date'));
+    }
+
+    public function updateAttendance(Request $request, $scheduleId, $date)
+    {
+        $request->validate([
+            'students' => 'required|array',
+            'students.*.student_id' => 'required|exists:students,id',
+            'students.*.status' => 'required|in:present,late,absent,excused',
+            'students.*.remark' => 'nullable|string',
+        ]);
+
+        $teacher = auth()->user()->teacher;
+
+        // Verify teacher teaches this schedule
+        $schedule = Schedule::where('id', $scheduleId)->where('teacher_id', $teacher->id)->firstOrFail();
+
+        foreach ($request->students as $attendanceData) {
+            $student = Student::findOrFail($attendanceData['student_id']);
+            if ($student->rombel_id !== $schedule->class_id) {
+                continue; // Skip if student is not in the scheduled class
+            }
+
+            Attendance::updateOrCreate(
+                [
+                    'student_id' => $attendanceData['student_id'],
+                    'schedule_id' => $scheduleId,
+                    'date' => $date,
+                ],
+                [
+                    'status' => $attendanceData['status'],
+                    'remark' => $attendanceData['remark'] ?? null,
+                    'recorded_by' => auth()->id(),
+                ]
+            );
+        }
+
+        return redirect()->route('teachers.attendances')->with('success', 'Absensi berhasil diperbarui.');
+    }
+
+    public function destroyAttendance($scheduleId, $date)
+    {
+        $teacher = auth()->user()->teacher;
+
+        // Verify teacher teaches this schedule
+        $schedule = Schedule::where('id', $scheduleId)->where('teacher_id', $teacher->id)->firstOrFail();
+
+        Attendance::where('schedule_id', $scheduleId)->where('date', $date)->delete();
+
+        return redirect()->route('teacher.attendances')->with('success', 'Absensi berhasil dihapus.');
+    }
+
+    public function getSubjectsForClass($classId)
+    {
+        $teacher = auth()->user()->teacher;
+
+        $subjects = Subject::whereHas('subjectTeachers', function ($query) use ($teacher, $classId) {
+            $query->where('teacher_id', $teacher->id)
+                  ->where('class_id', $classId);
+        })->get();
+
+        return response()->json($subjects);
+    }
+
+    public function getStudentsForClass($classId)
+    {
+        $teacher = auth()->user()->teacher;
+
+        // Verify teacher teaches this class
+        $hasAccess = \App\Models\SubjectTeacher::where('teacher_id', $teacher->id)
+            ->where('class_id', $classId)
+            ->exists();
+
+        if (!$hasAccess) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $students = Student::where('rombel_id', $classId)
+            ->with('user')
+            ->get();
+
+        return response()->json($students);
     }
 
     // Exam Management
@@ -198,7 +367,7 @@ class TeacherController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->with('classRoom', 'subject')->paginate(20);
 
-        return view('teacher.exams.index', compact('exams'));
+        return view('teachers.exams.index', compact('exams'));
     }
 
     public function createExam()
@@ -212,7 +381,7 @@ class TeacherController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->get();
 
-        return view('teacher.exams.create', compact('classes', 'subjects'));
+        return view('teachers.exams.create', compact('classes', 'subjects'));
     }
 
     public function storeExam(Request $request)
@@ -250,7 +419,7 @@ class TeacherController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->with('exam', 'student.user')->paginate(20);
 
-        return view('teacher.grades.index', compact('examResults'));
+        return view('teachers.grades.index', compact('examResults'));
     }
 
     public function inputGrades($examId)
@@ -262,7 +431,7 @@ class TeacherController extends Controller
             abort(403);
         }
 
-        return view('teacher.grades.input', compact('exam'));
+        return view('teachers.grades.input', compact('exam'));
     }
 
     public function storeGrades(Request $request, $examId)
@@ -307,7 +476,7 @@ class TeacherController extends Controller
             ->with('subject', 'classRoom')
             ->paginate(20);
 
-        return view('teacher.materials.index', compact('materials'));
+        return view('teachers.materials.index', compact('materials'));
     }
 
     // Announcement Management
@@ -316,19 +485,291 @@ class TeacherController extends Controller
         $announcements = Announcement::where('posted_by', auth()->id())
             ->paginate(20);
 
-        return view('teacher.announcements.index', compact('announcements'));
+        return view('teachers.announcements.index', compact('announcements'));
+    }
+
+    public function createAnnouncement()
+    {
+        return view('teachers.announcements.create');
+    }
+
+    public function storeAnnouncement(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'target_audience' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+            'is_published' => 'boolean',
+        ]);
+
+        $data = $request->all();
+        $data['posted_by'] = auth()->id();
+
+        if ($request->hasFile('attachment')) {
+            $data['attachment'] = $request->file('attachment')->store('announcements', 'public');
+        }
+
+        Announcement::create($data);
+
+        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dibuat.');
+    }
+
+    public function editAnnouncement(Announcement $announcement)
+    {
+        // Ensure teacher can only edit their own announcements
+        if ($announcement->posted_by !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('teachers.announcements.edit', compact('announcement'));
+    }
+
+    public function updateAnnouncement(Request $request, Announcement $announcement)
+    {
+        // Ensure teacher can only update their own announcements
+        if ($announcement->posted_by !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'target_audience' => 'nullable|string|max:255',
+            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+            'is_published' => 'boolean',
+        ]);
+
+        $data = $request->all();
+        $data['is_published'] = $request->has('is_published');
+
+        if ($request->hasFile('attachment')) {
+            // Delete old attachment if exists
+            if ($announcement->attachment) {
+                \Storage::disk('public')->delete($announcement->attachment);
+            }
+            $data['attachment'] = $request->file('attachment')->store('announcements', 'public');
+        }
+
+        $announcement->update($data);
+
+        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil diperbarui.');
+    }
+
+    public function destroyAnnouncement(Announcement $announcement)
+    {
+        // Ensure teacher can only delete their own announcements
+        if ($announcement->posted_by !== auth()->id()) {
+            abort(403);
+        }
+
+        // Delete attachment if exists
+        if ($announcement->attachment) {
+            \Storage::disk('public')->delete($announcement->attachment);
+        }
+
+        $announcement->delete();
+
+        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dihapus.');
+    }
+
+    public function publishAnnouncement(Announcement $announcement)
+    {
+        // Ensure teacher can only publish their own announcements
+        if ($announcement->posted_by !== auth()->id()) {
+            abort(403);
+        }
+
+        $announcement->update(['is_published' => true]);
+
+        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dipublish.');
     }
 
     // Messages
     public function messages()
     {
-        $messages = Message::where('receiver_id', auth()->id())
-            ->orWhere('sender_id', auth()->id())
-            ->with('sender', 'receiver')
+        $receivedMessages = Message::where('receiver_id', auth()->id())
+            ->with('sender')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(10, ['*'], 'inbox_page');
 
-        return view('teacher.messages.index', compact('messages'));
+        // Get all sent messages and group them by subject and recipient_type/receiver_id
+        $allSentMessages = Message::where('sender_id', auth()->id())
+            ->with('receiver')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $groupedMessages = collect();
+        $grouped = $allSentMessages->groupBy(function ($message) {
+            if ($message->recipient_type) {
+                return $message->subject . '|' . $message->recipient_type;
+            } else {
+                return $message->subject . '|' . $message->receiver_id;
+            }
+        });
+
+        foreach ($grouped as $key => $group) {
+            $firstMessage = $group->first();
+            $firstMessage->message_count = $group->count();
+            $firstMessage->latest_created_at = $group->max('created_at');
+            $groupedMessages->push($firstMessage);
+        }
+
+        $groupedMessages = $groupedMessages->sortByDesc('latest_created_at')->values();
+        $perPage = 10;
+        $currentPage = request()->get('sent_page', 1);
+        $paginatedUniqueSentMessages = new \Illuminate\Pagination\LengthAwarePaginator(
+            $groupedMessages->forPage($currentPage, $perPage),
+            $groupedMessages->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'pageName' => 'sent_page']
+        );
+
+        $uniqueSentMessages = $paginatedUniqueSentMessages;
+
+        return view('teachers.messages.index', compact('receivedMessages', 'uniqueSentMessages'));
+    }
+
+    public function storeMessage(Request $request)
+    {
+        $request->validate([
+            'recipient_id' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $recipientIds = [];
+
+        // Handle special "all_" prefixed recipient IDs
+        if (str_starts_with($request->recipient_id, 'all_')) {
+            $group = str_replace('all_', '', $request->recipient_id);
+
+            switch ($group) {
+                case 'students':
+                    $recipientIds = \App\Models\Student::pluck('user_id')->toArray();
+                    break;
+                case 'parents':
+                    $recipientIds = \App\Models\Student::whereNotNull('parent_id')
+                        ->with('parent.user')
+                        ->get()
+                        ->pluck('parent.user.id')
+                        ->filter()
+                        ->unique()
+                        ->toArray();
+                    break;
+                case 'teachers':
+                    $recipientIds = \App\Models\User::role('guru')->pluck('id')->toArray();
+                    break;
+                case 'admins':
+                    $recipientIds = \App\Models\User::role('admin')->pluck('id')->toArray();
+                    break;
+                case 'users':
+                    $recipientIds = \App\Models\User::pluck('id')->toArray();
+                    break;
+            }
+        } else {
+            // Single recipient
+            $request->validate([
+                'recipient_id' => 'exists:users,id',
+            ]);
+            $recipientIds = [$request->recipient_id];
+        }
+
+        // Remove sender from recipients if present
+        $recipientIds = array_diff($recipientIds, [auth()->id()]);
+
+        // Determine recipient type
+        $recipientType = null;
+        if (str_starts_with($request->recipient_id, 'all_')) {
+            $recipientType = str_replace('all_', '', $request->recipient_id);
+        }
+
+        // Create messages for each recipient
+        foreach ($recipientIds as $recipientId) {
+            Message::create([
+                'sender_id' => auth()->id(),
+                'receiver_id' => $recipientId,
+                'recipient_type' => $recipientType,
+                'subject' => $request->subject,
+                'body' => $request->content,
+                'is_read' => false,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pesan berhasil dikirim.');
+    }
+
+    public function editMessage(Message $message)
+    {
+        // Only allow editing if user is the sender and message hasn't been read by receiver
+        if ($message->sender_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($message->is_read) {
+            return redirect()->back()->with('error', 'Pesan tidak dapat diedit karena sudah dibaca oleh penerima.');
+        }
+
+        return view('teachers.messages.edit', compact('message'));
+    }
+
+    public function updateMessage(Request $request, Message $message)
+    {
+        // Only allow updating if user is the sender and message hasn't been read by receiver
+        if ($message->sender_id !== auth()->id()) {
+            abort(403);
+        }
+
+        if ($message->is_read) {
+            return redirect()->back()->with('error', 'Pesan tidak dapat diedit karena sudah dibaca oleh penerima.');
+        }
+
+        $request->validate([
+            'subject' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        $message->update([
+            'subject' => $request->subject,
+            'body' => $request->content,
+        ]);
+
+        return redirect()->route('teachers.messages')->with('success', 'Pesan berhasil diperbarui.');
+    }
+
+    public function destroyMessage(Message $message)
+    {
+        // Only allow deleting if user is the sender
+        if ($message->sender_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $message->delete();
+
+        return redirect()->back()->with('success', 'Pesan berhasil dihapus.');
+    }
+
+    public function showMessage(Message $message)
+    {
+        // Check if user is sender or receiver
+        if ($message->sender_id !== auth()->id() && $message->receiver_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Mark as read if receiver
+        if ($message->receiver_id === auth()->id() && !$message->is_read) {
+            $message->update(['is_read' => true]);
+        }
+
+        return response()->json([
+            'id' => $message->id,
+            'subject' => $message->subject,
+            'content' => $message->body,
+            'sender' => $message->sender,
+            'receiver' => $message->receiver,
+            'created_at' => $message->created_at,
+        ]);
     }
 
     // Notifications
@@ -338,6 +779,6 @@ class TeacherController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('teacher.notifications.index', compact('notifications'));
+        return view('teachers.notifications.index', compact('notifications'));
     }
 }

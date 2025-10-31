@@ -154,7 +154,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Teacher Routes
-    Route::middleware(['role:guru'])->prefix('teacher')->name('teacher.')->group(function () {
+    Route::middleware(['role:guru'])->prefix('teachers')->name('teachers.')->group(function () {
         Route::get('/dashboard', [TeacherController::class, 'dashboard'])->name('dashboard');
 
         // Subject Management
@@ -172,13 +172,23 @@ Route::middleware(['auth'])->group(function () {
         // Class Management
         Route::get('/classes', [TeacherController::class, 'classes'])->name('classes');
         Route::get('/classes/{classId}', [TeacherController::class, 'classDetail'])->name('classes.detail');
+        
 
         // Schedule Management
         Route::get('/schedules', [TeacherController::class, 'schedules'])->name('schedules');
 
         // Attendance Management
         Route::get('/attendances', [TeacherController::class, 'attendances'])->name('attendances');
+        Route::get('/attendances/create', [TeacherController::class, 'createAttendance'])->name('attendances.create');
         Route::post('/attendances/mark', [TeacherController::class, 'markAttendance'])->name('attendances.mark');
+        Route::get('/attendances/{scheduleId}/{date}', [TeacherController::class, 'showAttendance'])->name('attendances.show');
+        Route::get('/attendances/{scheduleId}/{date}/edit', [TeacherController::class, 'editAttendance'])->name('attendances.edit');
+        Route::put('/attendances/{scheduleId}/{date}', [TeacherController::class, 'updateAttendance'])->name('attendances.update');
+        Route::delete('/attendances/{scheduleId}/{date}', [TeacherController::class, 'destroyAttendance'])->name('attendances.destroy');
+
+        // Additional routes for attendance modal
+        Route::get('/classes/{classId}/subjects', [TeacherController::class, 'getSubjectsForClass'])->name('classes.subjects');
+        Route::get('/classes/{classId}/students', [TeacherController::class, 'getStudentsForClass'])->name('classes.students');
 
         // Grade Management
         Route::get('/grades', [TeacherController::class, 'grades'])->name('grades');
@@ -187,9 +197,20 @@ Route::middleware(['auth'])->group(function () {
 
         // Announcement Management
         Route::get('/announcements', [TeacherController::class, 'announcements'])->name('announcements');
+        Route::get('/announcements/create', [TeacherController::class, 'createAnnouncement'])->name('announcements.create');
+        Route::post('/announcements', [TeacherController::class, 'storeAnnouncement'])->name('announcements.store');
+        Route::get('/announcements/{announcement}/edit', [TeacherController::class, 'editAnnouncement'])->name('announcements.edit');
+        Route::put('/announcements/{announcement}', [TeacherController::class, 'updateAnnouncement'])->name('announcements.update');
+        Route::delete('/announcements/{announcement}', [TeacherController::class, 'destroyAnnouncement'])->name('announcements.destroy');
+        Route::post('/announcements/{announcement}/publish', [TeacherController::class, 'publishAnnouncement'])->name('announcements.publish');
 
-        // Messages
-        Route::get('/messages', [TeacherController::class, 'messages'])->name('messages');
+        // // Messages
+        // Route::get('/messages', [TeacherController::class, 'messages'])->name('messages');
+        // Route::post('/messages', [TeacherController::class, 'storeMessage'])->name('messages.store');
+        // Route::get('/messages/{message}', [TeacherController::class, 'showMessage'])->name('messages.show');
+        // Route::get('/messages/{message}/edit', [TeacherController::class, 'editMessage'])->name('messages.edit');
+        // Route::put('/messages/{message}', [TeacherController::class, 'updateMessage'])->name('messages.update');
+        // Route::delete('/messages/{message}', [TeacherController::class, 'destroyMessage'])->name('messages.destroy');
 
         // Notifications
         Route::get('/notifications', [TeacherController::class, 'notifications'])->name('notifications');

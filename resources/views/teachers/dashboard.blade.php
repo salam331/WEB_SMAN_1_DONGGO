@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard Admin')
+@section('title', 'SMAN 1 DONGGO - Guru')
 
 @section('content')
 <div class="container-fluid">
@@ -233,7 +233,7 @@
 
                         <!-- Schedule Management -->
                         <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.schedules') }}'">
+                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.schedules.index') }}'">
                                 <div class="card-body text-center p-4">
                                     <div class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
                                         <i class="fas fa-calendar-alt fa-2x text-secondary"></i>

@@ -17,11 +17,15 @@ class Announcement extends Model
         'start_date',
         'end_date',
         'pinned',
+        'is_published',
+        'target_audience',
+        'attachment',
     ];
 
     protected $casts = [
         'is_public' => 'boolean',
         'pinned' => 'boolean',
+        'is_published' => 'boolean',
         'start_date' => 'date',
         'end_date' => 'date',
     ];

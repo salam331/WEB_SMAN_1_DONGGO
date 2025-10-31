@@ -87,6 +87,15 @@
 
                             <div class="mb-3">
                                 <label class="form-label fw-semibold text-secondary">
+                                    <i class="fas fa-door-closed me-1 text-primary"></i> Ruangan
+                                </label>
+                                <input type="text" name="room" value="{{ old('room') }}"
+                                    placeholder="Contoh: Ruang 101" class="form-control border-0 shadow-sm rounded-3 p-2">
+                                <div class="form-text">Nama ruangan atau lokasi kelas (opsional).</div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-secondary">
                                     <i class="fas fa-user-tie me-1 text-primary"></i> Wali Kelas
                                 </label>
                                 <select name="homeroom_teacher_id" id="homeroom_teacher_id"

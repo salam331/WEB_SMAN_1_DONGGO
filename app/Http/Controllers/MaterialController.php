@@ -161,7 +161,6 @@ class MaterialController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'file_path' => ['nullable', 'file', 'mimes:pdf,doc,docx,ppt,pptx,xls,xlsx,jpg,jpeg,png,gif,mp4,avi,mov', 'max:51200'],
-            'is_published' => ['boolean'],
         ]);
 
         if ($request->hasFile('file_path')) {
@@ -174,6 +173,9 @@ class MaterialController extends Controller
             $path = $file->storeAs('materials', $filename, 'public');
             $data['file_path'] = $path;
         }
+
+        // Handle is_published checkbox
+        $data['is_published'] = $request->has('is_published') ? 1 : 0;
 
         $material->update($data);
 

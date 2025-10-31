@@ -62,6 +62,7 @@ class ClassRoomController extends Controller
             'name' => ['required', 'string', 'max:255', 'unique:class_rooms,name'],
             'level' => ['required', 'integer', 'between:10,12'],
             'capacity' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'room' => ['nullable', 'string', 'max:255'],
             'homeroom_teacher_id' => [
                 'nullable',
                 'exists:teachers,id',
@@ -81,6 +82,7 @@ class ClassRoomController extends Controller
                 'name' => $data['name'],
                 'level' => $data['level'],
                 'capacity' => $data['capacity'] ?? 30,
+                'room' => $data['room'] ?? null,
                 'homeroom_teacher_id' => $data['homeroom_teacher_id'] ?? null,
             ]);
 
@@ -113,13 +115,14 @@ class ClassRoomController extends Controller
     {
         $data = $request->validate([
             'name' => [
-                'required', 
-                'string', 
+                'required',
+                'string',
                 'max:255',
                 'unique:class_rooms,name,' . $classRoom->id
             ],
             'level' => ['required', 'integer', 'between:10,12'],
             'capacity' => ['nullable', 'integer', 'min:1', 'max:50'],
+            'room' => ['nullable', 'string', 'max:255'],
             'homeroom_teacher_id' => [
                 'nullable',
                 'exists:teachers,id',
@@ -149,6 +152,7 @@ class ClassRoomController extends Controller
                 'name' => $data['name'],
                 'level' => $data['level'],
                 'capacity' => $data['capacity'] ?? $classRoom->capacity,
+                'room' => $data['room'] ?? $classRoom->room,
                 'homeroom_teacher_id' => $data['homeroom_teacher_id'] ?? null,
             ]);
 
