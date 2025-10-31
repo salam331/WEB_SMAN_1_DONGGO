@@ -367,7 +367,15 @@ class TeacherController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->with('classRoom', 'subject')->paginate(20);
 
-        return view('teachers.exams.index', compact('exams'));
+        $classes = ClassRoom::whereHas('subjectTeachers', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->get();
+
+        $subjects = Subject::whereHas('subjectTeachers', function ($q) use ($teacher) {
+            $q->where('teacher_id', $teacher->id);
+        })->get();
+
+        return view('teachers.exams.index', compact('exams', 'classes', 'subjects'));
     }
 
     public function createExam()

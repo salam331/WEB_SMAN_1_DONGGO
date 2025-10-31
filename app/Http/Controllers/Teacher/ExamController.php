@@ -106,6 +106,9 @@ class ExamController extends Controller
             'grade_items.*.max_score' => ['required_with:grade_items', 'integer', 'min:1'],
         ]);
 
+        // Tambahkan teacher_id ke data
+        $data['teacher_id'] = $teacher->id;
+
         // Check if teacher is assigned to this subject/class combination
         $isAssigned = $teacher->subjectTeachers()
             ->where('subject_id', $data['subject_id'])

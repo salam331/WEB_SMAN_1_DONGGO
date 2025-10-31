@@ -445,7 +445,7 @@
                             </li>
                             <li>
                                 <a href="{{ route('teachers.classes') }}"
-                                    class="{{ request()->routeIs('teachers.classes') ? 'active' : '' }}">
+                                    class="{{ request()->routeIs('teachers.classes*') ? 'active' : '' }}">
                                     <i class="fas fa-school"></i> Kelas
                                 </a>
                             </li>

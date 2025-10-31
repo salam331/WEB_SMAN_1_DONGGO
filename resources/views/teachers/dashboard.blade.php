@@ -1,320 +1,224 @@
 @extends('layouts.app')
 
-@section('title', 'SMAN 1 DONGGO - Guru')
+@section('title', 'SMAN 1 DONGGO - Manajemen Sistem Sekolah')
 
 @section('content')
-<div class="container-fluid">
-    <!-- Welcome Header -->
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body bg-primary text-white py-4">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h2 class="mb-1">
-                                <i class="fas fa-tachometer-alt me-2"></i>Selamat Datang, {{ auth()->user()->name }}!
-                            </h2>
-                            <p class="mb-0 opacity-75">Dashboard Administrator - Sistem Manajemen Sekolah</p>
-                        </div>
-                        <div class="col-md-4 text-end">
-                            <div class="d-flex align-items-center justify-content-end">
-                                <i class="fas fa-calendar-alt fa-2x me-3 opacity-75"></i>
-                                <div>
-                                    <div class="h6 mb-0">{{ now()->format('l, d F Y') }}</div>
-                                    <small class="opacity-75">{{ now()->format('H:i') }} WITA</small>
-                                </div>
+    <div class="container-fluid animate-container">
+        <!-- 🌟 Header Section -->
+        <div class="text-center mb-5 fade-in-up">
+            <h2 class="fw-bold text-gradient mb-1">
+                <i class="fas fa-chalkboard-teacher me-2"></i> Manajemen Sistem Sekolah
+            </h2>
+            <p class="text-muted">Kelola seluruh aktivitas guru dan proses pembelajaran dengan mudah dan interaktif</p>
+        </div>
+
+        <!-- 💼 Modul Guru -->
+        <div class="row g-4 mb-5">
+            @php
+                $modules = [
+                    ['route' => 'teachers.dashboard', 'icon' => 'fas fa-home', 'color' => 'primary', 'title' => 'Dashboard Guru', 'desc' => 'Lihat ringkasan kegiatan, statistik, dan jadwal hari ini.'],
+                    ['route' => 'teachers.classes', 'icon' => 'fas fa-school', 'color' => 'success', 'title' => 'Kelas', 'desc' => 'Kelola data kelas dan wali kelas yang dibimbing.'],
+                    ['route' => 'teachers.attendances', 'icon' => 'fas fa-calendar-check', 'color' => 'info', 'title' => 'Absensi', 'desc' => 'Pantau kehadiran siswa setiap pertemuan.'],
+                    ['route' => 'teachers.schedules', 'icon' => 'fas fa-calendar-alt', 'color' => 'warning', 'title' => 'Jadwal Pelajaran', 'desc' => 'Atur dan lihat jadwal mengajar mingguan.'],
+                    ['route' => 'teachers.materials.index', 'icon' => 'fas fa-book-reader', 'color' => 'danger', 'title' => 'Materi Pembelajaran', 'desc' => 'Unggah, ubah, dan bagikan materi pembelajaran.'],
+                    ['route' => 'teachers.subjects.index', 'icon' => 'fas fa-book', 'color' => 'secondary', 'title' => 'Mata Pelajaran', 'desc' => 'Lihat dan atur mata pelajaran yang diampu.'],
+                    ['route' => 'teachers.announcements', 'icon' => 'fas fa-bullhorn', 'color' => 'dark', 'title' => 'Pengumuman', 'desc' => 'Bagikan pengumuman kepada siswa.'],
+                    ['route' => 'teachers.notifications', 'icon' => 'fas fa-bell', 'color' => 'primary', 'title' => 'Notifikasi', 'desc' => 'Kelola dan baca notifikasi terbaru.'],
+                    ['route' => 'teachers.grades', 'icon' => 'fas fa-graduation-cap', 'color' => 'success', 'title' => 'Nilai', 'desc' => 'Input dan pantau nilai siswa secara terstruktur.'],
+                    ['route' => 'teachers.exams.index', 'icon' => 'fas fa-file-alt', 'color' => 'info', 'title' => 'Ujian', 'desc' => 'Atur jadwal ujian dan penilaian hasil.'],
+                ];
+            @endphp
+
+            @foreach ($modules as $m)
+                <div class="col-xl-3 col-md-6 fade-in-up">
+                    <div class="card module-card border-0 shadow-lg position-relative overflow-hidden"
+                        onclick="window.location.href='{{ route($m['route']) }}'">
+                        <div class="module-glow"></div>
+                        <div class="card-body text-center py-5 position-relative z-2">
+                            <div class="floating-icon mb-3 mx-auto">
+                                <i class="{{ $m['icon'] }} fa-2x text-{{ $m['color'] }}"></i>
                             </div>
+                            <h6 class="fw-bold text-dark">{{ $m['title'] }}</h6>
+                            <p class="text-muted small mb-3">{{ $m['desc'] }}</p>
+                            <span class="badge bg-{{ $m['color'] }} px-3 py-2 rounded-pill"></span>
+                        </div>
+
+                        <!-- 🚀 Quick Action Menu -->
+                        <div class="quick-action d-flex justify-content-center align-items-center">
+                            <button class="btn btn-light btn-sm me-2 shadow-sm" title="Lihat Detail">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-{{ $m['color'] }} btn-sm shadow-sm" title="Aksi Cepat">
+                                <i class="fas fa-bolt"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endforeach
         </div>
     </div>
 
+    <!-- 🎨 CSS Effects -->
+    <style>
+        /* Container Animation */
+        .animate-container {
+            animation: fadeInScale 0.8s ease forwards;
+        }
 
+        @keyframes fadeInScale {
+            0% {
+                opacity: 0;
+                transform: scale(.97)
+            }
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-warning bg-opacity-10 p-3 rounded">
-                                <i class="fas fa-school fa-2x text-warning"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="card-title mb-1 text-muted">Total Kelas</h6>
-                            <h3 class="mb-0 text-warning">{{ number_format($stats['total_classes']) }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            100% {
+                opacity: 1;
+                transform: scale(1)
+            }
+        }
 
-        <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center">
-                        <div class="flex-shrink-0">
-                            <div class="bg-danger bg-opacity-10 p-3 rounded">
-                                <i class="fas fa-history fa-2x text-danger"></i>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1 ms-3">
-                            <h6 class="card-title mb-1 text-muted">Log Hari Ini</h6>
-                            <h3 class="mb-0 text-danger">
-                                @php
-                                    $todayLogs = \App\Models\Log::whereDate('created_at', today())->count();
-                                @endphp
-                                {{ number_format($todayLogs) }}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp .8s ease forwards;
+        }
 
-    <!-- Quick Actions & Recent Activities -->
-    <div class="row mb-4">
-        <!-- Quick Actions -->
-        <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-light border-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-bolt text-warning me-2"></i>Aksi Cepat
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.users.create') }}" class="btn btn-outline-primary w-100 p-3 h-auto">
-                                <i class="fas fa-user-plus fa-2x mb-2"></i><br>
-                                <span>Tambah Pengguna</span>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.teachers.create') }}" class="btn btn-outline-success w-100 p-3 h-auto">
-                                <i class="fas fa-chalkboard-teacher fa-2x mb-2"></i><br>
-                                <span>Tambah Guru</span>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.classes.create') }}" class="btn btn-outline-info w-100 p-3 h-auto">
-                                <i class="fas fa-school fa-2x mb-2"></i><br>
-                                <span>Tambah Kelas</span>
-                            </a>
-                        </div>
-                        <div class="col-md-6">
-                            <a href="{{ route('admin.announcements.create') }}" class="btn btn-outline-warning w-100 p-3 h-auto">
-                                <i class="fas fa-bullhorn fa-2x mb-2"></i><br>
-                                <span>Buat Pengumuman</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
 
-        <!-- System Info -->
-        <div class="col-lg-6 mb-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-header bg-light border-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-info-circle text-info me-2"></i>Informasi Sistem
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <div class="text-center">
-                                <div class="h4 mb-1 text-primary">{{ number_format($stats['total_subjects']) }}</div>
-                                <small class="text-muted">Mata Pelajaran</small>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="text-center">
-                                <div class="h4 mb-1 text-info">{{ now()->format('W') }}</div>
-                                <small class="text-muted">Minggu Ke</small>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <div class="text-center">
-                                <div class="h4 mb-1 text-warning">{{ now()->format('m') }}</div>
-                                <small class="text-muted">Bulan</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    <!-- Management Modules -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-light border-0">
-                    <h5 class="mb-0">
-                        <i class="fas fa-cogs text-secondary me-2"></i>Modul Manajemen
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-4">
-                        <!-- User Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.users') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-users fa-2x text-primary"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Pengguna</h6>
-                                    <p class="card-text text-muted small">Kelola akun pengguna, role, dan izin akses sistem</p>
-                                    <span class="badge bg-primary">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        /* Gradient Title */
+        .text-gradient {
+            background: linear-gradient(90deg, #007bff, #00c9a7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-                        <!-- Teacher Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.teachers') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-chalkboard-teacher fa-2x text-success"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Guru</h6>
-                                    <p class="card-text text-muted small">Data guru, jadwal mengajar, dan penugasan kelas</p>
-                                    <span class="badge bg-success">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        /* Card Style */
+        .module-card {
+            background: #fff;
+            border-radius: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-                        <!-- Student Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.students') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-user-graduate fa-2x text-info"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Siswa</h6>
-                                    <p class="card-text text-muted small">Data siswa, nilai, dan rapor akademik</p>
-                                    <span class="badge bg-info">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        .module-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 1.25rem 2rem rgba(0, 0, 0, 0.15);
+        }
 
-                        <!-- Class Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.classes') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-school fa-2x text-warning"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Kelas</h6>
-                                    <p class="card-text text-muted small">Pengaturan kelas, wali kelas, dan struktur akademik</p>
-                                    <span class="badge bg-warning">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        /* Glow Background */
+        .module-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 40% 40%, rgba(0, 123, 255, 0.15), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+        }
 
-                        <!-- Subject Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.subjects.index') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-book fa-2x text-danger"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Mata Pelajaran</h6>
-                                    <p class="card-text text-muted small">Kurikulum, silabus, dan standar kompetensi</p>
-                                    <span class="badge bg-danger">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        .module-card:hover .module-glow {
+            opacity: 1;
+            animation: glowMove 3s infinite alternate ease-in-out;
+        }
 
-                        <!-- Schedule Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.schedules.index') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-secondary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-calendar-alt fa-2x text-secondary"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Manajemen Jadwal</h6>
-                                    <p class="card-text text-muted small">Jadwal pelajaran dan kegiatan sekolah</p>
-                                    <span class="badge bg-secondary">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+        @keyframes glowMove {
+            0% {
+                background-position: 0% 0%;
+            }
 
-                        <!-- Announcement Management -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.announcements') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-dark bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-bullhorn fa-2x text-dark"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Pengumuman</h6>
-                                    <p class="card-text text-muted small">Informasi dan berita sekolah</p>
-                                    <span class="badge bg-dark">Kelola</span>
-                                </div>
-                            </div>
-                        </div>
+            100% {
+                background-position: 100% 100%;
+            }
+        }
 
-                        <!-- System Logs -->
-                        <div class="col-xl-3 col-md-6">
-                            <div class="card border-0 shadow-sm h-100 module-card" onclick="window.location.href='{{ route('admin.logs.dashboard') }}'">
-                                <div class="card-body text-center p-4">
-                                    <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-                                        <i class="fas fa-history fa-2x text-primary"></i>
-                                    </div>
-                                    <h6 class="card-title mb-2">Log Sistem</h6>
-                                    <p class="card-text text-muted small">Riwayat aktivitas dan audit trail</p>
-                                    <span class="badge bg-primary">Lihat</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection
+        /* Floating Icon */
+        .floating-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            animation: floatIcon 3s ease-in-out infinite;
+        }
 
-@push('styles')
-<style>
-.module-card {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
+        @keyframes floatIcon {
 
-.module-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
 
-.card {
-    transition: box-shadow 0.3s ease;
-}
+            50% {
+                transform: translateY(-8px);
+            }
+        }
 
-.card:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
-}
-</style>
-@endpush
+        /* Quick Action Menu */
+        .quick-action {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .4s ease;
+            z-index: 3;
+        }
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Add click animation to module cards
-    const moduleCards = document.querySelectorAll('.module-card');
-    moduleCards.forEach(card => {
-        card.addEventListener('click', function() {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
+        .module-card:hover .quick-action {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Button Animation */
+        .quick-action button {
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            transition: transform .3s ease, background-color .3s ease;
+        }
+
+        .quick-action button:hover {
+            transform: scale(1.15);
+            filter: brightness(1.1);
+        }
+
+        /* Pulse Effect */
+        .module-card:hover .badge {
+            animation: pulse 1.3s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 rgba(0, 123, 255, 0);
+            }
+
+            50% {
+                box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
+            }
+        }
+    </style>
+
+    <!-- 🧩 Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.fade-in-up');
+            items.forEach((el, i) => el.style.animationDelay = `${i * 0.1}s`);
         });
-    });
-});
-</script>
-@endpush
+    </script>
+@endsection
