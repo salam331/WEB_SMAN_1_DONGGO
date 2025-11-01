@@ -53,60 +53,38 @@
                             <table class="table align-middle table-hover mb-0">
                                 <thead class="bg-primary text-white">
                                     <tr>
-                                        <th>Siswa</th>
-                                        <th>Kelas</th>
                                         <th>Ujian</th>
+                                        <th>Kelas</th>
                                         <th>Mata Pelajaran</th>
-                                        <th>Nilai</th>
-                                        <th>Grade</th>
-                                        <th>Keterangan</th>
                                         <th>Tanggal Input</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white">
-                                    @foreach($examResults as $result)
+                                    @php
+                                        // Group examResults by exam_id, ambil ujian terbaru
+                                        $exams = $examResults->groupBy('exam_id')->map(function($items) { return $items->first(); });
+                                    @endphp
+                                    @forelse($exams as $exam)
                                     <tr class="hover-row">
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                @if($result->student->user->profile_photo)
-                                                    <img src="{{ asset('storage/' . $result->student->user->profile_photo) }}"
-                                                         alt="Foto" class="rounded-circle me-3 shadow-sm" width="40" height="40">
-                                                @else
-                                                    <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                                        <i class="fas fa-user fa-sm"></i>
-                                                    </div>
-                                                @endif
-                                                <div>
-                                                    <div class="fw-semibold text-dark">{{ $result->student->user->name }}</div>
-                                                    <small class="text-muted">{{ $result->student->nis }}</small>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>{{ $result->exam->classRoom->name }}</td>
-                                        <td>{{ $result->exam->name }}</td>
-                                        <td>{{ $result->exam->subject->name }}</td>
-                                        <td>
-                                            <span class="badge bg-info text-dark fs-6 shadow-sm">
-                                                {{ $result->score }}/{{ $result->exam->total_score }}
-                                            </span>
-                                        </td>
-                                        <td>
-                                            @switch($result->grade)
-                                                @case('A') <span class="badge bg-success shadow-sm fs-6">A</span> @break
-                                                @case('B') <span class="badge bg-primary shadow-sm fs-6">B</span> @break
-                                                @case('C') <span class="badge bg-warning text-dark shadow-sm fs-6">C</span> @break
-                                                @case('D') <span class="badge bg-danger shadow-sm fs-6">D</span> @break
-                                                @case('E') <span class="badge bg-dark shadow-sm fs-6">E</span> @break
-                                                @default <span class="badge bg-secondary shadow-sm fs-6">{{ $result->grade }}</span>
-                                            @endswitch
-                                        </td>
-                                        <td>{{ $result->remark ?? '-' }}</td>
+                                        <td>{{ $exam->exam->name }}</td>
+                                        <td>{{ $exam->exam->classRoom->name }}</td>
+                                        <td>{{ $exam->exam->subject->name }}</td>
                                         <td>
                                             <i class="fas fa-clock text-muted me-1"></i>
-                                            {{ $result->created_at->format('d/m/Y H:i') }}
+                                            {{ $exam->exam->created_at ? $exam->exam->created_at->format('d/m/Y H:i') : '-' }}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ route('teachers.grades.show', $exam->exam->id) }}" class="btn btn-sm btn-info shadow-sm" title="Lihat Nilai Siswa">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
                                         </td>
                                     </tr>
-                                    @endforeach
+                                    @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Belum ada data ujian.</td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>

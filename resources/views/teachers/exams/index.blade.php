@@ -67,7 +67,7 @@
                                         <div class="card border-0 shadow-sm rounded-3 h-100 hover-lift transition overflow-hidden">
                                             <div class="card-body p-4">
                                                 <div class="d-flex justify-content-between align-items-start mb-3">
-                                                    <h6 class="card-title mb-1 fw-bold text-dark">{{ $exam->title }}</h6>
+                                                    <h6 class="card-title mb-1 fw-bold text-dark">{{ $exam->name }}</h6>
                                                     <span
                                                         class="badge bg-{{ $exam->status == 'published' ? 'success' : ($exam->status == 'completed' ? 'primary' : 'secondary') }}">
                                                         {{ ucfirst($exam->status) }}
@@ -97,7 +97,7 @@
 
                                                 <div class="d-flex gap-2 mt-3">
                                                     @if($exam->status == 'published')
-                                                        <a href="{{ route('teacher.exams.input_grades', $exam) }}"
+                                                        <a href="{{ route('teachers.grades.input', $exam) }}"
                                                             class="btn btn-success btn-sm rounded-pill shadow-sm">
                                                             <i class="fas fa-graduation-cap me-1"></i>Input Nilai
                                                         </a>
@@ -109,20 +109,25 @@
                                                         </button>
                                                         <ul class="dropdown-menu shadow-sm rounded-3">
                                                             <li><a class="dropdown-item"
-                                                                    href="{{ route('teacher.exams.show', $exam) }}">
+                                                                    href="{{ route('teachers.exams.show', $exam) }}">
                                                                     <i class="fas fa-eye me-2 text-info"></i>Lihat Detail
                                                                 </a></li>
                                                             <li><a class="dropdown-item"
-                                                                    href="{{ route('teacher.exams.edit', $exam) }}">
+                                                                    href="{{ route('teachers.exams.edit', $exam) }}">
                                                                     <i class="fas fa-edit me-2 text-warning"></i>Edit
                                                                 </a></li>
                                                             <li>
                                                                 <hr class="dropdown-divider">
                                                             </li>
-                                                            <li><a class="dropdown-item text-danger" href="#"
-                                                                    onclick="confirmDelete({{ $exam->id }})">
-                                                                    <i class="fas fa-trash me-2"></i>Hapus
-                                                                </a></li>
+                                                            <li>
+                                                                <form action="{{ route('teachers.exams.destroy', $exam->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus ujian ini?')">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="dropdown-item text-danger">
+                                                                        <i class="fas fa-trash me-2"></i>Hapus
+                                                                    </button>
+                                                                </form>
+                                                            </li>
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -246,7 +251,18 @@
             });
 
             function confirmDelete(examId) {
-                document.getElementById('deleteForm').action = '{{ route("teachers.exams.index") }}/' + examId;
+                // Gunakan route destroy dengan placeholder agar lebih aman
+                var url = '{{ route("teachers.exams.destroy", ["exam" => ":id"]) }}';
+                if (url.includes(':id')) {
+                    url = url.replace(':id', examId);
+                } else {
+                    // Fallback jika Blade sudah mengganti :id, ambil base url dan tambahkan id
+                    if (!url.endsWith('/')) url += '/';
+                    url += examId;
+                }
+                document.getElementById('deleteForm').action = url;
+                // Debug log
+                console.log('Delete form action set to:', url);
                 new bootstrap.Modal(document.getElementById('deleteModal')).show();
             }
         </script>

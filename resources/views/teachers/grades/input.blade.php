@@ -18,7 +18,7 @@
                                 {{ $exam->subject->name }} - {{ $exam->classRoom->name }}
                             </small>
                         </div>
-                        <a href="{{ route('teacher.grades') }}" class="btn btn-light btn-sm shadow-sm rounded-pill px-3">
+                        <a href="{{ route('teachers.grades') }}" class="btn btn-light btn-sm shadow-sm rounded-pill px-3">
                             <i class="fas fa-arrow-left me-1"></i>Kembali
                         </a>
                     </div>
@@ -58,7 +58,7 @@
                         </div>
 
                         <!-- Form Input Nilai -->
-                        <form method="POST" action="{{ route('teacher.grades.store', $exam->id) }}" id="gradesForm">
+                        <form method="POST" action="{{ route('teachers.grades.store', $exam->id) }}" id="gradesForm">
                             @csrf
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle shadow-sm">
@@ -74,6 +74,9 @@
                                     </thead>
                                     <tbody>
                                         @foreach($exam->classRoom->students as $index => $student)
+                                            @php
+                                                $existingResult = $existingResults->get($student->id);
+                                            @endphp
                                             <tr class="row-hover transition">
                                                 <td>{{ $index + 1 }}</td>
                                                 <td>
@@ -99,22 +102,24 @@
                                                         class="form-control form-control-sm grade-input border-0 bg-white shadow-sm"
                                                         name="grades[{{ $index }}][score]" min="0"
                                                         max="{{ $exam->total_score }}" placeholder="0-{{ $exam->total_score }}"
+                                                        value="{{ $existingResult ? $existingResult->score : '' }}"
                                                         required>
                                                 </td>
                                                 <td>
                                                     <select class="form-select form-select-sm border-0 shadow-sm grade-select"
                                                         name="grades[{{ $index }}][grade]" required>
                                                         <option value="">Pilih Grade</option>
-                                                        <option value="A">A (85-100)</option>
-                                                        <option value="B">B (75-84)</option>
-                                                        <option value="C">C (60-74)</option>
-                                                        <option value="D">D (45-59)</option>
-                                                        <option value="E">E (0-44)</option>
+                                                        <option value="A" {{ $existingResult && $existingResult->grade == 'A' ? 'selected' : '' }}>A (85-100)</option>
+                                                        <option value="B" {{ $existingResult && $existingResult->grade == 'B' ? 'selected' : '' }}>B (75-84)</option>
+                                                        <option value="C" {{ $existingResult && $existingResult->grade == 'C' ? 'selected' : '' }}>C (60-74)</option>
+                                                        <option value="D" {{ $existingResult && $existingResult->grade == 'D' ? 'selected' : '' }}>D (45-59)</option>
+                                                        <option value="E" {{ $existingResult && $existingResult->grade == 'E' ? 'selected' : '' }}>E (0-44)</option>
                                                     </select>
                                                 </td>
                                                 <td>
                                                     <input type="text" class="form-control form-control-sm border-0 shadow-sm"
-                                                        name="grades[{{ $index }}][remark]" placeholder="Opsional">
+                                                        name="grades[{{ $index }}][remark]" placeholder="Opsional"
+                                                        value="{{ $existingResult ? $existingResult->remark : '' }}">
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -123,8 +128,8 @@
                             </div>
 
                             <!-- Tombol -->
-                            <div class="d-flex justify-content-between mt-4">
-                                <a href="{{ route('teacher.grades') }}" class="btn btn-outline-secondary rounded-pill px-4">
+                            <div class="d-flex justify-content-end gap-2 mt-4">
+                                <a href="{{ route('teachers.grades') }}" class="btn btn-outline-secondary rounded-pill px-4">
                                     <i class="fas fa-arrow-left me-1"></i>Batal
                                 </a>
                                 <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm hover-glow">

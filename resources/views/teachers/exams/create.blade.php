@@ -22,17 +22,30 @@
                     </div>
 
                     <div class="card-body p-4">
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <strong>Terdapat kesalahan dalam input:</strong>
+                                <ul class="mt-2 mb-0 ps-3">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        @endif
+
                         <form action="{{ route('teachers.exams.store') }}" method="POST" class="fade-up">
                             @csrf
                             <div class="row g-3">
                                 <!-- Judul Ujian -->
                                 <div class="col-12">
-                                    <label for="title" class="form-label fw-semibold">Judul Ujian <span
+                                    <label for="name" class="form-label fw-semibold">Judul Ujian <span
                                             class="text-danger">*</span></label>
                                     <input type="text"
-                                        class="form-control input-animated @error('title') is-invalid @enderror" id="title"
-                                        name="title" value="{{ old('title') }}" required>
-                                    @error('title')
+                                        class="form-control input-animated @error('name') is-invalid @enderror" id="name"
+                                        name="name" value="{{ old('name') }}" required>
+                                    @error('name')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -85,6 +98,34 @@
                                     @enderror
                                 </div>
 
+                                <!-- Kombinasi Mata Pelajaran dan Kelas -->
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">Kombinasi Mata Pelajaran dan Kelas yang Anda Ajar</label>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>Mata Pelajaran</th>
+                                                    <th>Kelas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($subjectTeachers as $st)
+                                                    <tr>
+                                                        <td>{{ $st->subject->name }}</td>
+                                                        <td>{{ $st->classRoom->name }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="2" class="text-center text-muted">Tidak ada kombinasi mata pelajaran dan kelas yang ditugaskan.</td>
+                                                    </tr>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <small class="text-muted">Pastikan kombinasi mata pelajaran dan kelas yang dipilih sesuai dengan yang Anda ajar.</small>
+                                </div>
+
                                 <!-- Tanggal & Waktu -->
                                 <div class="col-md-6">
                                     <label for="exam_date" class="form-label fw-semibold">Tanggal Ujian <span
@@ -128,6 +169,19 @@
                                         id="total_questions" name="total_questions" value="{{ old('total_questions') }}"
                                         min="1">
                                     @error('total_questions')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <!-- Total Skor -->
+                                <div class="col-md-6">
+                                    <label for="total_score" class="form-label fw-semibold">Total Skor <span
+                                            class="text-danger">*</span></label>
+                                    <input type="number"
+                                        class="form-control input-animated @error('total_score') is-invalid @enderror"
+                                        id="total_score" name="total_score" value="{{ old('total_score', 100) }}" min="1"
+                                        required>
+                                    @error('total_score')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>

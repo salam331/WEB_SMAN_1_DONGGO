@@ -432,14 +432,29 @@ class TeacherController extends Controller
 
     public function inputGrades($examId)
     {
-        $exam = Exam::with('classRoom.students.user')->findOrFail($examId);
+        $exam = Exam::with('classRoom.students.user', 'examResults')->findOrFail($examId);
         $teacher = auth()->user()->teacher;
 
         if (!$exam->classRoom->subjectTeachers()->where('teacher_id', $teacher->id)->exists()) {
             abort(403);
         }
 
-        return view('teachers.grades.input', compact('exam'));
+        // Get existing exam results keyed by student_id
+        $existingResults = $exam->examResults->keyBy('student_id');
+
+        return view('teachers.grades.input', compact('exam', 'existingResults'));
+    }
+
+    public function showGrades($examId)
+    {
+        $exam = Exam::with('classRoom.students.user', 'subject', 'examResults.student.user')->findOrFail($examId);
+        $teacher = auth()->user()->teacher;
+
+        if (!$exam->classRoom->subjectTeachers()->where('teacher_id', $teacher->id)->exists()) {
+            abort(403);
+        }
+
+        return view('teachers.grades.show', compact('exam'));
     }
 
     public function storeGrades(Request $request, $examId)
@@ -473,7 +488,7 @@ class TeacherController extends Controller
             );
         }
 
-        return redirect()->route('teacher.grades')->with('success', 'Grades saved successfully.');
+        return redirect()->route('teachers.grades')->with('success', 'Grades saved successfully.');
     }
 
     // Material Management

@@ -27,16 +27,7 @@ class ExamController extends Controller
         $teacher = auth()->user()->teacher;
 
         $query = Exam::with(['subject', 'classRoom'])
-            ->whereHas('subject', function($q) use ($teacher) {
-                $q->whereHas('subjectTeachers', function($sq) use ($teacher) {
-                    $sq->where('teacher_id', $teacher->id);
-                });
-            })
-            ->whereHas('classRoom', function($q) use ($teacher) {
-                $q->whereHas('subjectTeachers', function($sq) use ($teacher) {
-                    $sq->where('teacher_id', $teacher->id);
-                });
-            });
+            ->where('teacher_id', $teacher->id);
 
         // Filter by subject
         if ($request->subject_id) {
@@ -48,13 +39,27 @@ class ExamController extends Controller
             $query->where('class_id', $request->class_id);
         }
 
+        // Filter by status
+        if ($request->status) {
+            $query->where('status', $request->status);
+        }
+
+        // Filter by exam_date range if needed
+        if ($request->start_date && $request->end_date) {
+            $query->whereBetween('exam_date', [$request->start_date, $request->end_date]);
+        } elseif ($request->start_date) {
+            $query->where('exam_date', '>=', $request->start_date);
+        } elseif ($request->end_date) {
+            $query->where('exam_date', '<=', $request->end_date);
+        }
+
         // Search functionality
         if ($request->search) {
             $search = $request->search;
             $query->where('name', 'like', "%{$search}%");
         }
 
-        $exams = $query->orderBy('start_date', 'desc')
+        $exams = $query->orderBy('exam_date', 'desc')
                        ->paginate(20)
                        ->withQueryString();
 
@@ -84,7 +89,9 @@ class ExamController extends Controller
             $q->where('teacher_id', $teacher->id);
         })->orderBy('name')->get();
 
-        return view('teachers.exams.create', compact('subjects', 'classes'));
+        $subjectTeachers = $teacher->subjectTeachers()->with('subject', 'classRoom')->get();
+
+        return view('teachers.exams.create', compact('subjects', 'classes', 'subjectTeachers'));
     }
 
     /**
@@ -98,13 +105,23 @@ class ExamController extends Controller
             'class_id' => ['required', 'exists:class_rooms,id'],
             'subject_id' => ['required', 'exists:subjects,id'],
             'name' => ['required', 'string', 'max:255'],
-            'start_date' => ['required', 'date', 'after_or_equal:today'],
-            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
-            'total_score' => ['required', 'integer', 'min:1', 'max:100'],
+            'description' => ['nullable', 'string'],
+            'exam_date' => ['required', 'date', 'after_or_equal:today'],
+            'start_time' => ['required'],
+            'duration' => ['required', 'integer', 'min:1'],
+            'total_questions' => ['nullable', 'integer', 'min:1'],
+            'total_score' => ['required', 'integer', 'min:1'],
+            'passing_grade' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'instructions' => ['nullable', 'string'],
+            'status' => ['required', 'in:draft,published'],
             'grade_items' => ['nullable', 'array'],
             'grade_items.*.type' => ['required_with:grade_items', 'string', 'max:50'],
             'grade_items.*.max_score' => ['required_with:grade_items', 'integer', 'min:1'],
         ]);
+
+        // Tambahkan start_date dan end_date agar tidak error (pakai exam_date sebagai default)
+        $data['start_date'] = $request->input('start_date', $data['exam_date']);
+        $data['end_date'] = $request->input('end_date', $data['exam_date']);
 
         // Tambahkan teacher_id ke data
         $data['teacher_id'] = $teacher->id;
@@ -116,32 +133,78 @@ class ExamController extends Controller
             ->exists();
 
         if (!$isAssigned) {
+            \Log::warning('Teacher assignment check failed', [
+                'teacher_id' => $teacher->id,
+                'subject_id' => $data['subject_id'],
+                'class_id' => $data['class_id'],
+                'exam_name' => $data['name']
+            ]);
+
             return back()
                 ->withInput()
-                ->with('error', 'Anda tidak memiliki akses untuk membuat ujian pada mata pelajaran dan kelas ini.');
+                ->with('error', 'Anda tidak memiliki akses untuk membuat ujian pada mata pelajaran dan kelas ini. Pastikan Anda ditugaskan untuk mengajar mata pelajaran ini di kelas tersebut.');
         }
 
         try {
+            \DB::beginTransaction();
             $exam = Exam::create($data);
 
-            // Create grade items if provided
-            if ($request->grade_items) {
-                foreach ($request->grade_items as $item) {
-                    $exam->gradeItems()->create([
-                        'type' => $item['type'],
-                        'max_score' => $item['max_score'],
-                    ]);
+            // Create grade items if provided and valid
+            $gradeItems = $request->input('grade_items');
+            if (is_array($gradeItems) && count($gradeItems) > 0) {
+                foreach ($gradeItems as $item) {
+                    if (is_array($item) && isset($item['type']) && isset($item['max_score'])) {
+                        $exam->gradeItems()->create([
+                            'type' => $item['type'],
+                            'max_score' => $item['max_score'],
+                        ]);
+                    }
                 }
             }
 
+            \Log::info('Exam created successfully', [
+                'exam_id' => $exam->id,
+                'teacher_id' => $teacher->id,
+                'subject_id' => $data['subject_id'],
+                'class_id' => $data['class_id']
+            ]);
+
+            \DB::commit();
             return redirect()
-                ->route('teacher.exams')
+                ->route('teachers.exams.index')
                 ->with('success', 'Ujian berhasil dibuat.');
-                
-        } catch (\Exception $e) {
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            \DB::rollBack();
+            \Log::error('Database error during exam creation', [
+                'error' => $e->getMessage(),
+                'teacher_id' => $teacher->id,
+                'data' => $data
+            ]);
+
+            // Handle specific database errors
+            if ($e->getCode() == 23000) { // Integrity constraint violation
+                return back()
+                    ->withInput()
+                    ->with('error', 'Data yang dimasukkan tidak valid. Periksa kembali mata pelajaran dan kelas yang dipilih.');
+            }
+
             return back()
                 ->withInput()
-                ->with('error', 'Gagal membuat ujian. Silakan coba lagi.');
+                ->with('error', 'Terjadi kesalahan database. Silakan coba lagi atau hubungi administrator.');
+
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error('Unexpected error during exam creation', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'teacher_id' => $teacher->id,
+                'data' => $data
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan tidak terduga. Silakan coba lagi atau hubungi administrator jika masalah berlanjut.');
         }
     }
 
@@ -157,7 +220,9 @@ class ExamController extends Controller
 
         $exam->load(['subject', 'classRoom', 'gradeItems', 'examResults.student.user']);
 
-        return view('teachers.exams.show', compact('exam'));
+        $examResults = $exam->examResults;
+
+        return view('teachers.exams.show', compact('exam', 'examResults'));
     }
 
     /**
@@ -207,9 +272,15 @@ class ExamController extends Controller
             'class_id' => ['required', 'exists:class_rooms,id'],
             'subject_id' => ['required', 'exists:subjects,id'],
             'name' => ['required', 'string', 'max:255'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after_or_equal:start_date'],
-            'total_score' => ['required', 'integer', 'min:1', 'max:100'],
+            'description' => ['nullable', 'string'],
+            'exam_date' => ['required', 'date'],
+            'start_time' => ['required'],
+            'duration' => ['required', 'integer', 'min:1'],
+            'total_questions' => ['nullable', 'integer', 'min:1'],
+            'total_score' => ['required', 'integer', 'min:1'],
+            'passing_grade' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'instructions' => ['nullable', 'string'],
+            'status' => ['required', 'in:draft,published'],
             'grade_items' => ['nullable', 'array'],
             'grade_items.*.type' => ['required_with:grade_items', 'string', 'max:50'],
             'grade_items.*.max_score' => ['required_with:grade_items', 'integer', 'min:1'],
@@ -230,7 +301,7 @@ class ExamController extends Controller
             }
 
             return redirect()
-                ->route('teacher.exams')
+                ->route('teachers.exams.index')
                 ->with('success', 'Ujian berhasil diperbarui.');
                 
         } catch (\Exception $e) {
@@ -260,7 +331,7 @@ class ExamController extends Controller
             $exam->delete();
 
             return redirect()
-                ->route('teacher.exams')
+                ->route('teachers.exams.index')
                 ->with('success', 'Ujian berhasil dihapus.');
                 
         } catch (\Exception $e) {
@@ -283,7 +354,10 @@ class ExamController extends Controller
         // Get students in the class
         $students = $exam->classRoom->students()->with('user')->get();
 
-        return view('teachers.exams.input_grades', compact('exam', 'students'));
+        // Get existing exam results keyed by student_id
+        $existingResults = $exam->examResults->keyBy('student_id');
+
+        return view('teachers.grades.input', compact('exam', 'students', 'existingResults'));
     }
 
     /**
@@ -315,6 +389,7 @@ class ExamController extends Controller
                         'score' => $gradeData['score'],
                         'grade' => $gradeData['grade'] ?? $this->calculateGrade($gradeData['score'], $exam->subject->kkm),
                         'remark' => $gradeData['remark'] ?? null,
+                        'submitted_at' => now(),
                     ]
                 );
             }
@@ -340,6 +415,40 @@ class ExamController extends Controller
             ->where('subject_id', $exam->subject_id)
             ->where('class_id', $exam->class_id)
             ->exists();
+    }
+
+    /**
+     * Export exam results to PDF
+     */
+    public function exportPdf(Exam $exam)
+    {
+        // Check access permission
+        if (!$this->canAccessExam($exam)) {
+            abort(403);
+        }
+
+        $exam->load(['subject', 'classRoom', 'examResults.student.user']);
+
+        $examResults = $exam->examResults;
+
+        // Calculate statistics
+        $totalStudents = $examResults->count();
+        $passedStudents = $examResults->where('score', '>=', $exam->passing_grade ?? 0)->count();
+        $failedStudents = $totalStudents - $passedStudents;
+        $averageScore = $totalStudents > 0 ? $examResults->avg('score') : 0;
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('teachers.exams.export_pdf', compact(
+            'exam',
+            'examResults',
+            'totalStudents',
+            'passedStudents',
+            'failedStudents',
+            'averageScore'
+        ));
+
+        $filename = 'hasil_ujian_' . $exam->name . '_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     /**

@@ -168,6 +168,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/exams', \App\Http\Controllers\Teacher\ExamController::class)->names('exams');
         Route::get('/exams/{exam}/input-grades', [\App\Http\Controllers\Teacher\ExamController::class, 'inputGrades'])->name('exams.input_grades');
         Route::post('/exams/{exam}/store-grades', [\App\Http\Controllers\Teacher\ExamController::class, 'storeGrades'])->name('exams.store_grades');
+        Route::get('/exams/{exam}/export-pdf', [\App\Http\Controllers\Teacher\ExamController::class, 'exportPdf'])->name('exams.export_pdf');
 
         // Class Management
         Route::get('/classes', [TeacherController::class, 'classes'])->name('classes');
@@ -192,6 +193,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Grade Management
         Route::get('/grades', [TeacherController::class, 'grades'])->name('grades');
+        Route::get('/grades/{examId}', [TeacherController::class, 'showGrades'])->name('grades.show');
         Route::get('/grades/input/{examId}', [TeacherController::class, 'inputGrades'])->name('grades.input');
         Route::post('/grades/input/{examId}', [TeacherController::class, 'storeGrades'])->name('grades.store');
 

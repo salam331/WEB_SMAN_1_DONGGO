@@ -15,6 +15,11 @@ class ExamResult extends Model
         'score',
         'grade',
         'remark',
+        'submitted_at',
+    ];
+
+    protected $casts = [
+        'submitted_at' => 'datetime',
     ];
 
     // Relations
