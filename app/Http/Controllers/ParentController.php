@@ -10,21 +10,34 @@ use App\Models\Announcement;
 use App\Models\Message;
 use App\Models\Notification;
 use App\Models\Invoice;
+use App\Models\Schedule;
+use Carbon\Carbon;
 
 class ParentController extends Controller
 {
     public function dashboard()
     {
-        $parent = auth()->user()->parentModel;
+        $parent = auth()->user()->parent;
+        if (!$parent) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki data orang tua.');
+        }
         $children = $parent->students;
 
         $stats = [];
         foreach ($children as $child) {
+            // Get today's schedules for the child's class
+            $todaySchedules = Schedule::where('class_id', $child->rombel_id)
+                ->where('day', Carbon::today()->format('l')) // 'l' gives full day name like 'Monday'
+                ->with('subject', 'teacher.user', 'classRoom')
+                ->orderBy('start_time')
+                ->get();
+
             $stats[$child->id] = [
                 'name' => $child->user->name,
                 'today_attendance' => Attendance::where('student_id', $child->id)
                     ->where('date', today())
                     ->first(),
+                'today_schedules' => $todaySchedules,
                 'unread_messages' => Message::where('receiver_id', auth()->id())
                     ->where('is_read', false)
                     ->count(),
@@ -39,7 +52,10 @@ class ParentController extends Controller
 
     public function childDetail($childId)
     {
-        $parent = auth()->user()->parentModel;
+        $parent = auth()->user()->parent;
+        if (!$parent) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki data orang tua.');
+        }
         $child = $parent->students()->findOrFail($childId);
 
         return view('parent.child_detail', compact('child'));
@@ -48,7 +64,10 @@ class ParentController extends Controller
     // View child's attendance
     public function childAttendance($childId)
     {
-        $parent = auth()->user()->parentModel;
+        $parent = auth()->user()->parent;
+        if (!$parent) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki data orang tua.');
+        }
         $child = $parent->students()->findOrFail($childId);
 
         $attendances = Attendance::where('student_id', $childId)
@@ -61,7 +80,10 @@ class ParentController extends Controller
     // View child's grades
     public function childGrades($childId)
     {
-        $parent = auth()->user()->parentModel;
+        $parent = auth()->user()->parent;
+        if (!$parent) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki data orang tua.');
+        }
         $child = $parent->students()->findOrFail($childId);
 
         $examResults = ExamResult::where('student_id', $childId)
@@ -75,7 +97,10 @@ class ParentController extends Controller
     // View child's invoices
     public function childInvoices($childId)
     {
-        $parent = auth()->user()->parentModel;
+        $parent = auth()->user()->parent;
+        if (!$parent) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki data orang tua.');
+        }
         $child = $parent->students()->findOrFail($childId);
 
         $invoices = Invoice::where('student_id', $childId)

@@ -87,7 +87,7 @@
                                                     </div>
                                                     <div class="col-6">
                                                         <small class="text-muted d-block">Tanggal</small>
-                                                        <span>{{ $exam->exam_date->format('d/m/Y') }}</span>
+                                                        <span>{{ $exam->exam_date ? $exam->exam_date->format('d/m/Y') : 'Tidak ditentukan' }}</span>
                                                     </div>
                                                     <div class="col-6">
                                                         <small class="text-muted d-block">Durasi</small>

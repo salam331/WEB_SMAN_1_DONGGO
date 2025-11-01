@@ -287,11 +287,11 @@ Route::middleware(['auth'])->group(function () {
         // Announcements
         Route::get('/announcements', [ParentController::class, 'announcements'])->name('announcements');
 
-        // Messages
-        Route::get('/messages', [ParentController::class, 'messages'])->name('messages');
-        Route::post('/messages/send', [ParentController::class, 'sendMessage'])->name('messages.send');
+        // // Messages
+        // Route::get('/messages', [ParentController::class, 'messages'])->name('messages');
+        // Route::post('/messages/send', [ParentController::class, 'sendMessage'])->name('messages.send');
 
-        // Notifications
-        Route::get('/notifications', [ParentController::class, 'notifications'])->name('notifications');
+        // // Notifications
+        // Route::get('/notifications', [ParentController::class, 'notifications'])->name('notifications');
     });
 });

@@ -575,6 +575,50 @@
                                 </a>
                             </li> --}}
                         @endif
+
+                        @if(auth()->user()->hasRole('orang_tua'))
+                            <li>
+                                <a href="{{ route('parent.dashboard') }}"
+                                    class="{{ request()->routeIs('parent.dashboard') ? 'active' : '' }}">
+                                    <i class="fas fa-home"></i> Dashboard Orang Tua
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('parent.announcements') }}"
+                                    class="{{ request()->routeIs('parent.announcements') ? 'active' : '' }}">
+                                    <i class="fas fa-bullhorn"></i> Pengumuman
+                                </a>
+                            </li>
+                            @if(auth()->user()->parent && auth()->user()->parent->students->count() > 0)
+                                @foreach(auth()->user()->parent->students as $child)
+                                    <li class="menu-header">Anak: {{ $child->user->name }}</li>
+                                    <li>
+                                        <a href="{{ route('parent.child.detail', $child->id) }}"
+                                            class="{{ request()->routeIs('parent.child.detail') && request()->route('childId') == $child->id ? 'active' : '' }}">
+                                            <i class="fas fa-user"></i> Detail {{ $child->user->name }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('parent.child.attendance', $child->id) }}"
+                                            class="{{ request()->routeIs('parent.child.attendance') && request()->route('childId') == $child->id ? 'active' : '' }}">
+                                            <i class="fas fa-calendar-check"></i> Kehadiran {{ $child->user->name }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('parent.child.grades', $child->id) }}"
+                                            class="{{ request()->routeIs('parent.child.grades') && request()->route('childId') == $child->id ? 'active' : '' }}">
+                                            <i class="fas fa-graduation-cap"></i> Nilai {{ $child->user->name }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('parent.child.invoices', $child->id) }}"
+                                            class="{{ request()->routeIs('parent.child.invoices') && request()->route('childId') == $child->id ? 'active' : '' }}">
+                                            <i class="fas fa-file-invoice-dollar"></i> Tagihan {{ $child->user->name }}
+                                        </a>
+                                    </li>
+                                @endforeach
+                            @endif
+                        @endif
                     @endauth
                 </ul>
             </nav>
@@ -594,7 +638,8 @@
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Selamat Datang, {{ auth()->user()->name }}!
                         </h2>
-                        <p class="mb-0 small opacity-75">Dashboard Khusus {{ auth()->user()->name }} - Sistem Manajemen Sekolah</p>
+                        <p class="mb-0 small opacity-75">Dashboard Khusus {{ auth()->user()->name }} - Sistem Manajemen
+                            Sekolah</p>
                     </div>
                 </div>
 
