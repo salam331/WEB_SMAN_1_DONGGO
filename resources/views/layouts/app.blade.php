@@ -504,6 +504,77 @@
                                 </a>
                             </li>
                         @endif
+
+                        @if(auth()->user()->hasRole('siswa'))
+                            <li>
+                                <a href="{{ route('student.dashboard') }}"
+                                    class="{{ request()->routeIs('student.dashboard') ? 'active' : '' }}">
+                                    <i class="fas fa-tachometer-alt"></i> Dashboard Siswa
+                                </a>
+                            </li>
+                            {{-- ===== AKADEMIK ===== --}}
+                            <li class="menu-header">Akademik</li>
+                            <li>
+                                <a href="{{ route('student.schedule') }}"
+                                    class="{{ request()->routeIs('student.schedule') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-alt"></i> Jadwal Pelajaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('student.attendance') }}"
+                                    class="{{ request()->routeIs('student.attendance') ? 'active' : '' }}">
+                                    <i class="fas fa-calendar-check"></i> Riwayat Absensi
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('student.grades') }}"
+                                    class="{{ request()->routeIs('student.grades') ? 'active' : '' }}">
+                                    <i class="fas fa-graduation-cap"></i> Nilai
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('student.materials') }}"
+                                    class="{{ request()->routeIs('student.materials*') ? 'active' : '' }}">
+                                    <i class="fas fa-book-reader"></i> Materi Pembelajaran
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('student.announcements') }}"
+                                    class="{{ request()->routeIs('student.announcements') ? 'active' : '' }}">
+                                    <i class="fas fa-bullhorn"></i> Pengumuman
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('student.invoices') }}"
+                                    class="{{ request()->routeIs('student.invoices') ? 'active' : '' }}">
+                                    <i class="fas fa-file-invoice-dollar"></i> Tagihan
+                                </a>
+                            </li>
+                            {{-- <li>
+                                <a href="{{ route('student.library') }}"
+                                    class="{{ request()->routeIs('student.library*') ? 'active' : '' }}">
+                                    <i class="fas fa-book"></i> Perpustakaan
+                                </a>
+                            </li> --}}
+                            {{-- <li>
+                                <a href="{{ route('student.gallery') }}"
+                                    class="{{ request()->routeIs('student.gallery') ? 'active' : '' }}">
+                                    <i class="fas fa-images"></i> Galeri
+                                </a>
+                            </li> --}}
+                            {{-- <li>
+                                <a href="{{ route('student.messages') }}"
+                                    class="{{ request()->routeIs('student.messages*') ? 'active' : '' }}">
+                                    <i class="fas fa-envelope"></i> Pesan
+                                </a>
+                            </li> --}}
+                            {{-- <li>
+                                <a href="{{ route('student.notifications') }}"
+                                    class="{{ request()->routeIs('student.notifications*') ? 'active' : '' }}">
+                                    <i class="fas fa-bell"></i> Notifikasi
+                                </a>
+                            </li> --}}
+                        @endif
                     @endauth
                 </ul>
             </nav>
@@ -523,7 +594,7 @@
                             <i class="fas fa-tachometer-alt me-2"></i>
                             Selamat Datang, {{ auth()->user()->name }}!
                         </h2>
-                        <p class="mb-0 small opacity-75">Dashboard Administrator - Sistem Manajemen Sekolah</p>
+                        <p class="mb-0 small opacity-75">Dashboard Khusus {{ auth()->user()->name }} - Sistem Manajemen Sekolah</p>
                     </div>
                 </div>
 

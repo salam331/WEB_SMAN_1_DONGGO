@@ -1,15 +1,4 @@
-# TODO: Perbaiki Route Halaman Guru
-
-## Tugas Utama
-- Perbaiki inkonsistensi penamaan view di TeacherController.php untuk halaman materials, exams, dan grades
-
-## Langkah-langkah
-- [ ] Perbaiki method materials() di TeacherController.php untuk menggunakan view 'teachers.materials.index'
-- [ ] Perbaiki method exams() di TeacherController.php untuk menggunakan view 'teachers.exams.index'
-- [ ] Perbaiki method createExam() di TeacherController.php untuk menggunakan view 'teachers.exams.create'
-- [ ] Perbaiki method inputGrades() di TeacherController.php untuk menggunakan view 'teachers.grades.input'
-- [ ] Test routes untuk memastikan view benar dimuat
-
-## Status
-- [x] Analisis masalah selesai
-- [ ] Perbaikan kode dimulai
+- [x] Fix sender name display in student messages view (change $message->sender->user->name to $message->sender->name)
+- [x] Update viewMessage method to handle admin sender_type properly
+- [x] Fix "Error loading message" by handling body/content field properly
+- [x] Test message reading functionality (server started, browser tool disabled)

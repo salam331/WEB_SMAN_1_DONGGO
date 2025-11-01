@@ -19,7 +19,7 @@ class StudentController extends BaseController
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(['auth', 'role:admin'])->except(['dashboard', 'schedule', 'attendance', 'grades', 'materials', 'announcements', 'invoices', 'library', 'borrowBook', 'returnBook', 'gallery', 'messages', 'sendMessage', 'notifications']);
+        $this->middleware(['auth', 'role:admin'])->except(['dashboard', 'schedule', 'attendance', 'showAttendance', 'grades', 'materials', 'showMaterial', 'downloadMaterial', 'announcements', 'invoices', 'library', 'borrowBook', 'returnBook', 'gallery', 'messages', 'sendMessage', 'notifications']);
     }
 
     public function index(Request $request)
@@ -204,7 +204,7 @@ class StudentController extends BaseController
             'today_attendance' => \App\Models\Attendance::where('student_id', $student->id)
                 ->where('date', Carbon::today())
                 ->first(),
-            'total_materials' => \App\Models\Material::where('class_id', $student->class_id)
+            'total_materials' => \App\Models\Material::where('class_id', $student->rombel_id)
                 ->orWhereNull('class_id')
                 ->count(),
             'unread_messages' => \App\Models\Message::where('receiver_id', auth()->id())
@@ -215,20 +215,26 @@ class StudentController extends BaseController
                 ->count(),
         ];
 
-        return view('student.dashboard', compact('stats'));
+        $schedules = \App\Models\Schedule::where('class_id', $student->rombel_id)
+            ->with('subject', 'teacher.user', 'classRoom')
+            ->orderBy('day')
+            ->orderBy('start_time')
+            ->get();
+
+        return view('student.dashboard', compact('stats', 'schedules'));
     }
 
     // Schedule
     public function schedule()
     {
         $student = auth()->user()->student;
-        $schedules = \App\Models\Schedule::where('class_id', $student->class_id)
+        $schedules = \App\Models\Schedule::where('class_id', $student->rombel_id)
             ->with('subject', 'teacher.user')
             ->orderBy('day')
             ->orderBy('start_time')
             ->get();
 
-        return view('student.schedule', compact('schedules'));
+        return view('student.academic.schedule', compact('schedules'));
     }
 
     // Attendance
@@ -236,10 +242,28 @@ class StudentController extends BaseController
     {
         $student = auth()->user()->student;
         $attendances = \App\Models\Attendance::where('student_id', $student->id)
+            ->with(['schedule.subject', 'schedule.teacher.user'])
             ->orderBy('date', 'desc')
             ->paginate(20);
 
-        return view('student.attendance', compact('attendances'));
+        return view('student.academic.attendance', compact('attendances'));
+    }
+
+    // Show Attendance Detail for a specific schedule
+    public function showAttendance($scheduleId)
+    {
+        $student = auth()->user()->student;
+        $schedule = \App\Models\Schedule::where('id', $scheduleId)
+            ->where('class_id', $student->rombel_id)
+            ->with('subject', 'teacher.user')
+            ->firstOrFail();
+
+        $attendances = \App\Models\Attendance::where('student_id', $student->id)
+            ->where('schedule_id', $scheduleId)
+            ->orderBy('date', 'desc')
+            ->paginate(20);
+
+        return view('student.academic.attendance_detail', compact('schedule', 'attendances'));
     }
 
     // Grades
@@ -251,20 +275,74 @@ class StudentController extends BaseController
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('student.grades', compact('examResults'));
+        return view('student.academic.grades', compact('examResults'));
     }
 
     // Materials
     public function materials()
     {
         $student = auth()->user()->student;
-        $materials = \App\Models\Material::where('class_id', $student->class_id)
+        $subjects = \App\Models\Subject::whereHas('materials', function($query) use ($student) {
+            $query->where('class_id', $student->rombel_id)
+                  ->orWhereNull('class_id');
+        })
+        ->with(['materials' => function($query) use ($student) {
+            $query->where('class_id', $student->rombel_id)
+                  ->orWhereNull('class_id')
+                  ->where('is_published', true);
+        }, 'teacher.user', 'subjectTeachers.teacher.user'])
+        ->orderBy('name')
+        ->get();
+
+        return view('student.resources.materials', compact('subjects'));
+    }
+
+    public function showMaterial(\App\Models\Subject $subject)
+    {
+        $student = auth()->user()->student;
+
+        // Check if student has access to materials for this subject
+        $hasAccess = $subject->materials()
+            ->where(function($query) use ($student) {
+                $query->where('class_id', $student->rombel_id)
+                      ->orWhereNull('class_id');
+            })
+            ->where('is_published', true)
+            ->exists();
+
+        if (!$hasAccess) {
+            abort(403, 'Unauthorized access to subject materials.');
+        }
+
+        $materials = $subject->materials()
+            ->where('class_id', $student->rombel_id)
             ->orWhereNull('class_id')
-            ->with('subject', 'teacher.user')
+            ->where('is_published', true)
+            ->with('teacher.user')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('student.materials', compact('materials'));
+        return view('student.resources.materials.show', compact('subject', 'materials'));
+    }
+
+    public function downloadMaterial(\App\Models\Material $material)
+    {
+        // Check if student has access to this material (same class or null class_id)
+        $student = auth()->user()->student;
+        if ($material->class_id !== $student->rombel_id && $material->class_id !== null) {
+            \Log::warning("Unauthorized download attempt: Student {$student->id} tried to download material {$material->id}");
+            abort(403, 'Unauthorized access to material.');
+        }
+
+        if (!$material->file_path || !\Storage::disk('public')->exists($material->file_path)) {
+            \Log::error("File not found for download: Material {$material->id}, Path: {$material->file_path}, Student: {$student->id}");
+            return back()->with('error', 'File tidak ditemukan.');
+        }
+
+        // Log successful download
+        \Log::info("Material downloaded: Student {$student->id} ({$student->user->name}) downloaded '{$material->title}' (ID: {$material->id})");
+
+        return \Storage::disk('public')->download($material->file_path, $material->title . '.' . pathinfo($material->file_path, PATHINFO_EXTENSION));
     }
 
     // Announcements
@@ -280,7 +358,7 @@ class StudentController extends BaseController
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('student.announcements', compact('announcements'));
+        return view('student.resources.announcements', compact('announcements'));
     }
 
     // Invoices/Payments
@@ -292,7 +370,7 @@ class StudentController extends BaseController
             ->orderBy('due_date', 'desc')
             ->paginate(20);
 
-        return view('student.invoices', compact('invoices'));
+        return view('student.finance.invoices', compact('invoices'));
     }
 
     // Library
@@ -304,7 +382,7 @@ class StudentController extends BaseController
             ->with('book')
             ->get();
 
-        return view('student.library', compact('books', 'borrowedBooks'));
+        return view('student.resources.library', compact('books', 'borrowedBooks'));
     }
 
     public function borrowBook(Request $request)
@@ -360,55 +438,168 @@ class StudentController extends BaseController
     // Gallery
     public function gallery()
     {
-        $galleries = Gallery::where('is_public', true)
+        $galleries = \App\Models\Gallery::where('is_active', true)
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('student.gallery', compact('galleries'));
+        return view('student.resources.gallery', compact('galleries'));
     }
 
     // Messages
     public function messages()
     {
-        $messages = Message::where('receiver_id', auth()->id())
-            ->orWhere('sender_id', auth()->id())
-            ->with('sender', 'receiver')
+        $messages = \App\Models\Message::where('receiver_id', auth()->id())
+            ->with('sender')
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        return view('student.messages', compact('messages'));
+        return view('student.communication.messages', compact('messages'));
     }
 
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'receiver_id' => 'required|exists:users,id',
+            'recipient_type' => 'required|in:admin,teacher,parent',
+            'recipient_id' => 'required|exists:users,id',
             'subject' => 'required|string|max:255',
-            'body' => 'required|string',
+            'content' => 'required|string',
         ]);
 
-        Message::create([
+        \App\Models\Message::create([
             'sender_id' => auth()->id(),
-            'receiver_id' => $request->receiver_id,
+            'receiver_id' => $request->recipient_id,
+            'sender_type' => 'student',
+            'recipient_type' => $request->recipient_type,
             'subject' => $request->subject,
-            'body' => $request->body,
+            'body' => $request->content,
             'is_read' => false,
         ]);
 
-        return back()->with('success', 'Message sent successfully.');
+        return back()->with('success', 'Pesan berhasil dikirim.');
+    }
+
+    public function getMessageRecipients($type)
+    {
+        $recipients = [];
+        switch ($type) {
+            case 'admin':
+                $recipients = \App\Models\User::whereHas('roles', function($q) {
+                    $q->where('name', 'admin');
+                })->select('id', 'name')->get();
+                break;
+            case 'teacher':
+                $recipients = \App\Models\User::whereHas('roles', function($q) {
+                    $q->where('name', 'guru');
+                })->select('id', 'name')->get();
+                break;
+            case 'parent':
+                $recipients = \App\Models\User::whereHas('roles', function($q) {
+                    $q->where('name', 'orang_tua');
+                })->select('id', 'name')->get();
+                break;
+        }
+
+        return response()->json($recipients);
+    }
+
+    public function viewMessage($id)
+    {
+        $message = \App\Models\Message::where('id', $id)
+            ->where('receiver_id', auth()->id())
+            ->with('sender')
+            ->firstOrFail();
+
+        // Tandai pesan sebagai sudah dibaca jika belum
+        if (!$message->is_read) {
+            $message->update(['is_read' => true]);
+        }
+
+        $senderName = 'Unknown';
+        if ($message->sender_type == 'admin') {
+            $senderName = 'Admin';
+        } elseif ($message->sender) {
+            $senderName = $message->sender->name ?? 'Unknown';
+        }
+
+        // Ambil isi pesan dengan fallback aman
+        $body = isset($message->body) && $message->body !== null ? $message->body : (isset($message->content) ? $message->content : '-');
+
+        return response()->json([
+            'subject' => $message->subject ?? '-',
+            'body' => $body,
+            'sender_name' => $senderName,
+            'created_at' => $message->created_at ? $message->created_at->format('d/m/Y H:i') : '-',
+            'is_read' => true,
+        ]);
+    }
+
+    public function deleteMessage($id)
+    {
+        $message = \App\Models\Message::where('id', $id)
+            ->where(function($q) {
+                $q->where('sender_id', auth()->id())
+                  ->orWhere('receiver_id', auth()->id());
+            })
+            ->firstOrFail();
+
+        $message->delete();
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markMessageAsRead($id)
+    {
+        $message = \App\Models\Message::where('id', $id)
+            ->where('receiver_id', auth()->id())
+            ->firstOrFail();
+
+        $message->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
     }
 
     // Notifications
     public function notifications()
     {
-        $notifications = Notification::where('user_id', auth()->id())
+        $notifications = \App\Models\Notification::where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        // Mark as read
-        Notification::where('user_id', auth()->id())
+        $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+            ->where('is_read', false)
+            ->count();
+
+        return view('student.communication.notifications', compact('notifications', 'unreadCount'));
+    }
+
+    public function markNotificationAsRead($id)
+    {
+        $notification = \App\Models\Notification::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $notification->update(['is_read' => true]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function markAllNotificationsAsRead()
+    {
+        \App\Models\Notification::where('user_id', auth()->id())
             ->where('is_read', false)
             ->update(['is_read' => true]);
 
-        return view('student.notifications', compact('notifications'));
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteNotification($id)
+    {
+        $notification = \App\Models\Notification::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $notification->delete();
+
+        return response()->json(['success' => true]);
     }
 }

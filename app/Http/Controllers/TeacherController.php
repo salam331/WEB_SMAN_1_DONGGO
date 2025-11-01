@@ -245,7 +245,7 @@ class TeacherController extends Controller
             );
         }
 
-        return redirect()->route('teacher.attendances')->with('success', 'Absensi berhasil disimpan.');
+        return redirect()->route('teachers.attendances')->with('success', 'Absensi berhasil disimpan.');
     }
 
     public function showAttendance($scheduleId, $date)

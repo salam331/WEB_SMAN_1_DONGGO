@@ -219,20 +219,25 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Student Routes
-    Route::middleware(['role:siswa'])->prefix('student')->name('student.')->group(function () {
+    Route::middleware(['role:siswa'])->prefix('student')->name('student.')->group(function () {        
         Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
+        Route::get('/', [StudentController::class, 'dashboard'])->name('dashboard');
+
 
         // Schedule
         Route::get('/schedule', [StudentController::class, 'schedule'])->name('schedule');
 
         // Attendance
         Route::get('/attendance', [StudentController::class, 'attendance'])->name('attendance');
+        Route::get('/attendance/{scheduleId}', [StudentController::class, 'showAttendance'])->name('attendance.show');
 
         // Grades
         Route::get('/grades', [StudentController::class, 'grades'])->name('grades');
 
         // Materials
         Route::get('/materials', [StudentController::class, 'materials'])->name('materials');
+        Route::get('/materials/{subject}/show', [StudentController::class, 'showMaterial'])->name('materials.show');
+        Route::get('/materials/{material}/download', [StudentController::class, 'downloadMaterial'])->name('materials.download');
 
         // Announcements
         Route::get('/announcements', [StudentController::class, 'announcements'])->name('announcements');
@@ -240,20 +245,27 @@ Route::middleware(['auth'])->group(function () {
         // Invoices
         Route::get('/invoices', [StudentController::class, 'invoices'])->name('invoices');
 
-        // Library
-        Route::get('/library', [StudentController::class, 'library'])->name('library');
-        Route::post('/library/borrow', [StudentController::class, 'borrowBook'])->name('library.borrow');
-        Route::post('/library/return/{borrowId}', [StudentController::class, 'returnBook'])->name('library.return');
+        // // Library
+        // Route::get('/library', [StudentController::class, 'library'])->name('library');
+        // Route::post('/library/borrow', [StudentController::class, 'borrowBook'])->name('library.borrow');
+        // Route::post('/library/return/{borrowId}', [StudentController::class, 'returnBook'])->name('library.return');
 
         // Gallery
-        Route::get('/gallery', [StudentController::class, 'gallery'])->name('gallery');
+        // Route::get('/gallery', [StudentController::class, 'gallery'])->name('gallery');
 
         // Messages
-        Route::get('/messages', [StudentController::class, 'messages'])->name('messages');
-        Route::post('/messages/send', [StudentController::class, 'sendMessage'])->name('messages.send');
+        // Route::get('/messages', [StudentController::class, 'messages'])->name('messages');
+        // Route::post('/messages/send', [StudentController::class, 'sendMessage'])->name('messages.send');
+        // Route::get('/messages/recipients/{type}', [StudentController::class, 'getMessageRecipients'])->name('messages.recipients');
+        // Route::get('/messages/{id}', [StudentController::class, 'viewMessage'])->name('messages.view');
+        // Route::delete('/messages/{id}', [StudentController::class, 'deleteMessage'])->name('messages.delete');
+        // Route::post('/messages/{id}/read', [StudentController::class, 'markMessageAsRead'])->name('messages.read');
 
         // Notifications
-        Route::get('/notifications', [StudentController::class, 'notifications'])->name('notifications');
+        // Route::get('/notifications', [StudentController::class, 'notifications'])->name('notifications');
+        // Route::post('/notifications/{id}/read', [StudentController::class, 'markNotificationAsRead'])->name('notifications.read');
+        // Route::post('/notifications/mark-all-read', [StudentController::class, 'markAllNotificationsAsRead'])->name('notifications.mark_all_read');
+        // Route::delete('/notifications/{id}', [StudentController::class, 'deleteNotification'])->name('notifications.delete');
     });
 
     // Parent Routes
