@@ -3,9 +3,9 @@
 @section('title', 'Kelola Profil Sekolah')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-12">
         <div class="row justify-content-center">
-            <div class="col-lg-10 col-md-12">
+            <div class="col-lg-12 col-md-12">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div
                         class="card-header bg-primary text-white py-3 rounded-top-4 d-flex align-items-center justify-content-between">

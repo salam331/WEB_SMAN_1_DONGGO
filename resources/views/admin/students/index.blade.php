@@ -33,7 +33,7 @@
                     <div class="input-group w-50">
                         <input type="text" name="search" value="{{ request('search') }}"
                             class="form-control border-0 shadow-sm rounded-start-pill"
-                            placeholder="Cari nama, NIS, atau kelas...">
+                            placeholder="Cari nama atau NIS siswa...">
                         <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
                             <i class="fas fa-search me-1"></i> Cari
                         </button>

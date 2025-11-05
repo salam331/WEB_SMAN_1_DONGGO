@@ -1,147 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
+
 <head>
     <meta charset="utf-8">
-    <title>Laporan Hasil Ujian</title>
+    <title>Laporan Hasil Ujian - {{ $exam->name }}</title>
     <style>
         body {
             font-family: 'DejaVu Sans', Arial, sans-serif;
             font-size: 12px;
-            line-height: 1.4;
-            color: #333;
+            color: #222;
+            margin: 40px;
+            background-color: #fff;
         }
+
+        /* === HEADER === */
         .header {
             text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #333;
-            padding-bottom: 20px;
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
         }
+
         .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
             margin: 0;
-            font-size: 18px;
+            letter-spacing: 1px;
+            color: #0d6efd;
+        }
+
+        .header h2 {
+            margin: 5px 0 0 0;
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        /* === INFO SECTION === */
+        .exam-info,
+        .statistics {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
             font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #0d6efd;
             text-transform: uppercase;
         }
-        .header h2 {
-            margin: 5px 0;
-            font-size: 14px;
-            font-weight: normal;
-        }
-        .school-info {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .exam-info {
-            margin-bottom: 20px;
-        }
-        .exam-info table {
+
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-top: 4px;
         }
-        .exam-info th,
-        .exam-info td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
+
+        th,
+        td {
+            padding: 7px 10px;
+            border: 1px solid #ccc;
         }
+
+        th {
+            background-color: #f1f5fb;
+            font-weight: 600;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
         .exam-info th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            width: 30%;
+            width: 35%;
         }
-        .statistics {
-            margin-bottom: 20px;
-        }
-        .statistics table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .statistics th,
-        .statistics td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
+
+        /* === STATISTICS === */
         .statistics th {
-            background-color: #e9ecef;
-            font-weight: bold;
+            background-color: #e8f0ff;
         }
+
+        /* === RESULTS TABLE === */
         .results-table {
-            width: 100%;
-            border-collapse: collapse;
             margin-top: 20px;
         }
-        .results-table th,
-        .results-table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            text-align: left;
-            vertical-align: top;
-        }
+
         .results-table th {
-            background-color: #f8f9fa;
+            background-color: #0d6efd;
+            color: white;
+            text-align: center;
             font-weight: bold;
+        }
+
+        .results-table td {
             text-align: center;
+            border-color: #ddd;
         }
-        .results-table .no {
-            width: 40px;
-            text-align: center;
+
+        .results-table td.name {
+            text-align: left;
         }
-        .results-table .name {
-            width: 200px;
-        }
-        .results-table .score {
-            width: 80px;
-            text-align: center;
-        }
-        .results-table .grade {
-            width: 60px;
-            text-align: center;
-        }
-        .results-table .status {
-            width: 100px;
-            text-align: center;
-        }
+
         .status-pass {
-            color: #28a745;
-            font-weight: bold;
+            color: #198754;
+            font-weight: 700;
         }
+
         .status-fail {
             color: #dc3545;
-            font-weight: bold;
+            font-weight: 700;
         }
+
+        /* === FOOTER & SIGNATURE === */
         .footer {
             margin-top: 40px;
+            font-size: 11px;
+            color: #666;
             text-align: right;
         }
-        .signature {
+
+        .signature-section {
             margin-top: 60px;
+            text-align: right;
+        }
+
+        .signature {
+            display: inline-block;
             text-align: center;
+            margin-right: 60px;
         }
-        .signature-line {
-            border-bottom: 1px solid #333;
+
+        .signature .line {
             width: 200px;
-            margin: 0 auto;
-            margin-top: 40px;
+            border-bottom: 1px solid #444;
+            margin: 40px auto 5px;
         }
+
+        /* === PAGE BREAKS === */
         .page-break {
             page-break-before: always;
         }
+
+        @page {
+            margin: 40px;
+        }
+
         @media print {
             body {
                 font-size: 11px;
             }
+
+            .results-table th {
+                background-color: #cfdcff !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .status-pass,
+            .status-fail {
+                font-weight: bold;
+            }
         }
     </style>
 </head>
+
 <body>
+    <!-- HEADER -->
     <div class="header">
         <h1>SMAN 1 DONGGO</h1>
         <h2>Laporan Hasil Ujian</h2>
     </div>
 
+    <!-- EXAM INFO -->
     <div class="exam-info">
+        <div class="section-title">Informasi Ujian</div>
         <table>
             <tr>
                 <th>Nama Ujian</th>
@@ -157,7 +189,7 @@
             </tr>
             <tr>
                 <th>Tanggal Ujian</th>
-                <td>{{ \Carbon\Carbon::parse($exam->exam_date)->format('d F Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($exam->exam_date)->translatedFormat('d F Y') }}</td>
             </tr>
             <tr>
                 <th>Waktu</th>
@@ -174,8 +206,9 @@
         </table>
     </div>
 
+    <!-- STATISTICS -->
     <div class="statistics">
-        <h3 style="margin-bottom: 10px;">Statistik Hasil Ujian</h3>
+        <div class="section-title">Statistik Hasil Ujian</div>
         <table>
             <tr>
                 <th>Total Peserta</th>
@@ -192,48 +225,56 @@
         </table>
     </div>
 
-    <h3 style="margin-bottom: 10px;">Detail Hasil Ujian</h3>
-    <table class="results-table">
-        <thead>
-            <tr>
-                <th class="no">No</th>
-                <th class="name">Nama Siswa</th>
-                <th class="score">Nilai</th>
-                <th class="grade">Grade</th>
-                <th class="status">Status</th>
-                <th>Keterangan</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($examResults as $index => $result)
-            <tr>
-                <td class="no">{{ $index + 1 }}</td>
-                <td class="name">{{ $result->student->name ?? 'N/A' }}</td>
-                <td class="score">{{ $result->score }}</td>
-                <td class="grade">{{ $result->grade ?? '-' }}</td>
-                <td class="status">
-                    @if($result->score >= ($exam->passing_grade ?? 0))
-                        <span class="status-pass">LULUS</span>
-                    @else
-                        <span class="status-fail">TIDAK LULUS</span>
-                    @endif
-                </td>
-                <td>{{ $result->remark ?? '-' }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <!-- RESULTS -->
+    <div class="results">
+        <div class="section-title">Detail Hasil Ujian</div>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Nama Siswa</th>
+                    <th>Nilai</th>
+                    <th>Grade</th>
+                    <th>Status</th>
+                    <th>Keterangan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($examResults as $index => $result)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td class="name">{{ $result->student->user->name ?? 'N/A' }}</td>
+                        <td>{{ $result->score }}</td>
+                        <td>{{ $result->grade ?? '-' }}</td>
+                        <td>
+                            @if($result->score >= ($exam->passing_grade ?? 0))
+                                <span class="status-pass">LULUS</span>
+                            @else
+                                <span class="status-fail">TIDAK LULUS</span>
+                            @endif
+                        </td>
+                        <td>{{ $result->remark ?? '-' }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
+    <!-- FOOTER -->
     <div class="footer">
-        <p>Dicetak pada: {{ now()->format('d F Y H:i:s') }}</p>
+        <p>Dicetak pada: {{ now()->translatedFormat('d F Y H:i:s') }}</p>
         <p>Oleh: {{ auth()->user()->name }}</p>
     </div>
 
-    <div class="signature">
-        <p>Mengetahui,</p>
-        <p>Guru Pengampu</p>
-        <div class="signature-line"></div>
-        <p style="margin-top: 5px;">{{ auth()->user()->name }}</p>
+    <!-- SIGNATURE -->
+    <div class="signature-section">
+        <div class="signature">
+            <p>Mengetahui,</p>
+            <p><strong>Guru Pengampu</strong></p>
+            <div class="line"></div>
+            <p>{{ auth()->user()->name }}</p>
+        </div>
     </div>
 </body>
+
 </html>

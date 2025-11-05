@@ -16,7 +16,10 @@
                             </h4>
                             <small class="text-white-50 fw-medium">Lihat hasil dan performa ujian Anda di sini</small>
                         </div>
-                        <small class="fw-semibold">{{ now()->translatedFormat('l, d F Y') }}</small>
+                        @php
+                            $now = now()->setTimezone('Asia/Makassar');
+                        @endphp
+                        <small class="fw-semibold">{{ $now->translatedFormat('l, d F Y') }}</small>
                     </div>
 
                     <!-- Body -->

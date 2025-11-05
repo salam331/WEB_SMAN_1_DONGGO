@@ -646,8 +646,12 @@
                 <div class="d-flex align-items-center text-end">
                     <i class="fas fa-calendar-alt fa-2x me-3 opacity-75"></i>
                     <div class="me-4">
-                        <div class="fw-semibold">{{ now()->format('l, d F Y') }}</div>
-                        <small class="opacity-75">{{ now()->format('H:i') }} WITA</small>
+                        @php
+                            $now = now()->setTimezone('Asia/Makassar');
+                        @endphp
+
+                        <div class="fw-semibold">{{ $now->translatedFormat('l, d F Y') }}</div>
+                        <small class="opacity-75">{{ $now->format('H:i') }} WITA</small>
                     </div>
 
                     @auth

@@ -12,7 +12,10 @@
                         <h5 class="card-title mb-0 fw-bold">
                             <i class="fas fa-file-invoice-dollar me-2"></i> Tagihan Pembayaran
                         </h5>
-                        <small class="fw-semibold">{{ now()->translatedFormat('l, d F Y') }}</small>
+                        @php
+                            $now = now()->setTimezone('Asia/Makassar');
+                        @endphp
+                        <small class="fw-semibold">{{ $now->translatedFormat('l, d F Y') }}</small>
                     </div>
 
                     <div class="card-body p-4 bg-light-subtle">

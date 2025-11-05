@@ -420,12 +420,41 @@ class TeacherController extends Controller
     }
 
     // Grade Management
-    public function grades()
+    public function grades(Request $request)
     {
         $teacher = auth()->user()->teacher;
-        $examResults = ExamResult::whereHas('exam.classRoom.subjectTeachers', function ($q) use ($teacher) {
+        $query = ExamResult::whereHas('exam.classRoom.subjectTeachers', function ($q) use ($teacher) {
             $q->where('teacher_id', $teacher->id);
-        })->with('exam', 'student.user')->paginate(20);
+        })->with('exam', 'student.user');
+
+        // Search functionality
+        if ($request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->whereHas('exam', function($eq) use ($search) {
+                    $eq->where('name', 'like', "%{$search}%");
+                })
+                ->orWhereHas('student.user', function($sq) use ($search) {
+                    $sq->where('name', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // Filter by class
+        if ($request->class_id) {
+            $query->whereHas('exam.classRoom', function($q) use ($request) {
+                $q->where('id', $request->class_id);
+            });
+        }
+
+        // Filter by subject
+        if ($request->subject_id) {
+            $query->whereHas('exam.subject', function($q) use ($request) {
+                $q->where('id', $request->subject_id);
+            });
+        }
+
+        $examResults = $query->paginate(20)->withQueryString();
 
         return view('teachers.grades.index', compact('examResults'));
     }
@@ -502,110 +531,20 @@ class TeacherController extends Controller
         return view('teachers.materials.index', compact('materials'));
     }
 
-    // Announcement Management
+    // Announcement Management (View Only - Admin Created)
     public function announcements()
     {
-        $announcements = Announcement::where('posted_by', auth()->id())
+        $announcements = Announcement::where('is_published', true)
+            ->where(function($q) {
+                $q->where('target_audience', 'all')
+                  ->orWhere('target_audience', 'teachers');
+            })
+            ->with('postedBy')
+            ->orderBy('pinned', 'desc')
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
 
         return view('teachers.announcements.index', compact('announcements'));
-    }
-
-    public function createAnnouncement()
-    {
-        return view('teachers.announcements.create');
-    }
-
-    public function storeAnnouncement(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'target_audience' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'is_published' => 'boolean',
-        ]);
-
-        $data = $request->all();
-        $data['posted_by'] = auth()->id();
-
-        if ($request->hasFile('attachment')) {
-            $data['attachment'] = $request->file('attachment')->store('announcements', 'public');
-        }
-
-        Announcement::create($data);
-
-        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dibuat.');
-    }
-
-    public function editAnnouncement(Announcement $announcement)
-    {
-        // Ensure teacher can only edit their own announcements
-        if ($announcement->posted_by !== auth()->id()) {
-            abort(403);
-        }
-
-        return view('teachers.announcements.edit', compact('announcement'));
-    }
-
-    public function updateAnnouncement(Request $request, Announcement $announcement)
-    {
-        // Ensure teacher can only update their own announcements
-        if ($announcement->posted_by !== auth()->id()) {
-            abort(403);
-        }
-
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'target_audience' => 'nullable|string|max:255',
-            'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
-            'is_published' => 'boolean',
-        ]);
-
-        $data = $request->all();
-        $data['is_published'] = $request->has('is_published');
-
-        if ($request->hasFile('attachment')) {
-            // Delete old attachment if exists
-            if ($announcement->attachment) {
-                \Storage::disk('public')->delete($announcement->attachment);
-            }
-            $data['attachment'] = $request->file('attachment')->store('announcements', 'public');
-        }
-
-        $announcement->update($data);
-
-        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil diperbarui.');
-    }
-
-    public function destroyAnnouncement(Announcement $announcement)
-    {
-        // Ensure teacher can only delete their own announcements
-        if ($announcement->posted_by !== auth()->id()) {
-            abort(403);
-        }
-
-        // Delete attachment if exists
-        if ($announcement->attachment) {
-            \Storage::disk('public')->delete($announcement->attachment);
-        }
-
-        $announcement->delete();
-
-        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dihapus.');
-    }
-
-    public function publishAnnouncement(Announcement $announcement)
-    {
-        // Ensure teacher can only publish their own announcements
-        if ($announcement->posted_by !== auth()->id()) {
-            abort(403);
-        }
-
-        $announcement->update(['is_published' => true]);
-
-        return redirect()->route('teachers.announcements')->with('success', 'Pengumuman berhasil dipublish.');
     }
 
     // Messages

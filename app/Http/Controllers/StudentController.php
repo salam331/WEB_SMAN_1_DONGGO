@@ -25,20 +25,20 @@ class StudentController extends BaseController
     public function index(Request $request)
     {
         $query = Student::with(['user', 'classRoom']);
-        
-        if ($q = $request->query('q')) {
-            $query->where(function($query) use ($q) {
-                $query->whereHas('user', function($query) use ($q) {
-                    $query->where('name', 'like', "%{$q}%")
-                          ->orWhere('email', 'like', "%{$q}%");
+
+        if ($search = $request->query('search')) {
+            $query->where(function($query) use ($search) {
+                $query->whereHas('user', function($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
                 })
-                ->orWhere('nis', 'like', "%{$q}%")
-                ->orWhere('nisn', 'like', "%{$q}%");
+                ->orWhere('nis', 'like', "%{$search}%")
+                ->orWhere('nisn', 'like', "%{$search}%");
             });
         }
 
-        if ($class = $request->query('class')) {
-            $query->where('rombel_id', $class);
+        if ($classId = $request->query('class_id')) {
+            $query->where('rombel_id', $classId);
         }
 
         $students = $query->latest()
@@ -47,8 +47,14 @@ class StudentController extends BaseController
 
         // Get classes for filter dropdown
         $classes = ClassRoom::all();
-                         
+
         return view('admin.students.index', compact('students', 'classes'));
+    }
+
+    public function show(Student $student)
+    {
+        $student->load('user', 'classRoom', 'parent.user');
+        return view('admin.students.show', compact('student'));
     }
 
     public function create()

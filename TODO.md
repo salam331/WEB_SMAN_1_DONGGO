@@ -1,24 +1,27 @@
-# TODO: Tambahkan Menu Sidebar untuk Role Orang Tua
+# TODO: Update Fitur Pengumuman
 
-## Tugas Utama
-- Tambahkan menu sidebar untuk role 'orang_tua' di resources/views/layouts/app.blade.php
-
-## Menu yang Ditambahkan
-- Dashboard Orang Tua
-- Pengumuman
-- Untuk setiap anak:
-  - Detail [Nama Anak]
-  - Kehadiran [Nama Anak]
-  - Nilai [Nama Anak]
-  - Tagihan [Nama Anak]
+## Deskripsi
+Memperbarui fitur pengumuman agar hanya admin yang bisa membuat pengumuman, sedangkan guru, siswa, orang tua, dan public hanya bisa melihat pengumuman yang dibuat oleh admin jika admin ingin mempublishnya.
 
 ## Langkah-langkah
-- [ ] Edit resources/views/layouts/app.blade.php untuk menambahkan bagian sidebar orang_tua
-- [ ] Pastikan menu dinamis berdasarkan anak-anak orang tua
-- [ ] Test dengan login sebagai orang_tua untuk memverifikasi sidebar muncul
 
-## Status
-- [x] Analisis routes dan controller
-- [x] Brainstorm plan
-- [ ] Edit file app.blade.php
-- [ ] Test hasil
+### 1. Hapus Kemampuan Guru Membuat Pengumuman
+- [x] Hapus routes teacher announcements di `routes/web.php`
+- [x] Hapus methods announcements di `TeacherController.php`
+- [x] Cek dan hapus view teacher announcements jika ada
+
+### 2. Update Query Pengumuman di TeacherController
+- [x] Update method `announcements()` di `TeacherController.php` untuk hanya melihat pengumuman dari admin yang published
+
+### 3. Verifikasi Query di Controller Lain
+- [ ] AdminController: sudah benar (bisa lihat semua)
+- [ ] StudentController: sudah benar (hanya lihat yang published)
+- [ ] ParentController: sudah benar (hanya lihat yang published)
+- [ ] PublicController: sudah benar (hanya lihat yang published)
+
+### 4. Testing
+- [x] Test login sebagai admin: bisa buat, edit, hapus pengumuman
+- [x] Test login sebagai guru: hanya bisa lihat pengumuman admin yang published
+- [ ] Test login sebagai siswa: hanya bisa lihat pengumuman admin yang published
+- [ ] Test login sebagai orang tua: hanya bisa lihat pengumuman admin yang published
+- [ ] Test public: hanya bisa lihat pengumuman admin yang published

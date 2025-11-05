@@ -24,10 +24,15 @@
 
                     <!-- Body -->
                     <div class="card-body bg-light">
-                        <!-- Filter -->
+                        <!-- Search and Filter -->
                         <div class="row g-3 mb-4">
                             <div class="col-md-4">
-                                <select class="form-select shadow-sm rounded-pill border-0" id="subjectFilter">
+                                <label class="form-label fw-semibold text-secondary">Cari</label>
+                                <input type="text" class="form-control shadow-sm" id="searchInput" placeholder="Cari nama ujian atau deskripsi..." value="{{ request('search') }}">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold text-secondary">Mata Pelajaran</label>
+                                <select class="form-select shadow-sm" id="subjectFilter">
                                     <option value="">Semua Mata Pelajaran</option>
                                     @foreach($subjects as $subject)
                                         <option value="{{ $subject->id }}" {{ request('subject_id') == $subject->id ? 'selected' : '' }}>
@@ -36,8 +41,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <select class="form-select shadow-sm rounded-pill border-0" id="classFilter">
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold text-secondary">Kelas</label>
+                                <select class="form-select shadow-sm" id="classFilter">
                                     <option value="">Semua Kelas</option>
                                     @foreach($classes as $class)
                                         @if(is_object($class))
@@ -46,8 +52,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <select class="form-select shadow-sm rounded-pill border-0" id="statusFilter">
+                            <div class="col-md-2">
+                                <label class="form-label fw-semibold text-secondary">Status</label>
+                                <select class="form-select shadow-sm" id="statusFilter">
                                     <option value="">Semua Status</option>
                                     <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                                     <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>
@@ -55,6 +62,11 @@
                                     <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>
                                         Completed</option>
                                 </select>
+                            </div>
+                            <div class="col-md-2 d-flex align-items-end">
+                                <button class="btn btn-primary shadow-sm w-100 animate-btn" onclick="applyFilters()">
+                                    <i class="fas fa-search me-1"></i> Cari
+                                </button>
                             </div>
                         </div>
 
@@ -230,41 +242,35 @@
         }
     </style>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                // Filter functionality
-                const subjectFilter = document.getElementById('subjectFilter');
-                const classFilter = document.getElementById('classFilter');
-                const statusFilter = document.getElementById('statusFilter');
+    <script>
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value;
+            const classId = document.getElementById('classFilter').value;
+            const subjectId = document.getElementById('subjectFilter').value;
+            const status = document.getElementById('statusFilter').value;
 
-                function applyFilters() {
-                    const params = new URLSearchParams(window.location.search);
-                    params.set('subject_id', subjectFilter.value);
-                    params.set('class_id', classFilter.value);
-                    params.set('status', statusFilter.value);
-                    for (let [key, value] of params) if (!value) params.delete(key);
-                    window.location.href = '{{ route("teachers.exams.index") }}?' + params.toString();
-                }
+            let url = '{{ route("teachers.exams.index") }}';
+            const params = new URLSearchParams();
 
-                [subjectFilter, classFilter, statusFilter].forEach(f => f.addEventListener('change', applyFilters));
-            });
+            if (search) params.append('search', search);
+            if (classId) params.append('class_id', classId);
+            if (subjectId) params.append('subject_id', subjectId);
+            if (status) params.append('status', status);
 
-            function confirmDelete(examId) {
-                // Gunakan route destroy dengan placeholder agar lebih aman
-                var url = '{{ route("teachers.exams.destroy", ["exam" => ":id"]) }}';
-                if (url.includes(':id')) {
-                    url = url.replace(':id', examId);
-                } else {
-                    // Fallback jika Blade sudah mengganti :id, ambil base url dan tambahkan id
-                    if (!url.endsWith('/')) url += '/';
-                    url += examId;
-                }
-                document.getElementById('deleteForm').action = url;
-                // Debug log
-                console.log('Delete form action set to:', url);
-                new bootstrap.Modal(document.getElementById('deleteModal')).show();
+            if (params.toString()) {
+                url += '?' + params.toString();
             }
-        </script>
-    @endpush
+
+            window.location.href = url;
+        }
+
+        // Fungsi untuk konfirmasi hapus
+        function confirmDelete(examId) {
+            var url = '{{ route("teachers.exams.destroy", ":id") }}';
+            url = url.replace(':id', examId);
+            document.getElementById('deleteForm').action = url;
+            console.log('Delete form action set to:', url);
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+    </script>
 @endsection

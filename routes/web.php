@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Student Management - resource handled by StudentController
         Route::get('/students', [StudentController::class, 'index'])->name('students');
+        Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
         Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
         Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
@@ -197,14 +198,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/grades/input/{examId}', [TeacherController::class, 'inputGrades'])->name('grades.input');
         Route::post('/grades/input/{examId}', [TeacherController::class, 'storeGrades'])->name('grades.store');
 
-        // Announcement Management
+        // Announcement Management (View Only - Admin Created)
         Route::get('/announcements', [TeacherController::class, 'announcements'])->name('announcements');
-        Route::get('/announcements/create', [TeacherController::class, 'createAnnouncement'])->name('announcements.create');
-        Route::post('/announcements', [TeacherController::class, 'storeAnnouncement'])->name('announcements.store');
-        Route::get('/announcements/{announcement}/edit', [TeacherController::class, 'editAnnouncement'])->name('announcements.edit');
-        Route::put('/announcements/{announcement}', [TeacherController::class, 'updateAnnouncement'])->name('announcements.update');
-        Route::delete('/announcements/{announcement}', [TeacherController::class, 'destroyAnnouncement'])->name('announcements.destroy');
-        Route::post('/announcements/{announcement}/publish', [TeacherController::class, 'publishAnnouncement'])->name('announcements.publish');
 
         // // Messages
         // Route::get('/messages', [TeacherController::class, 'messages'])->name('messages');

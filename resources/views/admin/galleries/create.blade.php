@@ -3,9 +3,9 @@
 @section('title', 'Tambah Galeri')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-12">
         <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
+            <div class="col-lg-12 col-md-10">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div
                         class="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top">

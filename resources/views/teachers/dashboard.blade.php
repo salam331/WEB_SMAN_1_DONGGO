@@ -22,7 +22,7 @@
                     ['route' => 'teachers.schedules', 'icon' => 'fas fa-calendar-alt', 'color' => 'warning', 'title' => 'Jadwal Pelajaran', 'desc' => 'Atur dan lihat jadwal mengajar mingguan.'],
                     ['route' => 'teachers.materials.index', 'icon' => 'fas fa-book-reader', 'color' => 'danger', 'title' => 'Materi Pembelajaran', 'desc' => 'Unggah, ubah, dan bagikan materi pembelajaran.'],
                     ['route' => 'teachers.subjects.index', 'icon' => 'fas fa-book', 'color' => 'secondary', 'title' => 'Mata Pelajaran', 'desc' => 'Lihat dan atur mata pelajaran yang diampu.'],
-                    ['route' => 'teachers.announcements', 'icon' => 'fas fa-bullhorn', 'color' => 'dark', 'title' => 'Pengumuman', 'desc' => 'Bagikan pengumuman kepada siswa.'],
+
                     ['route' => 'teachers.notifications', 'icon' => 'fas fa-bell', 'color' => 'primary', 'title' => 'Notifikasi', 'desc' => 'Kelola dan baca notifikasi terbaru.'],
                     ['route' => 'teachers.grades', 'icon' => 'fas fa-graduation-cap', 'color' => 'success', 'title' => 'Nilai', 'desc' => 'Input dan pantau nilai siswa secara terstruktur.'],
                     ['route' => 'teachers.exams.index', 'icon' => 'fas fa-file-alt', 'color' => 'info', 'title' => 'Ujian', 'desc' => 'Atur jadwal ujian dan penilaian hasil.'],

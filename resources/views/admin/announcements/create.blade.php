@@ -54,24 +54,12 @@
 
                     <div class="mb-4">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_public" value="1" id="is_public" {{ old('is_public') ? 'checked' : '' }}>
-                            <label class="form-check-label fw-semibold text-secondary" for="is_public">
-                                <i class="fas fa-globe me-1 text-primary"></i> Publikasikan ke halaman publik
+                            <input class="form-check-input" type="checkbox" name="publish_to_all" value="1" id="publish_to_all" {{ old('publish_to_all', true) ? 'checked' : '' }}>
+                            <label class="form-check-label fw-semibold text-secondary" for="publish_to_all">
+                                <i class="fas fa-bullhorn me-1 text-primary"></i> Publish ke Semua
                             </label>
                             <small class="form-text text-muted d-block">
-                                Centang jika pengumuman ini akan ditampilkan di halaman pengumuman publik
-                            </small>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_published" value="1" id="is_published" {{ old('is_published', true) ? 'checked' : '' }}>
-                            <label class="form-check-label fw-semibold text-secondary" for="is_published">
-                                <i class="fas fa-eye me-1 text-primary"></i> Terbitkan Pengumuman
-                            </label>
-                            <small class="form-text text-muted d-block">
-                                Centang untuk menerbitkan pengumuman ini
+                                Centang untuk menerbitkan pengumuman ini ke semua pengguna dan halaman publik
                             </small>
                         </div>
                     </div>
@@ -83,6 +71,7 @@
                         <select name="target_audience" id="target_audience" class="form-control border-0 shadow-sm rounded-3 p-2">
                             <option value="">Pilih Target Audience</option>
                             <option value="all" {{ old('target_audience') == 'all' ? 'selected' : '' }}>Semua</option>
+                            <option value="public" {{ old('target_audience') == 'public' ? 'selected' : '' }}>Publik</option>
                             <option value="students" {{ old('target_audience') == 'students' ? 'selected' : '' }}>Siswa</option>
                             <option value="teachers" {{ old('target_audience') == 'teachers' ? 'selected' : '' }}>Guru</option>
                             <option value="parents" {{ old('target_audience') == 'parents' ? 'selected' : '' }}>Orang Tua</option>

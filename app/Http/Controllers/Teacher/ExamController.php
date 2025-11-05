@@ -26,6 +26,12 @@ class ExamController extends Controller
     {
         $teacher = auth()->user()->teacher;
 
+        // Update status to 'completed' for exams that have passed their exam_date
+        Exam::where('teacher_id', $teacher->id)
+            ->where('exam_date', '<', Carbon::today())
+            ->where('status', '!=', 'completed')
+            ->update(['status' => 'completed']);
+
         $query = Exam::with(['subject', 'classRoom'])
             ->where('teacher_id', $teacher->id);
 
@@ -56,7 +62,10 @@ class ExamController extends Controller
         // Search functionality
         if ($request->search) {
             $search = $request->search;
-            $query->where('name', 'like', "%{$search}%");
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
+            });
         }
 
         $exams = $query->orderBy('exam_date', 'desc')

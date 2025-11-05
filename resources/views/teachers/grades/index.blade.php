@@ -17,9 +17,13 @@
                 </div>
 
                 <div class="card-body bg-light-subtle p-4">
-                    <!-- Filter -->
+                    <!-- Search and Filter -->
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
+                            <label class="form-label fw-semibold text-secondary">Cari</label>
+                            <input type="text" class="form-control shadow-sm" id="searchInput" placeholder="Cari nama ujian atau siswa..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold text-secondary">Kelas</label>
                             <select class="form-select shadow-sm" id="classFilter">
                                 <option value="">Semua Kelas</option>
@@ -30,7 +34,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <label class="form-label fw-semibold text-secondary">Mata Pelajaran</label>
                             <select class="form-select shadow-sm" id="subjectFilter">
                                 <option value="">Semua Mata Pelajaran</option>
@@ -41,9 +45,9 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-md-4 d-flex align-items-end">
+                        <div class="col-md-2 d-flex align-items-end">
                             <button class="btn btn-primary shadow-sm w-100 animate-btn" onclick="filterGrades()">
-                                <i class="fas fa-filter me-1"></i> Terapkan Filter
+                                <i class="fas fa-search me-1"></i> Cari
                             </button>
                         </div>
                     </div>
@@ -137,12 +141,14 @@
 
 <script>
 function filterGrades() {
+    const search = document.getElementById('searchInput').value;
     const classId = document.getElementById('classFilter').value;
     const subjectId = document.getElementById('subjectFilter').value;
 
     let url = '{{ route("teachers.grades") }}';
     const params = new URLSearchParams();
 
+    if (search) params.append('search', search);
     if (classId) params.append('class_id', classId);
     if (subjectId) params.append('subject_id', subjectId);
 

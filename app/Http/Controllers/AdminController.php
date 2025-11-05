@@ -162,9 +162,22 @@ class AdminController extends Controller
     }
 
     // Teacher Management
-    public function teachers()
+    public function teachers(Request $request)
     {
-        $teachers = Teacher::with('user')->paginate(20);
+        $query = Teacher::with('user');
+
+        // Search functionality
+        if ($request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('nip', 'like', "%{$search}%")
+                  ->orWhereHas('user', function($uq) use ($search) {
+                      $uq->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $teachers = $query->paginate(20)->withQueryString();
         return view('admin.teachers.index', compact('teachers'));
     }
 
@@ -437,8 +450,7 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'is_public' => 'nullable|boolean',
-            'is_published' => 'nullable|boolean',
+            'publish_to_all' => 'nullable|boolean',
             'target_audience' => 'nullable|string|max:255',
             'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
@@ -448,13 +460,18 @@ class AdminController extends Controller
             $attachmentPath = $request->file('attachment')->store('announcements', 'public');
         }
 
+        // If publish_to_all is checked, set is_published to true and target_audience to 'all'
+        // If not checked but target_audience is selected, set is_published to true
+        $isPublished = ($request->publish_to_all || $request->target_audience) ? true : false;
+        $targetAudience = $request->publish_to_all ? 'all' : $request->target_audience;
+
         Announcement::create([
             'title' => $request->title,
             'content' => $request->content,
             'posted_by' => auth()->id(),
-            'is_public' => $request->is_public ?? false,
-            'is_published' => $request->is_published ?? false,
-            'target_audience' => $request->target_audience,
+            'is_public' => $request->publish_to_all ?? false,
+            'is_published' => $isPublished,
+            'target_audience' => $targetAudience,
             'attachment' => $attachmentPath,
         ]);
 
@@ -471,8 +488,7 @@ class AdminController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'is_public' => 'nullable|boolean',
-            'is_published' => 'nullable|boolean',
+            'publish_to_all' => 'nullable|boolean',
             'target_audience' => 'nullable|string|max:255',
             'attachment' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
@@ -486,12 +502,17 @@ class AdminController extends Controller
             $attachmentPath = $request->file('attachment')->store('announcements', 'public');
         }
 
+        // If publish_to_all is checked, set is_published to true and target_audience to 'all'
+        // If not checked but target_audience is selected, set is_published to true
+        $isPublished = ($request->publish_to_all || $request->target_audience) ? true : false;
+        $targetAudience = $request->publish_to_all ? 'all' : $request->target_audience;
+
         $announcement->update([
             'title' => $request->title,
             'content' => $request->content,
-            'is_public' => $request->is_public ?? false,
-            'is_published' => $request->is_published ?? false,
-            'target_audience' => $request->target_audience,
+            'is_public' => $request->publish_to_all ?? false,
+            'is_published' => $isPublished,
+            'target_audience' => $targetAudience,
             'attachment' => $attachmentPath,
         ]);
 

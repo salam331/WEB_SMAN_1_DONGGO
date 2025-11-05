@@ -14,7 +14,10 @@ class PublicController extends Controller
     {
         $school = SchoolProfile::first();
         $announcements = Announcement::where('is_published', true)
-            ->where('target_audience', 'all')
+            ->where(function($q) {
+                $q->where('target_audience', 'all')
+                  ->orWhere('target_audience', 'public');
+            })
             ->orderBy('pinned', 'desc')
             ->orderBy('created_at', 'desc')
             ->limit(5)
@@ -42,7 +45,10 @@ class PublicController extends Controller
     public function announcements()
     {
         $announcements = Announcement::where('is_published', true)
-            ->where('target_audience', 'all')
+            ->where(function($q) {
+                $q->where('target_audience', 'all')
+                  ->orWhere('target_audience', 'public');
+            })
             ->with('postedBy')
             ->orderBy('pinned', 'desc')
             ->orderBy('created_at', 'desc')

@@ -12,7 +12,10 @@
                     <h5 class="card-title mb-0 fw-bold">
                         <i class="fas fa-calendar-alt me-2"></i> Jadwal Pelajaran
                     </h5>
-                    <small class="fw-semibold">{{ now()->translatedFormat('l, d F Y') }}</small>
+                    @php
+                        $now = now()->setTimezone('Asia/Makassar');
+                    @endphp
+                    <small class="fw-semibold">{{ $now->translatedFormat('l, d F Y') }}</small>
                 </div>
 
                 <div class="card-body p-4 bg-light-subtle">
@@ -105,15 +108,20 @@
                                 @foreach($days as $english => $indonesian)
                                     <div class="col-12 col-md-6 col-lg-4">
                                         <div class="card day-card border-0 shadow-sm rounded-4 overflow-hidden">
+                                            @php
+                                                $now = now()->setTimezone('Asia/Makassar');
+                                            @endphp
+
                                             <div class="card-header d-flex justify-content-between align-items-center py-2 px-3 
-                                                @if($english == now()->format('l')) bg-primary text-white @else bg-softblue text-secondary @endif">
+                                                @if($english == $now->format('l')) bg-primary text-white @else bg-softblue text-secondary @endif">
                                                 <h6 class="mb-0 fw-semibold">
                                                     <i class="fas fa-calendar-day me-2"></i>{{ $indonesian }}
                                                 </h6>
-                                                @if($english == now()->format('l'))
+                                                @if($english == $now->format('l'))
                                                     <span class="badge bg-light text-primary shadow-sm">Hari Ini</span>
                                                 @endif
                                             </div>
+
                                             <div class="card-body bg-white">
                                                 @php
                                                     $daySchedules = $schedules->where('day', $english);
