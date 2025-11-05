@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'SMAN 1 DONGGO')</title>
 
+    <!-- Favicon -->
+    <link rel="icon" href="{{ asset('faviconn.ico') }}" type="image/x-icon">
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Bootstrap & Font Awesome -->
