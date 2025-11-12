@@ -93,14 +93,14 @@
                             </div>
                         </div>
 
-                        <div class="mt-5 d-flex justify-content-between align-items-center">
-                            <button type="submit" class="btn btn-primary px-4 py-2 shadow-sm fw-semibold">
-                                <i class="fas fa-save me-2"></i> Simpan Perubahan
-                            </button>
+                        <div class="mt-5 d-flex justify-content-end gap-2 align-items-center">
                             <a href="{{ route('admin.parents.index') }}"
                                 class="btn btn-outline-secondary px-4 py-2 shadow-sm">
                                 <i class="fas fa-times me-1"></i> Batal
                             </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2 shadow-sm fw-semibold">
+                                <i class="fas fa-save me-2"></i> Simpan Perubahan
+                            </button>
                         </div>
                     </form>
                 </div>

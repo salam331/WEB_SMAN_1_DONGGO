@@ -72,9 +72,9 @@ Route::middleware(['auth'])->group(function () {
 
         // Student Management - resource handled by StudentController
         Route::get('/students', [StudentController::class, 'index'])->name('students');
-        Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
         Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
         Route::post('/students', [StudentController::class, 'store'])->name('students.store');
+        Route::get('/students/{student}', [StudentController::class, 'show'])->name('students.show');
         Route::get('/students/{student}/edit', [StudentController::class, 'edit'])->name('students.edit');
         Route::put('/students/{student}', [StudentController::class, 'update'])->name('students.update');
         Route::delete('/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
@@ -174,7 +174,7 @@ Route::middleware(['auth'])->group(function () {
         // Class Management
         Route::get('/classes', [TeacherController::class, 'classes'])->name('classes');
         Route::get('/classes/{classId}', [TeacherController::class, 'classDetail'])->name('classes.detail');
-        
+
 
         // Schedule Management
         Route::get('/schedules', [TeacherController::class, 'schedules'])->name('schedules');
@@ -214,7 +214,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Student Routes
-    Route::middleware(['role:siswa'])->prefix('student')->name('student.')->group(function () {        
+    Route::middleware(['role:siswa'])->prefix('student')->name('student.')->group(function () {
         Route::get('/dashboard', [StudentController::class, 'dashboard'])->name('dashboard');
         Route::get('/', [StudentController::class, 'dashboard'])->name('dashboard');
 

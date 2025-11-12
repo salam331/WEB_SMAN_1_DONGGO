@@ -685,90 +685,49 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fungsi untuk menampilkan toast notification
-        // Parameter: message (string) - pesan yang akan ditampilkan
-        // Parameter: type (string) - jenis toast, bisa 'success' atau 'error'
+        // === Fungsi untuk menampilkan toast notification ===
+        // message: teks pesan | type: 'success' atau 'error'
         function showToast(message, type = 'success') {
-            // Ambil container toast dari DOM
             const container = document.getElementById('toastContainer');
 
-            // Buat elemen toast baru
+            // Buat elemen toast
             const toast = document.createElement('div');
             toast.className = `toast-notification ${type === 'error' ? 'error' : ''}`;
-
-            // Tentukan icon berdasarkan jenis toast
             const icon = type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle';
-
-            // Isi HTML toast dengan icon dan pesan
             toast.innerHTML = `<i class="fas ${icon}"></i>${message}`;
 
-            // Tambahkan toast ke container
+            // Tambahkan ke container
             container.appendChild(toast);
 
-            // Paksa reflow untuk memulai animasi
-            toast.offsetHeight;
+            // Trigger animasi muncul
+            setTimeout(() => toast.classList.add('show'), 100);
 
-            // Tambahkan class 'show' untuk memulai animasi muncul
+            // Hilangkan otomatis setelah 4 detik
             setTimeout(() => {
-                toast.classList.add('show');
-            }, 10);
-
-            // Setelah 1 detik, mulai animasi hilang
-            setTimeout(() => {
+                toast.classList.remove('show');
                 toast.classList.add('hide');
-
-                // Hapus elemen toast dari DOM setelah animasi selesai
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
-                    }
-                }, 300); // Durasi animasi fade-out
-            }, 1000); // Waktu tampil sebelum hilang
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
 
-        // Fungsi untuk toggle sidebar (tidak berubah)
+        // === Fungsi Toggle Sidebar untuk Mobile ===
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('show');
             document.body.classList.toggle('sidebar-open');
         }
 
-        // Header hide/show saat scroll (tidak berubah)
+        // === Header Sticky Animasi (Sembunyi saat scroll ke bawah) ===
         let lastScrollTop = 0;
         const header = document.getElementById('mainHeader');
-        const threshold = 80; // jarak minimal scroll agar efek aktif
-
-        window.addEventListener('scroll', function () {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-            if (scrollTop > lastScrollTop && scrollTop > threshold) {
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            if (scrollTop > lastScrollTop && scrollTop > 80) {
                 header.classList.add('hide');
-            } else if (scrollTop > lastScrollTop - 5) {
+            } else {
                 header.classList.remove('hide');
             }
-
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-        });
-
-        const sidebar = document.getElementById('sidebar');
-
-        // Restore posisi scroll saat load (tidak berubah)
-        window.addEventListener('load', () => {
-            const scrollPos = localStorage.getItem('sidebarScroll');
-            if (scrollPos) sidebar.scrollTop = parseInt(scrollPos);
-
-            // Cek apakah ada session success atau error untuk ditampilkan sebagai toast
-            @if(session('success'))
-                showToast("{{ session('success') }}", 'success');
-            @endif
-            @if(session('error'))
-                showToast("{{ session('error') }}", 'error');
-            @endif
-        });
-
-        // Simpan posisi scroll setiap saat sidebar digulir (tidak berubah)
-        sidebar.addEventListener('scroll', () => {
-            localStorage.setItem('sidebarScroll', sidebar.scrollTop);
+            lastScrollTop = scrollTop;
         });
     </script>
     <script>
