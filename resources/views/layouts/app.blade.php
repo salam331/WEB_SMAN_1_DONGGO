@@ -807,13 +807,24 @@
             }
         }
 
-        // === Close sidebar on menu link click (mobile) ===
+        // === Close sidebar on menu link click (mobile) and save scroll position ===
         document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
             const sidebarLinks = document.querySelectorAll('.sidebar a');
+
+            // Restore sidebar scroll position on page load
+            const savedScrollTop = sessionStorage.getItem('sidebarScrollTop');
+            if (savedScrollTop && window.innerWidth > 992) {
+                sidebar.scrollTop = parseInt(savedScrollTop, 10);
+            }
+
             sidebarLinks.forEach(link => {
                 link.addEventListener('click', function() {
                     if (window.innerWidth <= 992) {
                         closeSidebar();
+                    } else {
+                        // Save scroll position before navigation
+                        sessionStorage.setItem('sidebarScrollTop', sidebar.scrollTop);
                     }
                 });
             });
