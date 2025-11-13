@@ -222,10 +222,30 @@
             background: #bb2d3b;
         }
 
+        /* Backdrop for mobile sidebar */
+        .sidebar-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1020;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
         /* Responsive Sidebar */
         @media (max-width: 992px) {
             .sidebar {
                 left: -260px;
+                z-index: 1030;
             }
 
             .sidebar.show {
@@ -251,6 +271,47 @@
 
             body.sidebar-open {
                 overflow: hidden;
+            }
+
+            /* Pastikan header tidak menimpah sidebar saat sidebar terbuka */
+            body.sidebar-open #mainHeader {
+                z-index: 1025; /* Lebih rendah dari sidebar (1030) */
+            }
+
+            /* Adjust header for mobile */
+            #mainHeader {
+                padding: 0.75rem 1rem;
+            }
+
+            #mainHeader .d-flex.align-items-center.mb-2.mb-lg-0 div h2 {
+                font-size: 1rem;
+            }
+
+            #mainHeader .d-flex.align-items-center.mb-2.mb-lg-0 div p {
+                font-size: 0.75rem;
+            }
+
+            #mainHeader .me-4 {
+                margin-right: 0.5rem !important;
+            }
+
+            #mainHeader .me-4 div {
+                font-size: 0.8rem;
+            }
+
+            #mainHeader .me-4 small {
+                font-size: 0.7rem;
+            }
+
+            /* Toast adjustments for mobile */
+            .toast-container {
+                right: 10px;
+                top: 10px;
+            }
+
+            .toast-notification {
+                max-width: 250px;
+                font-size: 13px;
             }
         }
 
@@ -627,6 +688,8 @@
             </nav>
         </aside>
 
+        <!-- Backdrop for mobile sidebar -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
 
         <!-- Main -->
         <main>
@@ -713,9 +776,48 @@
         // === Fungsi Toggle Sidebar untuk Mobile ===
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const header = document.getElementById('mainHeader');
             sidebar.classList.toggle('show');
+            backdrop.classList.toggle('show');
             document.body.classList.toggle('sidebar-open');
+
+            // Hide header when sidebar is open on mobile
+            if (window.innerWidth <= 992) {
+                if (sidebar.classList.contains('show')) {
+                    header.classList.add('hide');
+                } else {
+                    header.classList.remove('hide');
+                }
+            }
         }
+
+        // === Fungsi Close Sidebar ===
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const header = document.getElementById('mainHeader');
+            sidebar.classList.remove('show');
+            backdrop.classList.remove('show');
+            document.body.classList.remove('sidebar-open');
+
+            // Show header when sidebar is closed on mobile
+            if (window.innerWidth <= 992) {
+                header.classList.remove('hide');
+            }
+        }
+
+        // === Close sidebar on menu link click (mobile) ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarLinks = document.querySelectorAll('.sidebar a');
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 992) {
+                        closeSidebar();
+                    }
+                });
+            });
+        });
 
         // === Header Sticky Animasi (Sembunyi saat scroll ke bawah) ===
         let lastScrollTop = 0;
