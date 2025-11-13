@@ -34,7 +34,7 @@
                 @endif --}}
 
                 <!-- Table Pengumuman -->
-                <div class="table-responsive shadow-sm rounded-3 overflow-hidden">
+                <div class="table-responsive">
                     <table class="table table-hover table-bordered align-middle shadow-sm rounded-3 overflow-hidden"
                         style="border-color: #dee2e6;">
                         <thead class="table-primary text-white"
@@ -211,6 +211,38 @@
         .badge {
             font-size: 0.85rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Responsive table for small screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 1200px; /* Ensure table doesn't shrink too much */
+            }
+
+            .table th, .table td {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .badge {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .table td .d-flex {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .table td .btn {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
         }
     </style>
 @endsection

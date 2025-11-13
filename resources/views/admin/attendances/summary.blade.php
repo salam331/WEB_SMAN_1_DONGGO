@@ -64,8 +64,8 @@
             </form>
 
             <!-- Summary Table -->
-            <div class="table-responsive shadow-sm rounded-3 overflow-hidden">
-                <table class="table table-hover table-bordered align-middle mb-0" style="border-color: #dee2e6;">
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle shadow-sm rounded-3 overflow-hidden" style="border-color: #dee2e6;">
                     <thead class="table-primary text-white" style="background: linear-gradient(135deg, #0d6efd, #007bff); border-bottom: 2px solid #0d6efd;">
                         <tr class="text-center align-middle">
                             <th rowspan="2">No</th>
@@ -138,6 +138,38 @@
         .table-hover tbody tr:hover {
             background-color: #f0f8ff !important;
             transition: all 0.25s ease-in-out;
+        }
+
+        /* Responsive table for small screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 1200px; /* Ensure table doesn't shrink too much */
+            }
+
+            .table th, .table td {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .badge {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .table td .d-flex {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .table td .btn {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
         }
 
         .badge {
