@@ -3,21 +3,21 @@
 @section('title', 'SMAN 1 DONGGO - Beranda')
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid px-2 px-md-3">
 
         <!-- 🌈 HERO SECTION -->
-        <section class="hero-section text-white py-4 mt-4 rounded-bottom-5 shadow-sm mb-4 rounded-5"
+        <section class="hero-section text-white py-3 py-md-4 mt-4 rounded-bottom-5 shadow-sm mb-4 rounded-5"
             style="background: linear-gradient(135deg, #7ebf99 0%, #667eea 100%);">
-            <div class="container">
+            <div class="container-fluid px-3 px-md-4">
                 <div class="row align-items-center">
-                    <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
-                        <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">
+                    <div class="col-12 col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+                        <h1 class="display-5 display-md-4 fw-bold mb-3 animate__animated animate__fadeInDown">
                             Selamat Datang di <br><span class="text-primary">SMAN 1 Donggo</span>
                         </h1>
                         <p class="lead mb-4 animate__animated animate__fadeInUp">
                             Sekolah berkualitas dengan pendidikan yang unggul dan berintegritas.
                         </p>
-                        <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                        {{-- <div class="d-flex flex-wrap gap-2 gap-md-3 justify-content-center justify-content-lg-start">
                             <a href="{{ route('login') }}" class="btn btn-light btn-lg fw-semibold shadow-sm">
                                 <i class="fas fa-sign-in-alt me-2"></i>Masuk Sistem
                             </a>
@@ -33,13 +33,13 @@
                             <a href="{{ route('contact') }}" class="btn btn-outline-light btn-lg">
                                 <i class="fas fa-phone me-2"></i>Kontak
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
                     <div
-                        class="col-lg-6 text-center d-flex align-items-center justify-content-center justify-content-lg-end gap-4 flex-wrap">
+                        class="col-12 col-lg-6 text-center d-flex align-items-center justify-content-center justify-content-lg-end gap-4 flex-wrap">
                         <img src="{{ asset('image/logo.png') }}" alt="Logo Sekolah"
                             class="img-fluid animate__animated animate__fadeIn"
-                            style="max-width: 250px; animation-duration: 2s;">
+                            style="max-width: 200px; animation-duration: 2s;">
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
 
         <!-- 💠 QUICK STATS -->
         <section class="stats-section mb-5">
-            <div class="row g-4">
+            <div class="row g-3 g-md-4">
                 @php
                     $stats = [
                         ['icon' => 'fa-users', 'color' => 'primary', 'title' => 'Siswa', 'desc' => 'Jumlah siswa aktif', 'value' => $school->total_students ?? '500+'],
@@ -58,12 +58,12 @@
                     ];
                 @endphp
                 @foreach($stats as $s)
-                    <div class="col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="card border-0 shadow-sm text-center h-100 rounded-4 stat-card">
-                            <div class="card-body py-4">
+                            <div class="card-body py-3 py-md-4">
                                 <div
                                     class="icon-wrapper bg-{{ $s['color'] }} bg-opacity-10 text-{{ $s['color'] }} mb-3 mx-auto">
-                                    <i class="fas {{ $s['icon'] }} fa-3x"></i>
+                                    <i class="fas {{ $s['icon'] }} fa-2x fa-md-3x"></i>
                                 </div>
                                 <h5 class="fw-semibold mb-1">{{ $s['title'] }}</h5>
                                 <p class="text-muted small mb-2">{{ $s['desc'] }}</p>
@@ -85,10 +85,10 @@
                             <i class="fas fa-bullhorn me-2"></i>Pengumuman Terbaru
                         </h4>
                     </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
+                    <div class="card-body p-3 p-md-4">
+                        <div class="row g-3 g-md-4">
                             @foreach($announcements as $a)
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <div class="card border-0 shadow-sm h-100 rounded-4 hover-card">
                                         <div class="card-body">
                                             <div class="d-flex">
@@ -149,19 +149,19 @@
         <!-- 📞 CONTACT INFO -->
         <section class="contact-section">
             <div class="card border-0 shadow-sm bg-primary text-white text-center rounded-4 overflow-hidden">
-                <div class="card-body py-5">
+                <div class="card-body py-4 py-md-5">
                     <h3 class="fw-bold mb-4"><i class="fas fa-envelope-open me-2"></i>Hubungi Kami</h3>
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-md-4">
+                    <div class="row g-3 g-md-4 justify-content-center">
+                        <div class="col-12 col-md-4">
                             <i class="fas fa-map-marker-alt fa-2x mb-2"></i>
                             <p>Jl. Pesanggrahan No.19,
                                 Doridungga, Kec. Donggo, <br>Kabupaten Bima, Nusa Tenggara Bar.</p>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-4">
                             <i class="fas fa-phone fa-2x mb-2"></i>
                             <p>(+62) 85339458990</p>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-12 col-md-4">
                             <i class="fas fa-envelope fa-2x mb-2"></i>
                             <p>info@sman1donggo.sch.id</p>
                         </div>
@@ -249,6 +249,39 @@
 
         .hover-card:hover .icon-wrapper {
             transform: rotate(8deg) scale(1.1);
+        }
+
+        /* Responsivitas untuk mobile */
+        @media (max-width: 767.98px) {
+            .hero-section {
+                padding: 1rem 0;
+            }
+
+            .hero-section h1 {
+                font-size: 1.75rem;
+            }
+
+            .hero-section .lead {
+                font-size: 1rem;
+            }
+
+            .btn-lg {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .stat-card .card-body {
+                padding: 1rem;
+            }
+
+            .icon-wrapper {
+                width: 60px;
+                height: 60px;
+            }
+
+            .icon-wrapper i {
+                font-size: 1.5rem;
+            }
         }
     </style>
 @endpush

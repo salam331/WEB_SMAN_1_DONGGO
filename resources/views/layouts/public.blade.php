@@ -10,11 +10,6 @@
     <link rel="icon" href="{{ asset('faviconn.ico') }}" type="image/x-icon">
 
     {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -142,14 +137,14 @@
          🌐 NAVIGATION BAR
     ============================== -->
     <nav class="navbar navbar-expand-lg navbar-dark py-3 sticky-top">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-auto">
             <a class="navbar-brand d-flex align-items-center" href="{{ route('home') }}">
                 <img src="{{ asset('image/logo.png') }}" alt="Logo Sekolah" class="me-2"
                     style="width: 55px; height: 55px; object-fit: cover;">
                 <span class="navbar-brand py-0 text-white">SMAN 1 DONGGO <br><p class="mb-0 d-none d-md-block d-xl-block text-white">Sekolah Hebat Berprestasi</p></span>
                 
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -202,7 +197,7 @@
          🧭 MAIN CONTENT
     ============================== -->
     <main>
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-0">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
                     <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
@@ -224,7 +219,7 @@
          ⚫ FOOTER SECTION
     ============================== -->
     <footer class="text-white pt-5 pb-3 mt-5">
-        <div class="container-fluid px-4">
+        <div class="container-fluid px-auto">
             <div class="row gy-4">
                 <div class="col-md-4 d-flex flex-column">
                     <div class="d-flex align-items-center mb-2 fade-in-logo">
