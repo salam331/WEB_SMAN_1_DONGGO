@@ -158,5 +158,37 @@
             transform: translateY(-2px);
             transition: all 0.2s ease;
         }
+
+        /* Responsive table for small screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 700px;
+            }
+
+            .table th, .table td {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .badge {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .table td .d-flex {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .table td .btn {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
+        }
     </style>
 @endsection

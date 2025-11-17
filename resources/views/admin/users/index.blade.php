@@ -15,12 +15,11 @@
                 </a>
             </div>
 
-            {{-- Form pencarian
-            <form action="{{ route('admin.users') }}" method="get"
-                class="mb-4 d-flex justify-content-end align-items-center flex-wrap gap-2">
-
+            <!-- Form Pencarian -->
+            <form method="GET" class="mb-4 d-flex flex-wrap gap-3 align-items-end justify-content-end">
                 <div class="w-auto">
-                    <select name="roles" class="form-select border-2 shadow-sm rounded-pill px-3 py-2">
+                    <label class="form-label fw-semibold text-secondary">Role</label>
+                    <select name="roles" class="form-select shadow-sm rounded-pill border-0">
                         <option value="">Semua Roles</option>
                         @foreach($roles as $role)
                             <option value="{{ $role }}" {{ request('roles') == $role ? 'selected' : '' }}>
@@ -29,16 +28,15 @@
                         @endforeach
                     </select>
                 </div>
-
-                <div class="input-group w-auto">
+                <div class="input-group w-50">
                     <input type="text" name="search" value="{{ request('search') }}"
-                        class="form-control border-0 shadow-sm rounded-start-pill px-3 py-2"
+                        class="form-control border-0 shadow-sm rounded-start-pill"
                         placeholder="Cari nama atau email pengguna...">
-                    <button type="submit" class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
+                    <button class="btn btn-primary rounded-end-pill px-4 fw-semibold shadow-sm">
                         <i class="fas fa-search me-1"></i> Cari
                     </button>
                 </div>
-            </form> --}}
+            </form>
 
             <div class="card-body bg-light bg-gradient p-4">
                 <div class="table-responsive">
@@ -118,64 +116,23 @@
         </div>
     </div>
 
-    <!-- 🎨 Style tambahan agar selaras dengan halaman Buat User -->
+    <!-- 🎨 Style Tambahan -->
     <style>
         .table thead th {
-            color: #726161 !important;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.03em;
+            letter-spacing: 0.04em;
             border: none;
         }
 
-        .table tbody tr:hover {
-            background-color: #f0fff7 !important;
-            transition: all 0.2s ease-in-out;
-        }
-
-        .btn-outline-primary:hover {
-            background: linear-gradient(135deg, #0062cc, #007bff) !important;
-            color: #fff !important;
-            transform: translateY(-2px);
-            transition: all 0.2s ease;
-        }
-
-        .btn-outline-danger:hover {
-            background: linear-gradient(135deg, #dc3545, #ff4d6d) !important;
-            color: #fff !important;
-            transform: translateY(-2px);
-            transition: all 0.2s ease;
-        }
-
-        .card {
-            transition: box-shadow 0.3s ease, transform 0.2s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            transform: translateY(-2px);
-        }
-    </style>
-    <style>
         .table-bordered th,
         .table-bordered td {
             border-color: #dee2e6 !important;
         }
 
-        .table thead th {
-            border-color: rgba(255, 255, 255, 0.2) !important;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-
         .table-hover tbody tr:hover {
-            background-color: #f0f7ff !important;
+            background-color: #f0f8ff !important;
             transition: all 0.25s ease-in-out;
-        }
-
-        .badge {
-            font-size: 0.85rem;
         }
 
         .btn-outline-primary:hover {
@@ -192,6 +149,11 @@
             transition: all 0.2s ease;
         }
 
+        .badge {
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
         .card {
             transition: box-shadow 0.3s ease, transform 0.2s ease;
         }
@@ -199,6 +161,49 @@
         .card:hover {
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
             transform: translateY(-2px);
+        }
+
+        .input-group input:focus {
+            border-color: #0d6efd !important;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15) !important;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0062cc, #007bff) !important;
+            transform: translateY(-2px);
+            transition: all 0.2s ease;
+        }
+
+        /* Responsive table for small screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+
+            .table th, .table td {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .badge {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .table td .d-flex {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .table td .btn {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
         }
     </style>
 @endsection

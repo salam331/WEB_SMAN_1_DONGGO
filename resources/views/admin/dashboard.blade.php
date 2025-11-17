@@ -38,7 +38,7 @@
             <!-- ==========================
                          💠 MODUL MANAJEMEN
                     =========================== -->
-            <div class="col-lg-20 mb-4">
+            <div class="card-body d-flex align-items-center p-full position-relative">
                 <div class="col-12">
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                         <div class="card-header bg-gradient text-dark border-0 py-3 d-flex align-items-center justify-content-between"
@@ -475,6 +475,24 @@
 
                     .card:hover {
                         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+                    }
+
+                    /* Responsivitas untuk mobile - hapus padding horizontal pada sisi kiri dan kanan */
+                    @media (max-width: 992px) {
+                        main {
+                            padding-left: 0 !important;
+                            padding-right: 0 !important;
+                        }
+
+                        .card-header {
+                            padding-left: 0 !important;
+                            padding-right: 0 !important;
+                        }
+
+                        .card-body {
+                            padding-left: 0 !important;
+                            padding-right: 0 !important;
+                        }
                     }
                 </style>
             @endpush

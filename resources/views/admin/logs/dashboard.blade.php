@@ -3,7 +3,7 @@
 @section('title', 'SMAN 1 DONGGO')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container-fluid py-5">
 
         <!-- Statistics Cards -->
         <div class="row g-4 mb-4">
@@ -246,6 +246,24 @@
 
         .card-hover:hover .icon-wrapper {
             transform: rotate(10deg) scale(1.1);
+        }
+
+        /* Responsivitas untuk mobile - hapus padding horizontal pada sisi kiri dan kanan */
+        @media (max-width: 992px) {
+            main {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .card-header {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .card-body {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
         }
     </style>
 @endsection

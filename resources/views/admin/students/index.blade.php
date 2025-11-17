@@ -19,9 +19,10 @@
             <!-- Body -->
             <div class="card-body bg-light bg-gradient p-4">
                 <!-- Form Pencarian -->
-                <form method="GET" class="mb-4 d-flex justify-content-end gap-2">
+                <form method="GET" class="mb-4 d-flex flex-wrap gap-3 align-items-end justify-content-end">
                     <div class="w-auto">
-                        <select name="class_id" class="form-select border-2 border-2 shadow-sm rounded-pill">
+                        <label class="form-label fw-semibold text-secondary">Kelas</label>
+                        <select name="class_id" class="form-select shadow-sm rounded-pill border-0">
                             <option value="">Semua Kelas</option>
                             @foreach($classes as $class)
                                 <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
@@ -174,6 +175,38 @@
             background: linear-gradient(135deg, #0062cc, #007bff) !important;
             transform: translateY(-2px);
             transition: all 0.2s ease;
+        }
+
+        /* Responsive table for small screens */
+        @media (max-width: 768px) {
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .table {
+                min-width: 800px;
+            }
+
+            .table th, .table td {
+                white-space: nowrap;
+                padding: 0.5rem;
+            }
+
+            .table td .badge {
+                display: block;
+                margin-bottom: 0.25rem;
+            }
+
+            .table td .d-flex {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .table td .btn {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
         }
     </style>
 @endsection

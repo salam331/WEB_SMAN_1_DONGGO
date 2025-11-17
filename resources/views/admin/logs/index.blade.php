@@ -28,7 +28,7 @@
 
 
             <!-- Body -->
-            <div class="card-body bg-light bg-gradient p-4">
+            <div class="card-body bg-light bg-gradient p-5">
                 <!-- Filter Form -->
                 <form method="GET" class="mb-4">
                     <div class="row g-3">
@@ -212,8 +212,8 @@
 
 
                 <!-- Pagination -->
-                <div class="mt-4 d-flex justify-content-end">
-                    {{ $logs->appends(request()->query())->links() }}
+                <div class="mt-4 d-flex justify-content-center justify-content-md-end">
+                    {!! $logs->appends(request()->query())->render() !!}
                 </div>
             </div>
         </div>
@@ -264,6 +264,89 @@
         .badge.bg-purple {
             background-color: #6f42c1;
             color: #fff;
+        }
+
+        /* Pagination styling untuk mobile */
+        .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .pagination .page-link {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .pagination .page-item:first-child .page-link,
+        .pagination .page-item:last-child .page-link {
+            border-radius: 0.375rem;
+        }
+
+        /* Responsivitas untuk mobile - hapus padding horizontal pada sisi kiri dan kanan */
+        @media (max-width: 992px) {
+            main {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .card-header {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                padding-top: 0.5rem !important;
+                padding-bottom: 0.5rem !important;
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 0.75rem !important;
+            }
+
+            .card-header h5 {
+                margin-bottom: 0.25rem;
+                font-size: 1.1rem;
+            }
+
+            .card-header .d-flex {
+                flex-wrap: wrap;
+                gap: 0.375rem !important;
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .card-header .btn {
+                flex: 1 1 auto;
+                min-width: 110px;
+                font-size: 0.8rem;
+                padding: 0.25rem 0.5rem;
+                border-radius: 0.25rem !important;
+            }
+
+            .card-body {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            /* Pagination pada mobile */
+            .pagination {
+                margin: 1rem 0;
+            }
+
+            .pagination .page-link {
+                min-width: 40px;
+                padding: 0.5rem;
+                font-size: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .pagination .page-link i {
+                font-size: 1.2rem;
+            }
+
+            /* Sembunyikan icon previous dan next pada mobile */
+            .pagination .page-item:first-child,
+            .pagination .page-item:last-child {
+                display: none !important;
+            }
         }
     </style>
 @endsection

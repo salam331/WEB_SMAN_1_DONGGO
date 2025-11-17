@@ -1,23 +1,33 @@
-# TODO: Update Public Pages for Mobile Responsiveness
+# TODO: Standardisasi Halaman Admin Index
 
-## Status: In Progress
+## Ringkasan Tugas
+Melakukan standardisasi pada halaman-halaman admin index untuk memastikan konsistensi dalam struktur, styling, dan responsivitas.
 
-### Tasks:
-- [ ] Update hero sections: Reduce font sizes and padding on mobile, adjust background attachments.
-- [ ] Improve grid responsiveness: Use more breakpoints (col-12, col-sm-*, col-md-*, col-lg-*).
-- [ ] Enhance card layouts: Ensure cards stack properly on mobile, adjust heights.
-- [ ] Optimize typography: Smaller font sizes on mobile for better readability.
-- [ ] Improve spacing and padding: Use responsive utilities (py-3, py-5, etc.).
-- [ ] Ensure touch-friendly elements: Larger buttons, proper spacing.
-- [ ] Add consistent media queries for mobile-specific adjustments.
+## Halaman yang Telah Dikerjakan
+- [x] `resources/views/admin/users/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
+- [x] `resources/views/admin/teachers/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
+- [x] `resources/views/admin/students/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
+- [x] `resources/views/admin/classes/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
+- [x] `resources/views/admin/subjects/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
+- [x] `resources/views/admin/parents/index.blade.php` - Standardisasi form pencarian, styling table, dan responsivitas
 
-### Files to Edit:
-- [ ] resources/views/public/home.blade.php
-- [ ] resources/views/public/about.blade.php
-- [ ] resources/views/public/announcements.blade.php
-- [ ] resources/views/public/contact.blade.php
-- [ ] resources/views/public/gallery.blade.php
+## Perubahan yang Diterapkan
+- [x] Form pencarian: Menghilangkan action attribute, menggunakan method="GET", menambahkan shadow-sm pada input
+- [x] Table styling: Menambahkan border-color untuk table-bordered, hover effects, dan responsive styles
+- [x] Responsivitas: Menambahkan media queries untuk mobile dengan min-width table dan button adjustments
+- [x] Konsistensi: Memastikan semua halaman menggunakan struktur dan styling yang sama
 
-### Followup Steps:
-- [ ] Test the pages on different screen sizes (desktop, tablet, mobile).
-- [ ] Run the Laravel app locally and use browser tools to verify responsiveness.
+## Halaman Admin Index yang Belum Dikerjakan
+- [ ] `resources/views/admin/attendances/index.blade.php`
+- [ ] `resources/views/admin/materials/index.blade.php`
+- [ ] `resources/views/admin/schedules/index.blade.php`
+- [ ] `resources/views/admin/reports/index.blade.php`
+- [ ] `resources/views/admin/contact_messages/index.blade.php`
+- [ ] `resources/views/admin/galleries/index.blade.php`
+- [ ] `resources/views/admin/invoices/index.blade.php`
+- [ ] `resources/views/admin/announcements/index.blade.php`
+
+## Hasil yang Diharapkan
+- Konsistensi visual dan fungsional di semua halaman admin index
+- Responsivitas yang baik untuk desktop dan mobile
+- User experience yang lebih baik dengan styling yang seragam

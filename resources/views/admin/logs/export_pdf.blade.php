@@ -16,47 +16,69 @@
         .action { width: 80px; }
         .model { width: 100px; }
         .ip { width: 120px; }
+
+        /* Responsivitas untuk mobile - hapus padding horizontal pada sisi kiri dan kanan */
+        @media (max-width: 992px) {
+            body {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            .header {
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+            }
+
+            table {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Laporan Log Aktivitas</h1>
-        <p>Periode: {{ request('from') ? request('from') : 'Semua' }} - {{ request('to') ? request('to') : 'Semua' }}</p>
-        <p>Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
-    </div>
+    <div class="container-fluid py-5">
+        <div class="header text-center mb-5">
+            <h1>Laporan Log Aktivitas</h1>
+            <p>Periode: {{ request('from') ? request('from') : 'Semua' }} - {{ request('to') ? request('to') : 'Semua' }}</p>
+            <p>Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+        </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th class="no">No</th>
-                <th class="date">Waktu</th>
-                <th class="user">User</th>
-                <th class="role">Role</th>
-                <th class="action">Aksi</th>
-                <th class="model">Model</th>
-                <th class="ip">IP Address</th>
-                <th>Deskripsi</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($logs as $index => $log)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
-                <td>{{ $log->user->name ?? 'N/A' }}</td>
-                <td>{{ ucfirst($log->role ?? 'N/A') }}</td>
-                <td>{{ ucfirst($log->action) }}</td>
-                <td>{{ $log->model }}</td>
-                <td>{{ $log->ip_address ?? 'N/A' }}</td>
-                <td>{{ $log->description ?? '-' }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th class="no">No</th>
+                        <th class="date">Waktu</th>
+                        <th class="user">User</th>
+                        <th class="role">Role</th>
+                        <th class="action">Aksi</th>
+                        <th class="model">Model</th>
+                        <th class="ip">IP Address</th>
+                        <th>Deskripsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($logs as $index => $log)
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $log->created_at->format('d/m/Y H:i') }}</td>
+                        <td>{{ $log->user->name ?? 'N/A' }}</td>
+                        <td>{{ ucfirst($log->role ?? 'N/A') }}</td>
+                        <td>{{ ucfirst($log->action) }}</td>
+                        <td>{{ $log->model }}</td>
+                        <td>{{ $log->ip_address ?? 'N/A' }}</td>
+                        <td>{{ $log->description ?? '-' }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
-    <div style="margin-top: 30px; text-align: right;">
-        <p>Dicetak oleh: {{ auth()->user()->name }}</p>
-        <p>Tanggal: {{ now()->format('d/m/Y') }}</p>
+        <div class="mt-5 text-end">
+            <p>Dicetak oleh: {{ auth()->user()->name }}</p>
+            <p>Tanggal: {{ now()->format('d/m/Y') }}</p>
+        </div>
     </div>
 </body>
 </html>
